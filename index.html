@@ -1,1901 +1,5461 @@
-<!DOCTYPE html>
+```html
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>أساس — استوديو تصميم القطعة (ثلاثي الأبعاد)</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>دار — مصمم الخزائن 2D</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-  :root{
-    --ink:#070907;
-    --panel:#0d1712;
-    --raised:#132a20;
-    --line: rgba(210,230,214,0.13);
-    --cream:#e9efe9;
-    --muted:#83a292;
-    --amber:#1f5c3f;
-    --walnut:#0a1f16;
-    --brass:#3fbd7c;
-  }
+:root{
+ --bg:#080d0b;
+ --panel:#101613;
+ --panel2:#151d19;
+ --panel3:#1b2521;
+ --line:#26352e;
+ --line2:#3a4d43;
+ --text:#f3f7f5;
+ --muted:#8da69b;
+ --dim:#60746b;
+ --mint:#2fd9c4;
+ --mint2:#12897a;
+ --mint3:#0b554c;
+ --danger:#ff7070;
+ --shadow:0 25px 80px rgba(0,0,0,.55);
+}
 
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+*{box-sizing:border-box}
 
-  body{
-    margin:0;
-    background:
-      radial-gradient(1100px 560px at 82% -6%, rgba(63,189,124,0.09), transparent 60%),
-      radial-gradient(900px 500px at 8% 105%, rgba(31,92,63,0.18), transparent 60%),
-      var(--ink);
-    color:var(--cream);
-    font-family:'Cairo', sans-serif;
-    line-height:1.6;
-  }
+html,body{
+ margin:0;
+ min-height:100%;
+ background:var(--bg);
+ color:var(--text);
+ font-family:"IBM Plex Sans Arabic",Cairo,sans-serif;
+}
 
-  h1,h2,h3, .brand{
-    font-family:'Amiri', serif;
-    font-weight:700;
-    margin:0;
-  }
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
 
-  a{color:inherit;}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{
+ background:#2b3a33;
+ border-radius:20px;
+}
 
-  :focus-visible{
-    outline: 2px solid var(--brass);
-    outline-offset: 3px;
-  }
+.app{min-height:100vh}
 
-  .wrap{
-    max-width:1180px;
-    margin:0 auto;
-    padding:0 28px;
-  }
+/* HEADER */
 
-  header.site{
-    padding:28px 0 24px;
-    border-bottom:1px solid var(--line);
-  }
-  header.site .wrap{
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    gap:16px;
-    flex-wrap:wrap;
-  }
-  .brand{font-size:1.7rem; letter-spacing:0.5px;}
-  .brand-row{display:flex; align-items:center; gap:12px;}
-  .logo-mark{
-    width:38px; height:38px; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center;
-    background:var(--raised); border:1.5px solid var(--brass);
-    color:var(--brass); font-family:'Amiri', serif; font-weight:700; font-size:1.3rem;
-    border-radius:6px;
-  }
-  .brand-tag{color:var(--muted); font-size:0.92rem;}
+.header{
+ height:70px;
+ border-bottom:1px solid var(--line);
+ background:rgba(8,13,11,.96);
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:0 25px;
+ position:sticky;
+ top:0;
+ z-index:100;
+ backdrop-filter:blur(20px);
+}
 
-  .hero{
-    padding:72px 0 56px;
-    border-bottom:1px solid var(--line);
-  }
-  .hero h1{
-    font-size:clamp(2.1rem, 4.2vw, 3.4rem);
-    max-width:16ch;
-    line-height:1.25;
-    color:var(--cream);
-  }
-  .hero p{
-    max-width:56ch;
-    color:var(--muted);
-    font-size:1.08rem;
-    margin-top:18px;
-  }
-  .hero .go{
-    display:inline-block;
-    margin-top:30px;
-    padding:13px 26px;
-    background:var(--brass);
-    color:var(--ink);
-    font-weight:700;
-    border-radius:2px;
-    text-decoration:none;
-    font-size:0.98rem;
-  }
-  .hero .go:hover{background:#57d693;}
+.logo{
+ display:flex;
+ align-items:center;
+ gap:10px;
+}
 
-  .section-title{
-    display:flex;
-    align-items:baseline;
-    gap:14px;
-    margin-bottom:34px;
-  }
-  .section-title h2{
-    font-size:1.6rem;
-    white-space:nowrap;
-  }
-  .section-title .rule{
-    height:1px;
-    background:var(--line);
-    flex:1;
-  }
+.logo svg{
+ width:38px;
+ height:38px;
+}
 
-  .configurator{
-    padding:64px 0 72px;
-    border-bottom:1px solid var(--line);
-  }
+.logo-name{
+ font:800 21px Cairo;
+}
 
-  /* ---------- Blender-style app shell ---------- */
-  .blender-app{
-    border:1px solid var(--line);
-    background:var(--panel);
-    display:flex;
-    flex-direction:column;
-    height:660px;
-    box-shadow: 0 24px 48px rgba(0,0,0,0.28);
-  }
+.logo-name i{
+ color:var(--mint);
+ font-style:normal;
+}
 
-  .app-topbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-    padding:10px 16px;
-    border-bottom:1px solid var(--line);
-    background:var(--raised);
-    flex-shrink:0;
-    flex-wrap:wrap;
-  }
+.live{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ color:var(--muted);
+ font-size:11px;
+}
 
-  .seg-toggle{
-    display:flex;
-    border:1px solid var(--line);
-    border-radius:3px;
-    overflow-x:auto;
-    overflow-y:hidden;
-    max-width:100%;
-    scrollbar-width:thin;
-  }
-  .type-toggle{flex:1; min-width:0; padding-bottom:2px;}
-  .type-toggle button{white-space:nowrap; flex-shrink:0;}
-  .seg-toggle button{
-    background:transparent;
-    border:none;
-    color:var(--muted);
-    font-family:'Cairo', sans-serif;
-    font-size:0.86rem;
-    font-weight:600;
-    padding:8px 14px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    gap:7px;
-  }
-  .seg-toggle button + button{border-right:1px solid var(--line);}
-  .seg-toggle button[aria-pressed="true"]{background:var(--amber); color:var(--ink);}
-  .seg-toggle button svg{width:15px; height:15px; flex-shrink:0;}
+.live-dot{
+ width:7px;
+ height:7px;
+ border-radius:50%;
+ background:var(--mint);
+ box-shadow:0 0 0 5px rgba(47,217,196,.1);
+}
 
-  .app-body{
-    flex:1;
-    display:flex;
-    min-height:0;
-  }
+.header-actions{
+ display:flex;
+ gap:8px;
+}
 
-  /* properties column (right side, Blender-style) */
-  .properties{
-    width:340px;
-    flex-shrink:0;
-    border-left:1px solid var(--line);
-    display:flex;
-    flex-direction:column;
-    min-height:0;
-  }
+.hbtn{
+ border:1px solid var(--line);
+ background:var(--panel2);
+ color:var(--muted);
+ border-radius:9px;
+ padding:9px 14px;
+ font-size:11px;
+}
 
-  .outliner{
-    border-bottom:1px solid var(--line);
-    padding:12px 16px 12px 24px;
-    max-height:150px;
-    overflow-y:auto;
-    overflow-x:hidden;
-    scrollbar-gutter: stable;
-    flex-shrink:0;
-  }
-  .outliner-title{font-size:0.76rem; color:var(--muted); margin-bottom:8px;}
-  .outliner ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px;}
-  .outliner li button{
-    width:100%;
-    background:transparent;
-    border:none;
-    color:var(--cream);
-    font-family:'Cairo', sans-serif;
-    font-size:0.86rem;
-    padding:6px 8px;
-    cursor:pointer;
-    border-radius:2px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  .outliner li button:hover{background:rgba(200,155,60,0.12);}
-  .outliner li button .dot{width:6px; height:6px; border-radius:50%; background:var(--amber); flex-shrink:0;}
+.hbtn:hover{
+ border-color:var(--line2);
+ color:white;
+}
 
-  .prop-tabs{
-    display:flex;
-    border-bottom:1px solid var(--line);
-    flex-shrink:0;
-  }
-  .prop-tabs button{
-    flex:1;
-    background:transparent;
-    border:none;
-    color:var(--muted);
-    padding:11px 0;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .prop-tabs button + button{border-right:1px solid var(--line);}
-  .prop-tabs button[aria-pressed="true"]{
-    color:var(--brass);
-    background:rgba(200,155,60,0.08);
-    box-shadow: inset 0 -2px 0 var(--brass);
-  }
-  .prop-tabs button svg{width:18px; height:18px;}
+.hbtn.primary{
+ background:var(--mint);
+ color:#06201c;
+ border-color:var(--mint);
+ font-weight:800;
+}
 
-  .prop-content{
-    flex:1;
-    overflow-y:auto;
-    overflow-x:hidden;
-    scrollbar-gutter: stable;
-    padding:18px 18px 4px 26px;
-    min-height:0;
-    scrollbar-width:thin;
-    scrollbar-color: var(--line) transparent;
-  }
-  .prop-content::-webkit-scrollbar{ width:8px; }
-  .prop-content::-webkit-scrollbar-track{ background:transparent; }
-  .prop-content::-webkit-scrollbar-thumb{ background:var(--line); border-radius:8px; }
-  .outliner::-webkit-scrollbar{ width:8px; }
-  .outliner::-webkit-scrollbar-track{ background:transparent; }
-  .outliner::-webkit-scrollbar-thumb{ background:var(--line); border-radius:8px; }
-  .outliner{ scrollbar-width:thin; scrollbar-color: var(--line) transparent; }
+/* LAYOUT */
 
-  .spec-panel{
-    border-top:1px solid var(--line);
-    padding:16px 18px 18px;
-    flex-shrink:0;
-  }
+.layout{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) 430px;
+ height:calc(100vh - 70px);
+}
 
-  fieldset{
-    border:none;
-    padding:0 0 22px;
-    margin:0 0 22px;
-    border-bottom:1px solid var(--line);
-    transition: background-color 0.4s ease;
-  }
-  fieldset:last-of-type{border-bottom:none; margin-bottom:4px;}
-  fieldset.field-flash{background-color: rgba(200,155,60,0.12);}
-  legend{
-    font-weight:600;
-    font-size:0.94rem;
-    color:var(--cream);
-    padding:0 0 12px;
-  }
+.canvas-area{
+ position:relative;
+ overflow:hidden;
+ background:#0b110e;
+}
 
-  .swatches{display:flex; gap:10px; flex-wrap:wrap;}
-  .swatch{
-    cursor:pointer; text-align:center; background:transparent; border:none; padding:0;
-    color:#b7cec1; font-family:'Cairo', sans-serif; font-size:0.8rem;
-  }
-  .swatch .chip{
-    width:42px; height:42px; border:2px solid transparent; display:block; margin-bottom:6px;
-    box-shadow: inset 0 -10px 14px rgba(0,0,0,0.25), inset 0 8px 10px rgba(255,255,255,0.12);
-  }
-  .swatch[aria-pressed="true"] .chip{border-color:var(--brass);}
-  .swatch[aria-pressed="true"]{color:var(--cream);}
+.canvas-area:before{
+ content:"";
+ position:absolute;
+ inset:0;
+ background-image:
+ linear-gradient(rgba(150,190,180,.045) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(150,190,180,.045) 1px,transparent 1px);
+ background-size:42px 42px;
+ mask-image:linear-gradient(to bottom,#000,transparent 90%);
+}
 
-  .finish-row{display:flex; gap:8px; flex-wrap:wrap;}
-  .finish-row button{
-    background:transparent; border:1px solid var(--line); color:#b7cec1;
-    font-family:'Cairo', sans-serif; padding:9px 12px; font-size:0.84rem; cursor:pointer;
-    line-height:1.35; white-space:normal;
-  }
-  .finish-row button[aria-pressed="true"]{border-color:var(--brass); color:var(--brass); background:rgba(200,155,60,0.1);}
+.canvas-top{
+ position:absolute;
+ top:20px;
+ left:24px;
+ right:24px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ z-index:20;
+}
 
-  .leg-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .leg-grid button{ width:100%; text-align:center; }
+.path{
+ color:var(--dim);
+ font-size:10px;
+}
 
-  .slider-row label{
-    display:flex; justify-content:space-between; font-size:0.9rem; color:var(--muted); margin-bottom:10px;
-  }
-  .slider-row output{color:var(--cream); font-weight:600; font-variant-numeric: tabular-nums;}
-  .slider-control{display:flex; align-items:center; gap:10px;}
-  .step-btn{
-    width:36px; height:36px; flex-shrink:0; border-radius:6px;
-    background:var(--raised); border:1px solid var(--line); color:var(--cream);
-    font-size:1.15rem; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center;
-    user-select:none; touch-action:manipulation;
-  }
-  .step-btn:hover{border-color:var(--brass); color:var(--brass);}
-  .step-btn:active{background:rgba(63,189,124,0.15);}
-  input[type="range"]{
-    width:100%; appearance:none; height:4px; background:var(--line); outline:none;
-    padding:16px 0; background-clip:content-box;
-  }
-  input[type="range"]::-webkit-slider-thumb{
-    appearance:none; width:24px; height:24px; border-radius:50%; background:var(--brass); cursor:pointer;
-    border:3px solid var(--panel); box-shadow:0 0 0 1px var(--brass); margin-top:-10px;
-  }
-  input[type="range"]::-moz-range-thumb{width:24px; height:24px; border-radius:50%; background:var(--brass); border:3px solid var(--panel); box-shadow:0 0 0 1px var(--brass); cursor:pointer;}
+.path b{
+ color:var(--text);
+}
 
-  .spec-row{
-    display:flex; justify-content:space-between; font-size:0.9rem; padding:6px 0;
-    border-bottom:1px dashed var(--line); color:var(--muted);
-  }
-  .spec-row span:last-child{color:var(--cream); font-weight:600; font-variant-numeric: tabular-nums;}
-  .price-line{
-    display:flex; justify-content:space-between; align-items:baseline; margin-top:14px; padding-top:14px;
-    border-top:1px solid var(--line);
-  }
-  .price-line .label{color:var(--muted); font-size:0.86rem;}
-  .price-line .value{font-family:'Amiri', serif; font-size:1.6rem; color:var(--brass);}
-  .price-note{color:var(--muted); font-size:0.76rem; margin-top:4px;}
+.mode{
+ display:flex;
+ gap:4px;
+ padding:4px;
+ border:1px solid var(--line);
+ border-radius:10px;
+ background:rgba(16,22,19,.9);
+}
 
-  .cta{
-    display:block; width:100%; margin-top:16px; padding:13px; background:var(--brass); color:var(--ink);
-    border:none; font-family:'Cairo', sans-serif; font-weight:700; font-size:0.94rem; cursor:pointer;
-  }
-  .cta:hover{background:#57d693;}
-  .cta-msg{font-size:0.82rem; color:var(--muted); text-align:center; margin-top:8px; min-height:1.2em;}
+.mode button{
+ border:0;
+ background:transparent;
+ color:var(--dim);
+ border-radius:7px;
+ padding:7px 13px;
+ font-size:10px;
+}
 
+.mode button.active{
+ background:var(--mint2);
+ color:white;
+}
 
-  /* ---------- Professional responsive control panel ---------- */
-  .properties-resizer{
-    width:7px;
-    flex:0 0 7px;
-    position:relative;
-    cursor:col-resize;
-    background:rgba(255,255,255,0.015);
-    border-left:1px solid var(--line);
-    border-right:1px solid transparent;
-    z-index:20;
-    touch-action:none;
-  }
-  .properties-resizer::after{
-    content:'';
-    position:absolute;
-    top:50%; left:1px;
-    width:3px; height:56px;
-    transform:translateY(-50%);
-    border-radius:3px;
-    background:var(--line);
-  }
-  .properties-resizer:hover,
-  .properties-resizer.is-dragging{background:rgba(63,189,124,0.10);}
-  .properties-resizer:hover::after,
-  .properties-resizer.is-dragging::after{background:var(--brass);}
+.stage{
+ position:absolute;
+ inset:70px 0 70px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
 
-  .properties{
-    width:390px;
-    min-width:300px;
-    max-width:520px;
-  }
-  .outliner{
-    max-height:88px;
-    padding:9px 14px 8px 20px;
-  }
-  .outliner-title{margin-bottom:5px; font-size:.72rem;}
-  .outliner ul{display:grid;grid-template-columns:1fr 1fr;gap:2px 6px;}
-  .outliner li button{padding:5px 7px;font-size:.8rem;}
+.stage-inner{
+ width:min(950px,94%);
+ height:min(670px,90%);
+ position:relative;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
 
-  .prop-content{
-    padding:12px 14px 2px 18px;
-  }
-  .prop-content fieldset{
-    padding-bottom:13px;
-    margin-bottom:13px;
-  }
-  .prop-content legend{font-size:.86rem;padding-bottom:7px;}
-  .slider-row label{font-size:.82rem;margin-bottom:6px;}
-  .slider-control{gap:7px;}
-  .step-btn{width:32px;height:32px;font-size:1rem;}
-  input[type="range"]{padding:13px 0;}
-  input[type="range"]::-webkit-slider-thumb{width:20px;height:20px;margin-top:-8px;}
-  input[type="range"]::-moz-range-thumb{width:20px;height:20px;}
+#mainSvg{
+ width:100%;
+ height:100%;
+ overflow:visible;
+ transform-origin:center;
+}
 
-  /* Two compact columns make the dimensions easy to control without wasting panel height. */
-  .tab-pane[data-pane="object"]{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    align-content:start;
-  }
-  .tab-pane[data-pane="object"] fieldset{
-    min-width:0;
-    margin:0;
-    padding:11px 10px 10px;
-    border:1px solid var(--line);
-    border-radius:5px;
-    background:rgba(255,255,255,0.018);
-  }
-  .tab-pane[data-pane="object"] fieldset legend{
-    padding:0 4px 7px;
-  }
-  .tab-pane[data-pane="object"] #fieldShapeTable,
-  .tab-pane[data-pane="object"] #fieldShapeChair{
-    grid-column:1 / -1;
-  }
-  .tab-pane[data-pane="object"] .finish-row{gap:6px;}
-  .tab-pane[data-pane="object"] .finish-row button{
-    padding:7px 9px;
-    font-size:.78rem;
-  }
+#uploadedHost{
+ position:absolute;
+ inset:3%;
+ display:none;
+ align-items:center;
+ justify-content:center;
+}
 
-  .spec-panel{
-    padding:10px 14px 12px;
-    max-height:190px;
-    overflow-y:auto;
-    scrollbar-width:thin;
-    scrollbar-color:var(--line) transparent;
-  }
-  .spec-row{font-size:.78rem;padding:4px 0;}
-  .price-line{margin-top:8px;padding-top:8px;}
-  .price-line .value{font-size:1.35rem;}
-  .price-note{font-size:.68rem;line-height:1.45;}
-  .cta{margin-top:9px;padding:10px;font-size:.82rem;}
-  .cta-secondary{margin-top:6px;padding:8px;font-size:.78rem;}
-  .cta-msg{font-size:.72rem;}
+#uploadedHost.active{
+ display:flex;
+}
 
-  /* Give the designer more room on medium screens. */
-  @media (max-width:1200px) and (min-width:769px){
-    .blender-app{height:720px;}
-    .properties{width:430px;}
-    .viewport-tools{width:40px;}
-  }
+#uploadedHost svg{
+ width:100%;
+ height:100%;
+ overflow:visible;
+ transform-origin:center;
+}
 
-  @media (max-width:768px){
-    .properties-resizer{display:none;}
-    .properties{width:100%;min-width:0;max-width:none;}
-    .outliner{max-height:82px;}
-    .prop-content{max-height:none;}
-    .tab-pane[data-pane="object"]{grid-template-columns:1fr;}
-    .tab-pane[data-pane="object"] #fieldShapeTable,
-    .tab-pane[data-pane="object"] #fieldShapeChair{grid-column:auto;}
-    .spec-panel{max-height:none;}
-  }
+#editorOverlay{
+ position:absolute;
+ inset:0;
+ pointer-events:none;
+}
 
-  /* viewport region (left side) */
-  .viewport-region{
-    flex:1;
-    display:flex;
-    min-width:0;
-  }
-  .viewport-tools{
-    width:44px; flex-shrink:0; border-left:1px solid var(--line);
-    display:flex; flex-direction:column; align-items:center; padding:10px 0; gap:4px;
-    background:var(--raised);
-  }
-  .viewport-tools button{
-    width:32px; height:32px; background:transparent; border:1px solid transparent; color:var(--muted);
-    cursor:pointer; border-radius:3px; display:flex; align-items:center; justify-content:center;
-  }
-  .viewport-tools button svg{width:16px; height:16px;}
-  .viewport-tools button[aria-pressed="true"]{border-color:var(--line); color:var(--brass); background:rgba(200,155,60,0.1);}
-  .viewport-tools button:hover{color:var(--brass);}
-  .viewport-tools .divider{width:20px; height:1px; background:var(--line); margin:4px 0;}
+.selection-box{
+ position:absolute;
+ border:1.5px solid var(--mint);
+ background:rgba(47,217,196,.07);
+ pointer-events:none;
+ display:none;
+}
 
-  .viewport{
-    flex:1;
-    position:relative;
-    min-width:0;
-    background:
-      radial-gradient(140% 130% at 50% 100%, rgba(0,0,0,0.4), transparent 60%),
-      var(--raised);
-  }
-  .viewport canvas{width:100%; height:100%; display:block; cursor:grab; touch-action:none;}
-  .viewport canvas:active{cursor:grabbing;}
-  .gizmo{position:absolute; top:14px; left:14px; width:70px; height:70px; pointer-events:none;}
-  .gizmo text{user-select:none;}
-  .viewport-hint{
-    position:absolute; bottom:12px; left:50%; transform:translateX(-50%);
-    color:var(--muted); font-size:0.76rem; background:rgba(26,21,18,0.6);
-    padding:5px 14px; border-radius:20px; white-space:nowrap;
-  }
-  .three-fallback{
-    position:absolute; inset:0; display:none; align-items:center; justify-content:center;
-    color:var(--muted); font-size:0.9rem; text-align:center; padding:20px;
-  }
+.selection-box.show{
+ display:block;
+}
 
-  .viewport-loading{
-    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:12px; background:var(--raised); z-index:5; transition:opacity 0.35s ease;
-  }
-  .viewport-loading.hidden{opacity:0; pointer-events:none;}
-  .spinner{
-    width:34px; height:34px; border-radius:50%;
-    border:2px solid var(--line); border-top-color:var(--brass);
-    animation:spin 0.8s linear infinite;
-  }
-  @keyframes spin{ to{ transform:rotate(360deg); } }
-  .viewport-loading span{color:var(--muted); font-size:0.82rem;}
+.selection-label{
+ position:absolute;
+ top:-28px;
+ right:0;
+ background:var(--mint);
+ color:#06201c;
+ padding:4px 9px;
+ border-radius:5px;
+ font-size:9px;
+ font-weight:800;
+ white-space:nowrap;
+}
 
-  .cta-secondary{
-    display:block; width:100%; margin-top:8px; padding:11px; background:transparent; color:var(--cream);
-    border:1px solid var(--line); font-family:'Cairo', sans-serif; font-weight:600; font-size:0.88rem; cursor:pointer;
-  }
-  .cta-secondary:hover{border-color:var(--brass); color:var(--brass);}
+.handle-point{
+ width:11px;
+ height:11px;
+ background:var(--mint);
+ border:2px solid #06110e;
+ border-radius:50%;
+ pointer-events:auto;
+ display:none;
+ position:absolute;
+}
 
-  .values{padding:60px 0 70px; border-bottom:1px solid var(--line);}
-  .values-list{display:grid; grid-template-columns:repeat(3, 1fr); gap:0; border-top:1px solid var(--line);}
-  .values-list li{list-style:none; padding:26px 24px 26px 0; border-left:1px solid var(--line);}
-  .values-list li:last-child{border-left:none;}
-  .values-list h3{font-size:1.15rem; margin-bottom:8px; color:var(--amber);}
-  .values-list p{color:var(--muted); font-size:0.94rem; margin:0;}
+.selection-box.show .handle-point{
+ display:block;
+}
 
-  footer.site{
-    padding:30px 0 44px; color:var(--muted); font-size:0.85rem;
-    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
-  }
+.hp-tl{left:-6px;top:-6px}
+.hp-tr{right:-6px;top:-6px}
+.hp-bl{left:-6px;bottom:-6px}
+.hp-br{right:-6px;bottom:-6px}
 
-  @media (max-width: 1024px){
-    .blender-app{height:auto;}
-    .app-body{flex-direction:column;}
-    .properties{width:100%; border-left:none; border-top:1px solid var(--line); order:2;}
-    .viewport-region{order:1; flex-direction:column;}
-    .viewport-tools{
-      width:100%; flex-direction:row; border-left:none; border-bottom:1px solid var(--line);
-      justify-content:center; padding:8px 0; gap:10px;
-    }
-    .viewport-tools .divider{width:1px; height:22px; margin:0 2px;}
-    .viewport-tools button{width:40px; height:40px;}
-    .viewport{height:360px;}
-    .outliner{max-height:110px;}
-    .prop-content{max-height:340px;}
-    .values-list{grid-template-columns:1fr;}
-    .values-list li{border-left:none; border-bottom:1px solid var(--line);}
-    .values-list li:last-child{border-bottom:none;}
-  }
+.rotate-point{
+ width:11px;
+ height:11px;
+ background:white;
+ border:2px solid var(--mint);
+ border-radius:50%;
+ top:-40px;
+ left:50%;
+ transform:translateX(-50%);
+ pointer-events:auto;
+ display:none;
+ position:absolute;
+}
+
+.selection-box.show .rotate-point{
+ display:block;
+}
+
+.rotate-line{
+ position:absolute;
+ width:1px;
+ height:30px;
+ background:var(--mint);
+ left:50%;
+ top:-30px;
+}
+
+.canvas-bottom{
+ position:absolute;
+ left:24px;
+ right:24px;
+ bottom:20px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ z-index:20;
+}
+
+.help{
+ color:var(--dim);
+ font-size:10px;
+ max-width:65%;
+}
+
+.canvas-tools{
+ display:flex;
+ gap:7px;
+}
+
+.tool{
+ width:40px;
+ height:40px;
+ border:1px solid var(--line);
+ background:var(--panel2);
+ color:var(--muted);
+ border-radius:9px;
+ font-size:16px;
+}
+
+.tool:hover{
+ color:white;
+ border-color:var(--line2);
+}
+
+/* SIDE */
+
+.side{
+ background:var(--panel);
+ border-right:1px solid var(--line);
+ display:flex;
+ flex-direction:column;
+ min-width:0;
+}
+
+.side-head{
+ padding:20px 22px 15px;
+ border-bottom:1px solid var(--line);
+}
+
+.over{
+ color:var(--mint);
+ font-size:9px;
+ font-weight:800;
+ letter-spacing:1px;
+}
+
+.side-head h1{
+ font:800 20px Cairo;
+ margin:3px 0;
+}
+
+.side-head p{
+ margin:0;
+ color:var(--muted);
+ font-size:10.5px;
+}
+
+.tabs{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ padding:12px 15px;
+ gap:5px;
+ border-bottom:1px solid var(--line);
+}
+
+.tab{
+ border:1px solid var(--line);
+ background:var(--panel2);
+ color:var(--dim);
+ border-radius:8px;
+ padding:8px 4px;
+ font-size:9px;
+}
+
+.tab.active{
+ background:var(--mint3);
+ border-color:var(--mint3);
+ color:white;
+}
+
+.scroll{
+ flex:1;
+ overflow:auto;
+ padding:18px;
+}
+
+.panel{
+ display:none;
+}
+
+.panel.active{
+ display:block;
+ animation:fade .2s ease;
+}
+
+@keyframes fade{
+ from{opacity:0;transform:translateY(5px)}
+ to{opacity:1;transform:none}
+}
+
+/* BOXES */
+
+.upload-box,
+.selected-box{
+ background:var(--panel2);
+ border:1px solid var(--line);
+ border-radius:13px;
+ padding:15px;
+ margin-bottom:15px;
+}
+
+.upload-box{
+ background:
+ linear-gradient(
+  180deg,
+  rgba(47,217,196,.07),
+  rgba(47,217,196,.015)
+ );
+}
+
+.upload-box h3{
+ font:700 13px Cairo;
+ margin:0 0 4px;
+}
+
+.upload-box p{
+ color:var(--muted);
+ font-size:9.5px;
+ line-height:1.7;
+ margin:0 0 12px;
+}
+
+.upload-buttons{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:7px;
+}
+
+.upload-buttons button{
+ border:1px solid var(--line2);
+ background:var(--panel2);
+ color:var(--muted);
+ padding:9px;
+ border-radius:8px;
+ font-size:10px;
+}
+
+.upload-buttons .main{
+ background:var(--mint);
+ color:#06201c;
+ border-color:var(--mint);
+ font-weight:800;
+}
+
+.file-name{
+ margin-top:8px;
+ color:var(--dim);
+ font-size:9px;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+}
+
+/* TITLES */
+
+.title{
+ display:flex;
+ justify-content:space-between;
+ align-items:flex-end;
+ margin:18px 0 10px;
+}
+
+.title h2{
+ font:700 13px Cairo;
+ margin:0;
+}
+
+.title span{
+ color:var(--dim);
+ font-size:9px;
+}
+
+/* FIELDS */
+
+.fields{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+}
+
+.field{
+ background:var(--panel2);
+ border:1px solid var(--line);
+ border-radius:10px;
+ padding:9px 11px;
+}
+
+.field label{
+ display:block;
+ color:var(--dim);
+ font-size:8.5px;
+ margin-bottom:3px;
+}
+
+.field input,
+.field select{
+ width:100%;
+ background:none;
+ border:0;
+ outline:0;
+ color:var(--text);
+ font-size:14px;
+ font-family:Cairo;
+ font-weight:700;
+}
+
+/* RANGES */
+
+.range-row{
+ margin-top:10px;
+}
+
+.range-top{
+ display:flex;
+ justify-content:space-between;
+ color:var(--dim);
+ font-size:9px;
+ margin-bottom:4px;
+}
+
+.range-top b{
+ color:white;
+}
+
+input[type=range]{
+ width:100%;
+ accent-color:var(--mint);
+}
+
+/* SEGMENTS */
+
+.segment{
+ display:grid;
+ grid-template-columns:repeat(5,1fr);
+ gap:4px;
+ border:1px solid var(--line);
+ background:var(--panel2);
+ padding:4px;
+ border-radius:9px;
+}
+
+.segment button{
+ border:0;
+ background:transparent;
+ color:var(--dim);
+ padding:8px 3px;
+ border-radius:6px;
+ font-size:10px;
+}
+
+.segment button.active{
+ background:var(--mint2);
+ color:white;
+ font-weight:800;
+}
+
+/* STYLE */
+
+.styles{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:7px;
+}
+
+.style{
+ border:1px solid var(--line);
+ background:var(--panel2);
+ color:white;
+ border-radius:10px;
+ padding:10px;
+ text-align:right;
+}
+
+.style.active{
+ border-color:var(--mint);
+ background:rgba(47,217,196,.08);
+}
+
+.style strong{
+ display:block;
+ font-size:10.5px;
+}
+
+.style small{
+ color:var(--dim);
+ font-size:8px;
+}
+
+/* MATERIAL */
+
+.materials{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:7px;
+}
+
+.material{
+ border:1px solid var(--line);
+ background:var(--panel2);
+ border-radius:9px;
+ overflow:hidden;
+ padding:0;
+ color:var(--muted);
+}
+
+.material.active{
+ border-color:var(--mint);
+}
+
+.swatch{
+ height:38px;
+}
+
+.material span{
+ display:block;
+ padding:6px 2px;
+ font-size:8px;
+}
+
+/* HANDLES */
+
+.handle-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:7px;
+}
+
+.handle{
+ border:1px solid var(--line);
+ background:var(--panel2);
+ color:white;
+ border-radius:9px;
+ padding:11px 5px;
+ text-align:center;
+}
+
+.handle.active{
+ border-color:var(--mint);
+ background:var(--mint-wash);
+}
+
+.handle-icon{
+ height:35px;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+}
+
+.handle-name{
+ font-size:9px;
+}
+
+/* SELECTED */
+
+.selected-title{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:10px;
+}
+
+.selected-title strong{
+ font-size:11px;
+}
+
+.selected-title span{
+ color:var(--mint);
+ font-size:9px;
+}
+
+.transform-grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:7px;
+}
+
+.transform-field{
+ border:1px solid var(--line);
+ background:#101713;
+ border-radius:8px;
+ padding:7px;
+}
+
+.transform-field label{
+ display:block;
+ color:var(--dim);
+ font-size:8px;
+ margin-bottom:2px;
+}
+
+.transform-field input{
+ width:100%;
+ border:0;
+ outline:0;
+ background:none;
+ color:white;
+ font-size:11px;
+}
+
+.actions-grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:7px;
+ margin-top:9px;
+}
+
+.action{
+ border:1px solid var(--line);
+ background:var(--panel3);
+ color:var(--muted);
+ border-radius:8px;
+ padding:9px;
+ font-size:9px;
+}
+
+.action:hover{
+ color:white;
+ border-color:var(--line2);
+}
+
+.action.danger{
+ color:#ff8888;
+}
+
+.action.accent{
+ border-color:var(--mint3);
+ color:var(--mint);
+}
+
+.action.accent.on{
+ background:var(--mint2);
+ color:white;
+}
+
+/* ADDONS */
+
+.addons{
+ display:grid;
+ gap:7px;
+}
+
+.addon{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ border:1px solid var(--line);
+ background:var(--panel2);
+ border-radius:9px;
+ padding:10px;
+ color:white;
+}
+
+.addon-left{
+ display:flex;
+ align-items:center;
+ gap:8px;
+}
+
+.addon-icon{
+ width:29px;
+ height:29px;
+ display:grid;
+ place-items:center;
+ border-radius:7px;
+ background:var(--mint-wash);
+ color:var(--mint);
+}
+
+.addon strong{
+ display:block;
+ font-size:10px;
+}
+
+.addon small{
+ color:var(--dim);
+ font-size:8px;
+}
+
+.switch{
+ width:34px;
+ height:20px;
+ border-radius:30px;
+ background:var(--line2);
+ position:relative;
+}
+
+.switch:after{
+ content:"";
+ position:absolute;
+ width:14px;
+ height:14px;
+ top:3px;
+ right:3px;
+ background:white;
+ border-radius:50%;
+ transition:.2s;
+}
+
+.addon.on .switch{
+ background:var(--mint2);
+}
+
+.addon.on .switch:after{
+ right:17px;
+}
+
+/* INFO */
+
+.info{
+ background:rgba(47,217,196,.05);
+ border:1px solid var(--mint3);
+ border-radius:11px;
+ padding:11px;
+ color:var(--muted);
+ font-size:9px;
+ line-height:1.8;
+ margin-top:12px;
+}
+
+.info.warn{
+ background:rgba(255,140,120,.06);
+ border-color:#7a3a34;
+ color:#ffb3a8;
+}
+
+/* FOOTER */
+
+.footer{
+ border-top:1px solid var(--line);
+ padding:14px 18px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.price small{
+ color:var(--dim);
+ display:block;
+ font-size:8px;
+}
+
+.price strong{
+ font:800 20px Cairo;
+ color:var(--mint);
+}
+
+.footer-buttons{
+ display:flex;
+ gap:6px;
+}
+
+.footer button{
+ border:0;
+ border-radius:8px;
+ padding:10px 13px;
+ font-size:9px;
+}
+
+.prev{
+ background:var(--panel2);
+ color:var(--muted);
+}
+
+.next{
+ background:var(--mint);
+ color:#06201c;
+ font-weight:800;
+}
+
+/* TOAST */
+
+.toast{
+ position:fixed;
+ top:85px;
+ left:50%;
+ transform:translate(-50%,-15px);
+ opacity:0;
+ pointer-events:none;
+ z-index:1000;
+ background:var(--panel3);
+ border:1px solid var(--line2);
+ border-radius:9px;
+ padding:10px 18px;
+ font-size:10px;
+ transition:.25s;
+ max-width:80vw;
+ text-align:center;
+}
+
+.toast.show{
+ opacity:1;
+ transform:translate(-50%,0);
+}
+
+/* MODAL */
+
+.modal{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.72);
+ backdrop-filter:blur(10px);
+ display:none;
+ align-items:center;
+ justify-content:center;
+ z-index:2000;
+ padding:20px;
+}
+
+.modal.show{
+ display:flex;
+}
+
+.modal-box{
+ width:min(470px,100%);
+ background:var(--panel);
+ border:1px solid var(--line);
+ border-radius:15px;
+ padding:22px;
+ box-shadow:var(--shadow);
+}
+
+.modal-box h2{
+ margin:0;
+ font:800 19px Cairo;
+}
+
+.modal-box p{
+ margin:3px 0 15px;
+ color:var(--muted);
+ font-size:10px;
+}
+
+.modal-field{
+ margin-bottom:9px;
+}
+
+.modal-field label{
+ display:block;
+ color:var(--dim);
+ font-size:9px;
+ margin-bottom:4px;
+}
+
+.modal-field input,
+.modal-field textarea{
+ width:100%;
+ background:var(--panel2);
+ border:1px solid var(--line);
+ border-radius:8px;
+ color:white;
+ padding:10px;
+ outline:0;
+}
+
+.modal-field textarea{
+ height:70px;
+ resize:none;
+}
+
+.modal-actions{
+ display:flex;
+ gap:7px;
+ margin-top:13px;
+}
+
+.modal-actions button{
+ flex:1;
+ border:0;
+ border-radius:8px;
+ padding:10px;
+}
+
+.cancel{
+ background:var(--panel2);
+ color:var(--muted);
+}
+
+.send{
+ background:var(--mint);
+ color:#06201c;
+ font-weight:800;
+}
+
+@media(max-width:1050px){
+
+ .layout{
+  grid-template-columns:1fr;
+  height:auto;
+ }
+
+ .canvas-area{
+  height:570px;
+ }
+
+ .side{
+  border-top:1px solid var(--line);
+  border-right:0;
+ }
+
+}
+
+@media(max-width:620px){
+
+ .header{
+  padding:0 12px;
+ }
+
+ .live{
+  display:none;
+ }
+
+ .header-actions .hbtn:not(.primary){
+  display:none;
+ }
+
+ .canvas-area{
+  height:460px;
+ }
+
+ .stage{
+  inset:60px 0 60px;
+ }
+
+}
 </style>
 </head>
+
 <body>
 
-<header class="site">
-  <div class="wrap">
-    <div class="brand-row">
-      <div class="logo-mark" aria-hidden="true">D</div>
-      <div class="brand">أساس</div>
-    </div>
-    <div class="brand-tag">ورشة أثاث مصنوع حسب الطلب</div>
-  </div>
+<div class="app">
+
+<header class="header">
+
+ <div class="logo">
+
+  <svg viewBox="0 0 100 100">
+   <circle cx="50" cy="50" r="50" fill="#0A0F0D"/>
+   <path
+    d="M38 26 H52 C68 26 79 37 79 50 C79 63 68 74 52 74 H38 Z"
+    fill="#12897A"
+   />
+   <path
+    d="M46 26 H52 C68 26 79 37 79 50 C79 63 68 74 52 74 H46 C60 70 68 61 68 50 C68 39 60 30 46 26 Z"
+    fill="#0A0F0D"
+   />
+  </svg>
+
+  <div class="logo-name">دار<i>.</i></div>
+
+ </div>
+
+ <div class="live">
+  <span class="live-dot"></span>
+  مصمم الخزائن 2D يعمل مباشرة
+ </div>
+
+ <div class="header-actions">
+  <button class="hbtn" id="saveBtn">حفظ التصميم</button>
+  <button class="hbtn" id="resetBtn">إعادة</button>
+  <button class="hbtn primary" id="quoteBtn">طلب عرض سعر</button>
+ </div>
+
 </header>
 
-<section class="hero">
-  <div class="wrap">
-    <h1>قطعتك، بمقاسك، من الفكرة إلى الورشة</h1>
-    <p>اختر النوع، الشكل، الخشب، ونمط الأرجل — ودوّر القطعة بنفسك في مجسم ثلاثي الأبعاد زي أي محرر تصميم احترافي، شوفها من كل زاوية قبل ما تتصنع. صمّم قطعتك وشوفها ثلاثية الأبعاد قبل إرسال طلب التنفيذ للورشة.</p>
-    <a href="#configurator" class="go">جرّب المصمم</a>
-  </div>
-</section>
 
-<section class="configurator" id="configurator">
-  <div class="wrap">
-    <div class="section-title">
-      <h2>صمّم قطعتك</h2>
-      <div class="rule"></div>
+<div class="layout">
+
+
+<section class="canvas-area">
+
+ <div class="canvas-top">
+
+  <div class="path">
+   دار / الخزائن /
+   <b id="modelTitle">خزانة 4 أبواب</b>
+  </div>
+
+  <div class="mode">
+   <button class="active">2D</button>
+   <button id="mode3d">3D</button>
+  </div>
+
+ </div>
+
+
+ <div class="stage">
+
+  <div class="stage-inner">
+
+   <!--
+      المشهد الرئيسي
+      الخزانة الحقيقية يتم بناؤها هنا كـ SVG
+   -->
+
+   <svg id="mainSvg" viewBox="0 0 1000 700">
+
+    <defs>
+
+     <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#111a15"/>
+      <stop offset="1" stop-color="#18241e"/>
+     </linearGradient>
+
+     <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#202b25"/>
+      <stop offset="1" stop-color="#080d0b"/>
+     </linearGradient>
+
+     <linearGradient id="woodLight" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".5" stop-color="#eeeeea"/>
+      <stop offset="1" stop-color="#c9cbc7"/>
+     </linearGradient>
+
+     <filter id="shadow">
+      <feGaussianBlur stdDeviation="12"/>
+     </filter>
+
+    </defs>
+
+
+    <!-- غرفة -->
+
+    <rect
+     x="0"
+     y="0"
+     width="1000"
+     height="500"
+     fill="url(#wall)"
+    />
+
+    <rect
+     x="0"
+     y="500"
+     width="1000"
+     height="200"
+     fill="url(#floor)"
+    />
+
+    <line
+     x1="0"
+     y1="500"
+     x2="1000"
+     y2="500"
+     stroke="#35453d"
+     stroke-width="2"
+    />
+
+
+    <!-- ظل الخزانة -->
+
+    <ellipse
+     id="wardrobeShadow"
+     cx="500"
+     cy="570"
+     rx="320"
+     ry="35"
+     fill="#000"
+     opacity=".55"
+     filter="url(#shadow)"
+    />
+
+
+    <!-- الخزانة -->
+
+    <g
+     id="wardrobeRoot"
+     data-editor-element="true"
+      data-name="الخزانة"
+    ></g>
+
+   </svg>
+
+
+   <!-- SVG خارجي -->
+
+   <div id="uploadedHost"></div>
+
+
+   <!-- تحديد العنصر -->
+
+   <div id="editorOverlay">
+
+    <div id="selectionBox" class="selection-box">
+
+     <div class="selection-label" id="selectionLabel">
+      عنصر
+     </div>
+
+     <div class="handle-point hp-tl"></div>
+     <div class="handle-point hp-tr"></div>
+     <div class="handle-point hp-bl"></div>
+     <div class="handle-point hp-br"></div>
+
+     <div class="rotate-line"></div>
+     <div class="rotate-point"></div>
+
     </div>
 
-    <div class="blender-app" id="app">
-      <div class="app-topbar">
-        <div class="seg-toggle type-toggle" role="group" aria-label="نوع القطعة">
-          <button type="button" data-type="table" aria-pressed="true">طاولة</button>
-          <button type="button" data-type="bench" aria-pressed="false">بنش</button>
-          <button type="button" data-type="chair" aria-pressed="false">كرسي</button>
-          <button type="button" data-type="desk" aria-pressed="false">مكتب</button>
-          <button type="button" data-type="tvStand" aria-pressed="false">وحدة تلفزيون</button>
-          <button type="button" data-type="bookshelf" aria-pressed="false">مكتبة</button>
-          <button type="button" data-type="wardrobe" aria-pressed="false">دولاب ملابس</button>
-          <button type="button" data-type="nightstand" aria-pressed="false">كومودينو</button>
-          <button type="button" data-type="console" aria-pressed="false">كونسول</button>
-          <button type="button" data-type="shoeRack" aria-pressed="false">جزامة</button>
-          <button type="button" data-type="barStool" aria-pressed="false">كرسي بار</button>
-          <button type="button" data-type="loungeChair" aria-pressed="false">كرسي استرخاء</button>
-          <button type="button" data-type="vanity" aria-pressed="false">تسريحة</button>
-          <button type="button" data-type="sideboard" aria-pressed="false">بوفيه</button>
-          <button type="button" data-type="plantStand" aria-pressed="false">ستاند نباتات</button>
-          <button type="button" data-type="wallShelf" aria-pressed="false">رف حائط</button>
-          <button type="button" data-type="bedroom" aria-pressed="false">غرفة نوم رئيسية</button>
-          <button type="button" data-type="kitchenL" aria-pressed="false">مطبخ حرف L</button>
-          <button type="button" data-type="kitchenIsland" aria-pressed="false">مطبخ بجزيرة</button>
-        </div>
-        <div class="seg-toggle shading-toggle" role="group" aria-label="طريقة العرض">
-          <button type="button" data-shade="solid" aria-pressed="true" title="مجسّم">
-            <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="currentColor"/></svg>
-          </button>
-          <button type="button" data-shade="wire" aria-pressed="false" title="شبكي">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="10" cy="10" r="7"/><path d="M3 10h14M10 3v14M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg>
-          </button>
-        </div>
-      </div>
+   </div>
 
-      <div class="app-body">
-        <aside class="properties">
-          <div class="outliner">
-            <div class="outliner-title">مكوّنات القطعة</div>
-            <ul id="outlinerList"></ul>
-          </div>
-
-          <div class="prop-tabs" role="tablist" aria-label="خصائص القطعة">
-            <button type="button" data-tab="object" aria-pressed="true" title="الشكل والمقاس">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M10 2 L17 5.5 V13.5 L10 17 L3 13.5 V5.5 Z"/><path d="M3 5.5 L10 9 L17 5.5"/><path d="M10 9 V17"/></svg>
-            </button>
-            <button type="button" data-tab="material" aria-pressed="false" title="الخشب والتشطيب">
-              <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="currentColor" opacity="0.85"/><circle cx="7.4" cy="7" r="2.3" fill="#fff" opacity="0.4"/></svg>
-            </button>
-            <button type="button" data-tab="modifiers" aria-pressed="false" title="الأرجل والتفاصيل">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 3.8a3 3 0 0 0-4.1 3.6L4 12.5V16h3.5l5.1-5.1a3 3 0 0 0 3.6-4.1l-2 2-1.7-1.7z"/></svg>
-            </button>
-          </div>
-
-          <div class="prop-content">
-            <div class="tab-pane" data-pane="object">
-              <fieldset id="fieldShapeTable">
-                <legend>شكل السطح</legend>
-                <div class="finish-row" id="tableShapeRow"></div>
-              </fieldset>
-              <fieldset id="fieldShapeChair">
-                <legend>شكل المقعد</legend>
-                <div class="finish-row" id="chairShapeRow"></div>
-              </fieldset>
-              <fieldset id="fieldLength">
-                <legend id="lengthLegend">الطول</legend>
-                <div class="slider-row">
-                  <label for="lengthSlider"><span id="lengthLabel">المقاس</span> <output id="lengthOut"></output></label>
-                  <div class="slider-control">
-                    <button type="button" class="step-btn" data-step-for="lengthSlider" data-dir="-1" aria-label="تقليل">−</button>
-                    <input type="range" id="lengthSlider" min="80" max="240" step="5" value="140">
-                    <button type="button" class="step-btn" data-step-for="lengthSlider" data-dir="1" aria-label="زيادة">+</button>
-                  </div>
-                </div>
-              </fieldset>
-              <fieldset>
-                <legend id="widthLegend">العرض</legend>
-                <div class="slider-row">
-                  <label for="widthSlider"><span id="widthLabel">عرض القطعة</span> <output id="widthOut"></output></label>
-                  <div class="slider-control">
-                    <button type="button" class="step-btn" data-step-for="widthSlider" data-dir="-1" aria-label="تقليل">−</button>
-                    <input type="range" id="widthSlider" min="30" max="120" step="2" value="88">
-                    <button type="button" class="step-btn" data-step-for="widthSlider" data-dir="1" aria-label="زيادة">+</button>
-                  </div>
-                </div>
-              </fieldset>
-              <fieldset>
-                <legend id="depthLegend">العمق</legend>
-                <div class="slider-row">
-                  <label for="depthSlider"><span id="depthLabel">عمق القطعة</span> <output id="depthOut"></output></label>
-                  <div class="slider-control">
-                    <button type="button" class="step-btn" data-step-for="depthSlider" data-dir="-1" aria-label="تقليل">−</button>
-                    <input type="range" id="depthSlider" min="30" max="120" step="2" value="88">
-                    <button type="button" class="step-btn" data-step-for="depthSlider" data-dir="1" aria-label="زيادة">+</button>
-                  </div>
-                </div>
-              </fieldset>
-              <fieldset>
-                <legend>السماكة</legend>
-                <div class="slider-row">
-                  <label for="thicknessSlider">سُمك الخشب <output id="thicknessOut"></output></label>
-                  <div class="slider-control">
-                    <button type="button" class="step-btn" data-step-for="thicknessSlider" data-dir="-1" aria-label="تقليل">−</button>
-                    <input type="range" id="thicknessSlider" min="15" max="40" step="1" value="22">
-                    <button type="button" class="step-btn" data-step-for="thicknessSlider" data-dir="1" aria-label="زيادة">+</button>
-                  </div>
-                </div>
-              </fieldset>
-              <fieldset id="fieldEdge">
-                <legend>استدارة الحواف</legend>
-                <div class="slider-row">
-                  <label for="edgeSlider">درجة الاستدارة <output id="edgeOut"></output></label>
-                  <div class="slider-control">
-                    <button type="button" class="step-btn" data-step-for="edgeSlider" data-dir="-1" aria-label="تقليل">−</button>
-                    <input type="range" id="edgeSlider" min="0" max="30" step="1" value="6">
-                    <button type="button" class="step-btn" data-step-for="edgeSlider" data-dir="1" aria-label="زيادة">+</button>
-                  </div>
-                </div>
-              </fieldset>
-            </div>
-
-            <div class="tab-pane" data-pane="material" style="display:none">
-              <fieldset id="fieldWood">
-                <legend>نوع الخشب</legend>
-                <div class="swatches" id="woodSwatches"></div>
-              </fieldset>
-              <fieldset id="fieldFinish">
-                <legend>التشطيب / اللون</legend>
-                <div class="finish-row" id="finishRow"></div>
-              </fieldset>
-            </div>
-
-            <div class="tab-pane" data-pane="modifiers" style="display:none">
-              <fieldset id="fieldLegs">
-                <legend>نمط الأرجل</legend>
-                <div class="finish-row leg-grid" id="legStyleRow"></div>
-              </fieldset>
-              <fieldset id="backCurveField">
-                <legend>ميل ظهر الكرسي</legend>
-                <div class="slider-row">
-                  <label for="backCurveSlider">قوس المسند <output id="backCurveOut"></output></label>
-                  <div class="slider-control">
-                    <button type="button" class="step-btn" data-step-for="backCurveSlider" data-dir="-1" aria-label="تقليل">−</button>
-                    <input type="range" id="backCurveSlider" min="0" max="30" step="1" value="10">
-                    <button type="button" class="step-btn" data-step-for="backCurveSlider" data-dir="1" aria-label="زيادة">+</button>
-                  </div>
-                </div>
-              </fieldset>
-              <fieldset id="armrestField">
-                <legend>مسند الذراع</legend>
-                <div class="finish-row" id="armrestRow"></div>
-              </fieldset>
-            </div>
-          </div>
-
-          <div class="spec-panel">
-            <div class="spec-row"><span>القطعة</span><span id="specType">طاولة</span></div>
-            <div class="spec-row"><span>الشكل</span><span id="specShape">مستطيلة</span></div>
-            <div class="spec-row"><span>الخشب</span><span id="specWood">بلوط</span></div>
-            <div class="spec-row"><span>التشطيب</span><span id="specFinish">طبيعي</span></div>
-            <div class="spec-row"><span>نمط الأرجل</span><span id="specLeg">مدببة</span></div>
-            <div class="spec-row" id="specLengthRow"><span id="specLengthLabel">الطول</span><span id="specLength">140 سم</span></div>
-            <div class="spec-row"><span id="specWidthLabel">العرض</span><span id="specWidth">88 سم</span></div>
-            <div class="spec-row"><span id="specDepthLabel">العمق</span><span id="specDepth">88 سم</span></div>
-            <div class="spec-row"><span>السماكة</span><span id="specThickness">22 مم</span></div>
-            <div class="price-line">
-              <span class="label">السعر التقديري</span>
-              <span class="value" id="priceOut">$0</span>
-            </div>
-            <div class="price-note">تقدير أولي لأغراض العرض — الأسعار الفعلية تُحدَّد بعد المعاينة.</div>
-            <button class="cta" id="ctaBtn">تواصل عبر واتساب بخصوص هذا التصميم</button>
-            <button class="cta-secondary" id="shareBtn">نسخ رابط هذا التصميم</button>
-            <div class="cta-msg" id="ctaMsg"></div>
-          </div>
-        </aside>
-
-        <div class="properties-resizer" id="propertiesResizer" role="separator" aria-label="تغيير عرض لوحة التحكم" tabindex="0"></div>
-
-        <div class="viewport-region">
-          <div class="viewport-tools" role="group" aria-label="زوايا الكاميرا">
-            <button type="button" data-view="persp" aria-pressed="true" title="منظور حر">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M4 8a6 6 0 1 1 1 6"/><path d="M4 4v4h4"/></svg>
-            </button>
-            <div class="divider"></div>
-            <button type="button" data-view="front" aria-pressed="false" title="أمامي">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5" y="3" width="10" height="14" rx="1"/></svg>
-            </button>
-            <button type="button" data-view="side" aria-pressed="false" title="جانبي">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="8" y="3" width="4" height="14" rx="1"/></svg>
-            </button>
-            <button type="button" data-view="top" aria-pressed="false" title="علوي">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="8" width="14" height="4" rx="1"/></svg>
-            </button>
-          </div>
-
-          <div class="viewport" id="viewport">
-            <canvas id="three-canvas"></canvas>
-            <svg class="gizmo" id="gizmo" viewBox="0 0 70 70"></svg>
-            <div class="viewport-hint">دوّر بالسحب — كبّر/صغّر بالسكرول أو بإصبعين — دوس على أي جزء تختاره</div>
-            <div class="three-fallback" id="threeFallback">تعذّر تحميل محرك العرض الثلاثي الأبعاد. تأكد من الاتصال بالإنترنت وأعد تحميل الصفحة.</div>
-            <div class="viewport-loading" id="viewportLoading">
-              <div class="spinner"></div>
-              <span>جارٍ تجهيز المجسم ثلاثي الأبعاد…</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
+
+ </div>
+
+
+ <div class="canvas-bottom">
+
+  <div class="help" id="helpText">
+   اضغط على أي باب أو جزء من الخزانة لتحديده وتعديله
+  </div>
+
+  <div class="canvas-tools">
+   <button class="tool" id="zoomIn">+</button>
+   <button class="tool" id="zoomOut">−</button>
+   <button class="tool" id="zoomReset">↻</button>
+  </div>
+
+ </div>
+
 </section>
 
-<section class="values">
-  <div class="wrap">
-    <div class="section-title">
-      <h2>ليه أساس</h2>
-      <div class="rule"></div>
+
+
+<aside class="side">
+
+
+ <div class="side-head">
+
+  <div class="over">
+   DAR DESIGN STUDIO
+  </div>
+
+  <h1>
+   مصمم الخزانة 2D
+  </h1>
+
+  <p>
+   صمّم خزانة حقيقية وعدّل كل جزء منها مباشرة.
+  </p>
+
+ </div>
+
+
+ <div class="tabs">
+
+  <button class="tab active" data-tab="model">
+   الموديل
+  </button>
+
+  <button class="tab" data-tab="doors">
+   الأبواب
+  </button>
+
+  <button class="tab" data-tab="appearance">
+   الشكل
+  </button>
+
+  <button class="tab" data-tab="selected">
+   العنصر
+  </button>
+
+ </div>
+
+
+
+ <div class="scroll">
+
+
+ <!-- ================= MODEL ================= -->
+
+ <section class="panel active" data-panel="model">
+
+
+  <div class="upload-box">
+
+   <h3>
+    رفع موديل SVG
+   </h3>
+
+   <p>
+    يمكنك رفع خزانة SVG حقيقية، ثم تحديد أي جزء منها وجعله منطقة أبواب قابلة للتحكم.
+   </p>
+
+   <div class="upload-buttons">
+
+    <button class="main" id="uploadBtn">
+     رفع SVG
+    </button>
+
+    <button id="removeBtn">
+     إزالة
+    </button>
+
+   </div>
+
+   <input
+    id="svgFile"
+    type="file"
+    accept=".svg,image/svg+xml"
+    hidden
+   >
+
+   <div class="file-name" id="fileName">
+    لم يتم رفع ملف
+   </div>
+
+  </div>
+
+
+
+  <div class="title">
+   <h2>أبعاد الخزانة</h2>
+   <span>المقاس الكلي</span>
+  </div>
+
+
+  <div class="fields">
+
+   <div class="field">
+
+    <label>العرض — سم</label>
+
+    <input
+     id="widthInput"
+     type="number"
+     min="120"
+     max="400"
+     value="240"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>الارتفاع — سم</label>
+
+    <input
+     id="heightInput"
+     type="number"
+     min="180"
+     max="350"
+     value="240"
+    >
+
+   </div>
+
+  </div>
+
+
+  <div class="range-row">
+
+   <div class="range-top">
+    <span>العرض</span>
+    <b id="widthValue">240 سم</b>
+   </div>
+
+   <input
+    id="widthRange"
+    type="range"
+    min="120"
+    max="400"
+    value="240"
+   >
+
+  </div>
+
+
+  <div class="range-row">
+
+   <div class="range-top">
+    <span>الارتفاع</span>
+    <b id="heightValue">240 سم</b>
+   </div>
+
+   <input
+    id="heightRange"
+    type="range"
+    min="180"
+    max="350"
+    value="240"
+   >
+
+  </div>
+
+
+  <div class="info">
+
+   <b>الخزانة الافتراضية:</b><br>
+
+   هذه خزانة 4 أبواب حقيقية مبنية كعناصر SVG منفصلة.
+   كل باب له مساحة مستقلة، ويمكنك تغيير العدد والتوزيع والشكل والخامة والمقبض.
+
+   <br><br>
+
+   <b>الخزانة المرفوعة:</b><br>
+
+   ارفع SVG، ثم اضغط على الجزء الذي يمثل واجهة الباب،
+   وبعدها من تبويب "العنصر" اضغط "تعيين كمنطقة أبواب".
+
+  </div>
+
+ </section>
+
+
+
+ <!-- ================= DOORS ================= -->
+
+ <section class="panel" data-panel="doors">
+
+
+  <div class="title">
+   <h2>عدد الأبواب</h2>
+   <span id="doorsText">4 أبواب</span>
+  </div>
+
+
+  <div class="segment" id="doorGroup">
+
+   <button data-count="2">2</button>
+   <button data-count="3">3</button>
+   <button class="active" data-count="4">4</button>
+   <button data-count="5">5</button>
+   <button data-count="6">6</button>
+
+  </div>
+
+
+  <div class="title">
+   <h2>توزيع الأبواب</h2>
+   <span>شكل الواجهة</span>
+  </div>
+
+
+  <div class="styles" id="layoutGroup">
+
+   <button class="style active" data-layout="equal">
+
+    <strong>
+     متساوية
+    </strong>
+
+    <small>
+     4 أبواب بنفس العرض
+    </small>
+
+   </button>
+
+
+   <button class="style" data-layout="wide">
+
+    <strong>
+     وسط أعرض
+    </strong>
+
+    <small>
+     الأبواب الوسطى أكبر
+    </small>
+
+   </button>
+
+
+   <button class="style" data-layout="classic">
+
+    <strong>
+     كلاسيكي
+    </strong>
+
+    <small>
+     تقسيم متوازن
+    </small>
+
+   </button>
+
+
+   <button class="style" data-layout="asymmetric">
+
+    <strong>
+     غير متماثل
+    </strong>
+
+    <small>
+     تصميم عصري
+    </small>
+
+   </button>
+
+  </div>
+
+
+  <div class="info">
+
+   عند تغيير عدد الأبواب، يتم إنشاء الأبواب من جديد داخل جسم الخزانة،
+   مع المحافظة على الأبعاد والخامة والشكل والمقابض.
+
+  </div>
+
+ </section>
+
+
+
+ <!-- ================= APPEARANCE ================= -->
+
+ <section class="panel" data-panel="appearance">
+
+
+  <div class="title">
+   <h2>شكل الباب</h2>
+   <span>تصميم الواجهة</span>
+  </div>
+
+
+  <div class="styles" id="styleGroup">
+
+
+   <button class="style active" data-style="flat">
+
+    <strong>مسطح</strong>
+    <small>واجهة حديثة</small>
+
+   </button>
+
+
+   <button class="style" data-style="panel">
+
+    <strong>كلاسيكي</strong>
+    <small>إطار داخلي</small>
+
+   </button>
+
+
+   <button class="style" data-style="fluted">
+
+    <strong>مضلع رأسي</strong>
+    <small>خطوط رأسية</small>
+
+   </button>
+
+
+   <button class="style" data-style="horizontal">
+
+    <strong>مضلع أفقي</strong>
+    <small>خطوط أفقية</small>
+
+   </button>
+
+
+   <button class="style" data-style="glass">
+
+    <strong>زجاج</strong>
+    <small>زجاج داكن</small>
+
+   </button>
+
+
+   <button class="style" data-style="mirror">
+
+    <strong>مرايا</strong>
+    <small>واجهة عاكسة</small>
+
+   </button>
+
+  </div>
+
+
+
+  <div class="title">
+   <h2>الخامة</h2>
+   <span>اللون</span>
+  </div>
+
+
+  <div class="materials" id="materialGroup">
+
+
+   <button class="material active" data-color="#EDEDE9">
+
+    <div class="swatch" style="background:#EDEDE9"></div>
+    <span>أبيض</span>
+
+   </button>
+
+
+   <button class="material" data-color="#1B1D1C">
+
+    <div class="swatch" style="background:#1B1D1C"></div>
+    <span>أسود</span>
+
+   </button>
+
+
+   <button class="material" data-color="#3B3F3E">
+
+    <div class="swatch" style="background:#3B3F3E"></div>
+    <span>غرافيت</span>
+
+   </button>
+
+
+   <button class="material" data-color="#D8C9AE">
+
+    <div class="swatch" style="background:#D8C9AE"></div>
+    <span>بيج</span>
+
+   </button>
+
+
+   <button class="material" data-color="#A9754A">
+
+    <div class="swatch" style="background:#A9754A"></div>
+    <span>بلوط</span>
+
+   </button>
+
+
+   <button class="material" data-color="#6B4226">
+
+    <div class="swatch" style="background:#6B4226"></div>
+    <span>جوز</span>
+
+   </button>
+
+
+   <button class="material" data-color="#1F3A52">
+
+    <div class="swatch" style="background:#1F3A52"></div>
+    <span>كحلي</span>
+
+   </button>
+
+
+   <button class="material" data-color="#12897A">
+
+    <div class="swatch" style="background:#12897A"></div>
+    <span>تركواز</span>
+
+   </button>
+
+  </div>
+
+
+
+  <div class="title">
+   <h2>المقبض</h2>
+   <span>لكل الأبواب</span>
+  </div>
+
+
+  <div class="handle-grid" id="handleGroup">
+
+
+   <button class="handle active" data-handle="bar">
+
+    <div class="handle-icon">
+
+     <span
+      style="
+       display:block;
+       width:4px;
+       height:29px;
+       border-radius:5px;
+       background:#2FD9C4
+      "
+     ></span>
+
     </div>
-    <ul class="values-list">
-      <li>
-        <h3>قياس بدقة</h3>
-        <p>كل قطعة بتتفصل على المقاس المطلوب، من غير تسويات لاحقة.</p>
-      </li>
-      <li>
-        <h3>خشب مختار</h3>
-        <p>أنواع خشب متنوعة تناسب الاستخدام اليومي والميزانية.</p>
-      </li>
-      <li>
-        <h3>من التصميم للتنفيذ</h3>
-        <p>تشوف قطعتك بمجسم ثلاثي الأبعاد قبل ما تتصنع، وتتابع مراحل التنفيذ خطوة بخطوة.</p>
-      </li>
-    </ul>
-  </div>
-</section>
 
-<footer class="site">
-  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:10px;">
-    <span>أساس — أثاث مصنوع حسب الطلب</span>
-    <span>٢٠٢٦</span>
-  </div>
-</footer>
+    <div class="handle-name">
+     عمودي
+    </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+   </button>
+
+
+   <button class="handle" data-handle="knob">
+
+    <div class="handle-icon">
+
+     <span
+      style="
+       display:block;
+       width:14px;
+       height:14px;
+       border-radius:50%;
+       background:#2FD9C4
+      "
+     ></span>
+
+    </div>
+
+    <div class="handle-name">
+     دائري
+    </div>
+
+   </button>
+
+
+   <button class="handle" data-handle="hidden">
+
+    <div class="handle-icon">
+
+     <span
+      style="
+       display:block;
+       width:22px;
+       height:3px;
+       border-radius:4px;
+       background:#2FD9C4
+      "
+     ></span>
+
+    </div>
+
+    <div class="handle-name">
+     مخفي
+    </div>
+
+   </button>
+
+  </div>
+
+ </section>
+
+
+
+ <!-- ================= SELECTED ================= -->
+
+ <section class="panel" data-panel="selected">
+
+
+  <div class="selected-box">
+
+   <div class="selected-title">
+
+    <strong>
+     العنصر المحدد
+    </strong>
+
+    <span id="selectedName">
+     لا يوجد
+    </span>
+
+   </div>
+
+
+   <div class="transform-grid">
+
+    <div class="transform-field">
+
+     <label>X</label>
+
+     <input
+      id="posX"
+      type="number"
+      step="1"
+     >
+
+    </div>
+
+
+    <div class="transform-field">
+
+     <label>Y</label>
+
+     <input
+      id="posY"
+      type="number"
+      step="1"
+     >
+
+    </div>
+
+
+    <div class="transform-field">
+
+     <label>العرض</label>
+
+     <input
+      id="elementWidth"
+      type="number"
+      step="1"
+     >
+
+    </div>
+
+
+    <div class="transform-field">
+
+     <label>الارتفاع</label>
+
+     <input
+      id="elementHeight"
+      type="number"
+      step="1"
+     >
+
+    </div>
+
+   </div>
+
+
+   <div class="actions-grid">
+
+    <button
+     class="action accent"
+     id="markDoorBtn"
+    >
+     تعيين كمنطقة أبواب
+    </button>
+
+
+    <button
+     class="action"
+     id="duplicateBtn"
+    >
+     نسخ العنصر
+    </button>
+
+
+    <button
+     class="action"
+     id="frontBtn"
+    >
+     إلى الأمام
+    </button>
+
+
+    <button
+     class="action"
+     id="backBtn"
+    >
+     إلى الخلف
+    </button>
+
+
+    <button
+     class="action danger"
+     id="deleteBtn"
+    >
+     حذف العنصر
+    </button>
+
+
+    <button
+     class="action danger"
+     id="unmarkDoorBtn"
+     style="display:none"
+    >
+     إلغاء منطقة الأبواب
+    </button>
+
+   </div>
+
+  </div>
+
+
+  <div class="info">
+
+   <b>التحكم المباشر:</b><br>
+
+   اضغط على الباب أو جسم الخزانة لتحديده.
+   بعد التحديد تستطيع تغيير X وY والعرض والارتفاع.
+
+   <br><br>
+
+   ويمكنك سحب العنصر بالماوس مباشرة داخل المعاينة.
+
+   <br><br>
+
+   <b>منطقة الأبواب:</b><br>
+
+   في حالة رفع SVG خارجي،
+   حدد واجهة الباب ثم اضغط "تعيين كمنطقة أبواب".
+   بعدها سيقوم النظام بإنشاء الأبواب داخل نفس المنطقة.
+
+  </div>
+
+ </section>
+
+
+
+ <!-- ADDONS -->
+
+ <div class="title">
+  <h2>إضافات الخزانة</h2>
+  <span>اختيارية</span>
+ </div>
+
+
+ <div class="addons">
+
+
+  <button class="addon on" data-addon="led">
+
+   <div class="addon-left">
+
+    <div class="addon-icon">
+     ✦
+    </div>
+
+    <div>
+     <strong>إضاءة LED</strong>
+     <small>إضاءة داخلية</small>
+    </div>
+
+   </div>
+
+   <i class="switch"></i>
+
+  </button>
+
+
+  <button class="addon" data-addon="drawers">
+
+   <div class="addon-left">
+
+    <div class="addon-icon">
+     ▤
+    </div>
+
+    <div>
+     <strong>أدراج داخلية</strong>
+     <small>تنظيم الملابس</small>
+    </div>
+
+   </div>
+
+   <i class="switch"></i>
+
+  </button>
+
+
+  <button class="addon on" data-addon="hanging">
+
+   <div class="addon-left">
+
+    <div class="addon-icon">
+     ⌁
+    </div>
+
+    <div>
+     <strong>وحدات تعليق</strong>
+     <small>تعليق الملابس</small>
+    </div>
+
+   </div>
+
+   <i class="switch"></i>
+
+  </button>
+
+
+  <button class="addon" data-addon="mirror">
+
+   <div class="addon-left">
+
+    <div class="addon-icon">
+     ◈
+    </div>
+
+    <div>
+     <strong>مرآة داخلية</strong>
+     <small>مرآة مخفية</small>
+    </div>
+
+   </div>
+
+   <i class="switch"></i>
+
+  </button>
+
+
+ </div>
+
+ </div>
+
+
+ <div class="footer">
+
+  <div class="price">
+
+   <small>
+    السعر التقديري
+   </small>
+
+   <strong id="price">
+    $ 520
+   </strong>
+
+  </div>
+
+
+  <div class="footer-buttons">
+
+   <button class="prev" id="undoBtn">
+    تراجع
+   </button>
+
+   <button class="next" id="nextBtn">
+    معاينة الطلب
+   </button>
+
+  </div>
+
+ </div>
+
+</aside>
+
+</div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<div class="modal" id="quoteModal">
+
+ <div class="modal-box">
+
+  <h2>
+   طلب عرض سعر
+  </h2>
+
+  <p>
+   سيتم إرسال مواصفات الخزانة عبر واتساب.
+  </p>
+
+
+  <div class="modal-field">
+
+   <label>
+    الاسم
+   </label>
+
+   <input
+    id="customerName"
+    placeholder="اكتب اسمك"
+   >
+
+  </div>
+
+
+  <div class="modal-field">
+
+   <label>
+    رقم الهاتف
+   </label>
+
+   <input
+    id="customerPhone"
+    placeholder="رقم الهاتف"
+   >
+
+  </div>
+
+
+  <div class="modal-field">
+
+   <label>
+    الملاحظات
+   </label>
+
+   <textarea
+    id="customerNote"
+    placeholder="أي تفاصيل إضافية..."
+   ></textarea>
+
+  </div>
+
+
+  <div class="modal-actions">
+
+   <button
+    class="cancel"
+    id="closeModal"
+   >
+    إلغاء
+   </button>
+
+   <button
+    class="send"
+    id="sendWhatsApp"
+   >
+    إرسال واتساب
+   </button>
+
+  </div>
+
+ </div>
+
+</div>
+
+
+
 <script>
-(function(){
-  const WOODS = {
-    oak:       { name:'بلوط',     base:'#c9a46a', grain:'#a9834f' },
-    walnut:    { name:'جوز',      base:'#5c3a22', grain:'#432714' },
-    beech:     { name:'زان',      base:'#e3c39a', grain:'#c7a579' },
-    mahogany:  { name:'ماهوجني',  base:'#7a2e22', grain:'#5a1f17' }
-  };
-  const FINISHES = {
-    natural: { name:'طبيعي',    apply: c => c },
-    dark:    { name:'غامق',     apply: c => shade(c, -0.32) },
-    light:   { name:'فاتح',     apply: c => shade(c, 0.32) },
-    white:   { name:'أبيض مطلي', apply: () => '#e9e2d3' }
-  };
-  const LEG_STYLES = {
-    tapered:  { name:'مدببة',            priceFactor:1 },
-    straight: { name:'مستقيمة',          priceFactor:0.95 },
-    hairpin:  { name:'دبوسية معدنية',    priceFactor:1.05 },
-    cabriole: { name:'منحنية كلاسيكية',  priceFactor:1.3 }
-  };
-  const ARMRESTS = { none:{name:'بدون'}, yes:{name:'مع مسند'} };
-  const TABLE_SHAPES = { rect:{name:'مستطيلة'}, round:{name:'دائرية'} };
-  const CHAIR_SHAPES = { square:{name:'مربع'}, round:{name:'دائري'} };
-  const TYPES = {
-    table:{name:'طاولة',base:620}, bench:{name:'بنش',base:480}, chair:{name:'كرسي',base:900},
-    desk:{name:'مكتب',base:760}, tvStand:{name:'وحدة تلفزيون',base:820}, bookshelf:{name:'مكتبة',base:880},
-    wardrobe:{name:'دولاب ملابس',base:1250}, nightstand:{name:'كومودينو',base:520}, console:{name:'كونسول',base:680},
-    shoeRack:{name:'جزامة',base:610}, barStool:{name:'كرسي بار',base:700}, loungeChair:{name:'كرسي استرخاء',base:1150},
-    vanity:{name:'تسريحة',base:1050}, sideboard:{name:'بوفيه',base:1180}, plantStand:{name:'ستاند نباتات',base:420},
-    wallShelf:{name:'رف حائط',base:380}, bedroom:{name:'غرفة نوم رئيسية',base:4200},
-    kitchenL:{name:'مطبخ حرف L',base:5200}, kitchenIsland:{name:'مطبخ بجزيرة',base:6800}
-  };
 
-  function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
-  function mapRange(v, inMin, inMax, outMin, outMax){
-    return outMin + (v - inMin) * (outMax - outMin) / (inMax - inMin);
+/* =========================================================
+   STATE
+========================================================= */
+
+const S = {
+
+ width:240,
+ height:240,
+
+ doors:4,
+ doorLayout:"equal",
+
+ color:"#EDEDE9",
+ style:"flat",
+ handle:"bar",
+
+ zoom:1,
+
+ selected:null,
+ selectedName:"",
+
+ uploaded:false,
+ uploadedName:"",
+ uploadedRaw:"",
+
+ modelBaseBox:null,
+
+ doorRegion:null,
+ doorContainer:null,
+
+ addons:{
+  led:true,
+  drawers:false,
+  hanging:true,
+  mirror:false
+ }
+
+};
+
+
+const NS =
+ "http://www.w3.org/2000/svg";
+
+
+const $ =
+ s => document.querySelector(s);
+
+const $$ =
+ s => document.querySelectorAll(s);
+
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function toast(message){
+
+ const t=$("#toast");
+
+ t.textContent=message;
+
+ t.classList.add("show");
+
+ clearTimeout(window.toastTimer);
+
+ window.toastTimer=setTimeout(()=>{
+  t.classList.remove("show");
+ },2200);
+
+}
+
+
+function clamp(v,min,max){
+
+ return Math.max(min,Math.min(max,v));
+
+}
+
+
+function svgEl(tag,attrs={}){
+
+ const n=
+  document.createElementNS(NS,tag);
+
+ for(const k in attrs){
+
+  n.setAttribute(k,attrs[k]);
+
+ }
+
+ return n;
+
+}
+
+
+function shade(hex,amount){
+
+ let n=parseInt(
+  hex.replace("#",""),
+  16
+ );
+
+ let r=clamp(
+  (n>>16)+Math.round(255*amount),
+  0,
+  255
+ );
+
+ let g=clamp(
+  ((n>>8)&255)+Math.round(255*amount),
+  0,
+  255
+ );
+
+ let b=clamp(
+  (n&255)+Math.round(255*amount),
+  0,
+  255
+ );
+
+ return "#"+
+  (
+   0x1000000+
+   r*0x10000+
+   g*0x100+
+   b
+  ).toString(16).slice(1);
+
+}
+
+
+function activate(selector,node){
+
+ $$(selector).forEach(
+  x=>x.classList.remove("active")
+ );
+
+ node.classList.add("active");
+
+}
+
+
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+function getPrice(){
+
+ let p=260;
+
+ p+=(S.width-180)*1.05;
+ p+=(S.height-200)*.7;
+
+ p+=(S.doors-2)*55;
+
+ if(S.color!=="#EDEDE9")
+  p+=45;
+
+ if(S.style!=="flat")
+  p+=30;
+
+ if(S.handle==="knob")
+  p+=10;
+
+ if(S.handle==="hidden")
+  p+=25;
+
+ if(S.addons.led)
+  p+=45;
+
+ if(S.addons.drawers)
+  p+=70;
+
+ if(S.addons.hanging)
+  p+=35;
+
+ if(S.addons.mirror)
+  p+=50;
+
+ return Math.round(p);
+
+}
+
+
+function updatePrice(){
+
+ $("#price").textContent=
+  "$ "+
+  getPrice().toLocaleString();
+
+}
+
+
+
+/* =========================================================
+   DOOR WIDTHS
+========================================================= */
+
+function computeDoorWidths(
+ count,
+ total
+){
+
+ if(count<=0)
+  return [];
+
+ if(
+  S.doorLayout==="equal" ||
+  count<3
+ ){
+  return new Array(count)
+   .fill(total/count);
+ }
+
+
+ let weights=
+  new Array(count).fill(1);
+
+
+ if(S.doorLayout==="wide"){
+
+  const middle=
+   (count-1)/2;
+
+  for(let i=0;i<count;i++){
+
+   const d=
+    Math.abs(i-middle);
+
+   weights[i]=
+    1+
+    Math.max(
+     0,
+     1-d/middle
+    )*.55;
+
   }
-  function shade(hex, pct){
-    const num = parseInt(hex.slice(1), 16);
-    let r = (num >> 16) + Math.round(255*pct);
-    let g = ((num >> 8) & 0x00FF) + Math.round(255*pct);
-    let b = (num & 0x0000FF) + Math.round(255*pct);
-    r = clamp(r,0,255); g = clamp(g,0,255); b = clamp(b,0,255);
-    return '#' + (0x1000000 + r*0x10000 + g*0x100 + b).toString(16).slice(1);
-  }
-  function mix(hex, target, amt){
-    const a = parseInt(hex.slice(1),16), b = parseInt(target.slice(1),16);
-    const ar=a>>16, ag=(a>>8)&255, ab=a&255;
-    const br=b>>16, bg=(b>>8)&255, bb=b&255;
-    const r = Math.round(ar + (br-ar)*amt);
-    const g = Math.round(ag + (bg-ag)*amt);
-    const bl = Math.round(ab + (bb-ab)*amt);
-    return '#' + (0x1000000 + r*0x10000 + g*0x100 + bl).toString(16).slice(1);
-  }
-  function lerp(a,b,t){ return a + (b-a)*t; }
 
-  const state = {
-    type:'table', wood:'oak', finish:'natural', legStyle:'tapered',
-    tableShape:'rect', chairShape:'square',
-    length:140, width:88, depth:88, thickness:22, edgeRadius:6, backCurve:10, armrest:'none'
-  };
+ }
 
-  const DIMENSION_DEFAULTS = {
-    table:{length:140,width:88,depth:88}, bench:{length:140,width:34,depth:34}, chair:{length:0,width:48,depth:42},
-    desk:{length:140,width:70,depth:74}, tvStand:{length:180,width:45,depth:55}, bookshelf:{length:90,width:35,depth:180},
-    wardrobe:{length:180,width:60,depth:220}, nightstand:{length:55,width:40,depth:55}, console:{length:120,width:35,depth:80},
-    shoeRack:{length:100,width:35,depth:90}, barStool:{length:0,width:45,depth:45}, loungeChair:{length:0,width:75,depth:78},
-    vanity:{length:110,width:45,depth:75}, sideboard:{length:160,width:45,depth:80}, plantStand:{length:45,width:45,depth:80},
-    wallShelf:{length:100,width:25,depth:30}, bedroom:{length:360,width:300,depth:280},
-    kitchenL:{length:360,width:240,depth:240}, kitchenIsland:{length:400,width:280,depth:280}
-  };
 
-  function applyDimensionDefaults(type, force=false){
-    const d = DIMENSION_DEFAULTS[type] || DIMENSION_DEFAULTS.table;
-    if(force || !Number.isFinite(state.length)) state.length=d.length;
-    if(force || !Number.isFinite(state.width)) state.width=d.width;
-    if(force || !Number.isFinite(state.depth)) state.depth=d.depth;
+ if(S.doorLayout==="classic"){
+
+  for(let i=0;i<count;i++){
+
+   weights[i]=
+    i===0 || i===count-1
+     ? .92
+     : 1.05;
+
   }
 
-  /* ---------------- UI: static control rows ---------------- */
-  function buildRow(container, options, stateKey){
-    Object.keys(options).forEach(key=>{
-      const btn = document.createElement('button');
-      btn.type='button'; btn.dataset.key=key;
-      btn.setAttribute('aria-pressed', key===state[stateKey] ? 'true':'false');
-      btn.textContent = options[key].name;
-      btn.addEventListener('click', ()=>{
-        state[stateKey]=key;
-        [...container.children].forEach(c=> c.setAttribute('aria-pressed', c.dataset.key===state[stateKey] ? 'true':'false'));
-        render();
-      });
-      container.appendChild(btn);
-    });
+ }
+
+
+ if(S.doorLayout==="asymmetric"){
+
+  for(let i=0;i<count;i++){
+
+   weights[i]=
+    i<count/2
+     ? .82
+     : 1.18;
+
   }
 
-  const woodSwatches = document.getElementById('woodSwatches');
-  Object.keys(WOODS).forEach(key=>{
-    const btn = document.createElement('button');
-    btn.type='button'; btn.className='swatch'; btn.dataset.wood=key;
-    btn.setAttribute('aria-pressed', key===state.wood ? 'true':'false');
-    btn.innerHTML = `<span class="chip" style="background:${WOODS[key].base}"></span>${WOODS[key].name}`;
-    btn.addEventListener('click', ()=>{
-      state.wood=key;
-      [...woodSwatches.children].forEach(c=> c.setAttribute('aria-pressed', c.dataset.wood===state.wood ? 'true':'false'));
-      render();
-    });
-    woodSwatches.appendChild(btn);
+ }
+
+
+ const sum=
+  weights.reduce(
+   (a,b)=>a+b,
+   0
+  );
+
+ return weights.map(
+  w=>(w/sum)*total
+ );
+
+}
+
+
+
+/* =========================================================
+   REALISTIC DOOR FACE
+========================================================= */
+
+function buildDoorFace(
+ dx,
+ dy,
+ dw,
+ dh,
+ index
+){
+
+ const g=
+  svgEl("g",{
+   "data-door":"true",
+   "data-door-index":index,
+   "data-editor-element":"true"
   });
 
-  buildRow(document.getElementById('finishRow'), FINISHES, 'finish');
-  buildRow(document.getElementById('legStyleRow'), LEG_STYLES, 'legStyle');
-  buildRow(document.getElementById('armrestRow'), ARMRESTS, 'armrest');
-  buildRow(document.getElementById('tableShapeRow'), TABLE_SHAPES, 'tableShape');
-  buildRow(document.getElementById('chairShapeRow'), CHAIR_SHAPES, 'chairShape');
 
-  const backCurveField = document.getElementById('backCurveField');
-  const armrestField = document.getElementById('armrestField');
-  const fieldShapeTable = document.getElementById('fieldShapeTable');
-  const fieldShapeChair = document.getElementById('fieldShapeChair');
+ const stroke=
+  shade(S.color,-.42);
 
-  function syncTypeUI(){
-    const seatTypes=['chair','barStool','loungeChair','rockingChair'];
-    const verticalTypes=['bookshelf','wardrobe','console','shoeRack','vanity','sideboard','plantStand'];
-    const isChair=seatTypes.includes(state.type), isBench=state.type==='bench';
-    backCurveField.style.display=isChair?'':'none';
-    armrestField.style.display=['chair','loungeChair','rockingChair'].includes(state.type)?'':'none';
-    fieldShapeTable.style.display=state.type==='table'?'':'none';
-    fieldShapeChair.style.display=isChair?'':'none';
-    const fieldLength=document.getElementById('fieldLength');
-    const lengthLegend=document.getElementById('lengthLegend'), lengthLabel=document.getElementById('lengthLabel');
-    const widthLegend=document.getElementById('widthLegend'), widthLabel=document.getElementById('widthLabel');
-    const depthLegend=document.getElementById('depthLegend'), depthLabel=document.getElementById('depthLabel');
-    const lengthSlider=document.getElementById('lengthSlider'), widthSlider=document.getElementById('widthSlider'), depthSlider=document.getElementById('depthSlider');
-    fieldLength.style.display=isChair?'':'none';
-    if(state.type==='bedroom'){
-      lengthLegend.textContent='طول الغرفة'; lengthLabel.textContent='طول الغرفة'; widthLegend.textContent='عرض الغرفة'; widthLabel.textContent='عرض الغرفة'; depthLegend.textContent='ارتفاع المشهد'; depthLabel.textContent='ارتفاع المشهد';
-    }else if(['kitchenL','kitchenIsland'].includes(state.type)){
-      lengthLegend.textContent='الطول'; lengthLabel.textContent='طول المطبخ'; widthLegend.textContent='العرض'; widthLabel.textContent='عرض المطبخ'; depthLegend.textContent='الارتفاع'; depthLabel.textContent='ارتفاع الوحدات';
-    }else if(['bookshelf','wardrobe'].includes(state.type)){
-      lengthLegend.textContent='العرض'; lengthLabel.textContent='عرض المكتبة'; widthLegend.textContent='العمق'; widthLabel.textContent='عمق المكتبة'; depthLegend.textContent='الارتفاع'; depthLabel.textContent='ارتفاع المكتبة';
-    }else if(verticalTypes.includes(state.type)){
-      lengthLegend.textContent='الطول'; lengthLabel.textContent='طول القطعة'; widthLegend.textContent='العمق'; widthLabel.textContent='عمق القطعة'; depthLegend.textContent='الارتفاع'; depthLabel.textContent='ارتفاع القطعة';
-    }else if(isChair){
-      lengthLegend.textContent='العرض'; lengthLabel.textContent='عرض القطعة'; widthLegend.textContent='العرض'; widthLabel.textContent='عرض المقعد'; depthLegend.textContent='العمق'; depthLabel.textContent='عمق المقعد';
-    }else if(isBench){
-      lengthLegend.textContent='الطول'; lengthLabel.textContent='طول البنش'; widthLegend.textContent='العرض'; widthLabel.textContent='عرض البنش'; depthLegend.textContent='العمق'; depthLabel.textContent='عمق البنش';
-    }else{
-      lengthLegend.textContent='الطول'; lengthLabel.textContent='طول القطعة'; widthLegend.textContent='العرض'; widthLabel.textContent='عرض القطعة'; depthLegend.textContent='العمق'; depthLabel.textContent='عمق القطعة';
-    }
-    lengthSlider.min=40; lengthSlider.max=240; lengthSlider.step=1; lengthSlider.disabled=isChair;
-    widthSlider.min=20; widthSlider.max=120; widthSlider.step=1;
-    depthSlider.min=25; depthSlider.max=(state.type==='bookshelf'?200:120); depthSlider.step=1;
-    if(isChair){widthSlider.min=30;widthSlider.max=110;depthSlider.min=30;depthSlider.max=120;}
-    if(['bedroom','kitchenL','kitchenIsland'].includes(state.type)){ lengthSlider.min=180; lengthSlider.max=600; widthSlider.min=120; widthSlider.max=400; depthSlider.min=120; depthSlider.max=400; }
-    widthSlider.value=clamp(state.width,+widthSlider.min,+widthSlider.max);
-    depthSlider.value=clamp(state.depth,+depthSlider.min,+depthSlider.max);
-    if(!isChair) lengthSlider.value=clamp(state.length,+lengthSlider.min,+lengthSlider.max);
-  }
-  function flashFields(ids){
-    ids.forEach((id,i)=>{
-      const el = document.getElementById(id);
-      if(!el) return;
-      if(i===0) el.scrollIntoView({behavior:'smooth', block:'center'});
-      el.classList.add('field-flash');
-      setTimeout(()=> el.classList.remove('field-flash'), 900);
-    });
-  }
-  function shapeFieldForType(){ return state.type==='chair' ? 'fieldShapeChair' : 'fieldShapeTable'; }
 
-  function switchTab(name){
-    document.querySelectorAll('.prop-tabs button').forEach(b=> b.setAttribute('aria-pressed', b.dataset.tab===name ? 'true':'false'));
-    document.querySelectorAll('.tab-pane').forEach(p=> p.style.display = p.dataset.pane===name ? 'block':'none');
+ /* الباب */
+
+ g.appendChild(
+  svgEl("rect",{
+   x:dx,
+   y:dy,
+   width:dw,
+   height:dh,
+   rx:1.5,
+   fill:S.color,
+   stroke:stroke,
+   "stroke-width":2
+  })
+ );
+
+
+ /* إضاءة جانبية */
+
+ if(S.addons.led){
+
+  g.appendChild(
+   svgEl("rect",{
+    x:dx+dw*.008,
+    y:dy+dh*.04,
+    width:Math.max(1,dw*.006),
+    height:dh*.92,
+    fill:"#B8FFF5",
+    opacity:.55
+   })
+  );
+
+ }
+
+
+ /* مسطح */
+
+ if(S.style==="flat"){
+
+  g.appendChild(
+   svgEl("rect",{
+    x:dx+dw*.035,
+    y:dy+dh*.025,
+    width:dw*.93,
+    height:dh*.95,
+    fill:"none",
+    stroke:shade(S.color,-.22),
+    "stroke-width":1,
+    opacity:.45
+   })
+  );
+
+ }
+
+
+ /* كلاسيكي */
+
+ if(S.style==="panel"){
+
+  g.appendChild(
+   svgEl("rect",{
+    x:dx+dw*.11,
+    y:dy+dh*.08,
+    width:dw*.78,
+    height:dh*.84,
+    rx:2,
+    fill:"none",
+    stroke:shade(S.color,-.35),
+    "stroke-width":3
+   })
+  );
+
+  g.appendChild(
+   svgEl("rect",{
+    x:dx+dw*.145,
+    y:dy+dh*.12,
+    width:dw*.71,
+    height:dh*.76,
+    fill:"none",
+    stroke:shade(S.color,.12),
+    "stroke-width":1,
+    opacity:.8
+   })
+  );
+
+ }
+
+
+ /* مضلع رأسي */
+
+ if(S.style==="fluted"){
+
+  for(let i=1;i<9;i++){
+
+   const xx=
+    dx+
+    dw*i/9;
+
+   g.appendChild(
+    svgEl("line",{
+     x1:xx,
+     y1:dy+dh*.035,
+     x2:xx,
+     y2:dy+dh*.965,
+     stroke:shade(S.color,-.25),
+     "stroke-width":
+      Math.max(1,dw*.007),
+     opacity:.65
+    })
+   );
+
   }
-  document.querySelectorAll('.prop-tabs button').forEach(b=>{
-    b.addEventListener('click', ()=> switchTab(b.dataset.tab));
+
+ }
+
+
+ /* مضلع أفقي */
+
+ if(S.style==="horizontal"){
+
+  for(let i=1;i<10;i++){
+
+   const yy=
+    dy+
+    dh*i/10;
+
+   g.appendChild(
+    svgEl("line",{
+     x1:dx+dw*.035,
+     y1:yy,
+     x2:dx+dw*.965,
+     y2:yy,
+     stroke:shade(S.color,-.27),
+     "stroke-width":
+      Math.max(1,dh*.006),
+     opacity:.65
+    })
+   );
+
+  }
+
+ }
+
+
+ /* زجاج */
+
+ if(S.style==="glass"){
+
+  g.appendChild(
+   svgEl("rect",{
+    x:dx+dw*.12,
+    y:dy+dh*.08,
+    width:dw*.76,
+    height:dh*.84,
+    fill:"#6e8582",
+    opacity:.8,
+    stroke:"#dffefa",
+    "stroke-width":1.5
+   })
+  );
+
+  g.appendChild(
+   svgEl("line",{
+    x1:dx+dw*.18,
+    y1:dy+dh*.17,
+    x2:dx+dw*.76,
+    y2:dy+dh*.82,
+    stroke:"#fff",
+    "stroke-width":2,
+    opacity:.25
+   })
+  );
+
+ }
+
+
+ /* مرآة */
+
+ if(S.style==="mirror"){
+
+  g.appendChild(
+   svgEl("rect",{
+    x:dx+dw*.08,
+    y:dy+dh*.055,
+    width:dw*.84,
+    height:dh*.89,
+    fill:"#9db4b4",
+    opacity:.88,
+    stroke:"#f4ffff",
+    "stroke-width":2
+   })
+  );
+
+  g.appendChild(
+   svgEl("line",{
+    x1:dx+dw*.12,
+    y1:dy+dh*.15,
+    x2:dx+dw*.70,
+    y2:dy+dh*.82,
+    stroke:"#fff",
+    "stroke-width":3,
+    opacity:.18
+   })
+  );
+
+ }
+
+
+ /* المقبض */
+
+ const hx=
+  dx+
+  dw*.83;
+
+ const hy=
+  dy+
+  dh*.50;
+
+
+ if(S.handle==="bar"){
+
+  g.appendChild(
+   svgEl("rect",{
+    x:hx,
+    y:dy+dh*.40,
+    width:Math.max(3,dw*.018),
+    height:dh*.20,
+    rx:2,
+    fill:"#17231f",
+    stroke:"#2FD9C4",
+    "stroke-width":1.2
+   })
+  );
+
+ }
+
+
+ if(S.handle==="knob"){
+
+  g.appendChild(
+   svgEl("circle",{
+    cx:hx,
+    cy:hy,
+    r:Math.max(4,dw*.035),
+    fill:"#2FD9C4",
+    stroke:"#063c35",
+    "stroke-width":1.5
+   })
+  );
+
+ }
+
+
+ if(S.handle==="hidden"){
+
+  g.appendChild(
+   svgEl("rect",{
+    x:dx+dw*.73,
+    y:dy+dh*.505,
+    width:dw*.12,
+    height:2,
+    rx:2,
+    fill:"#111"
+   })
+  );
+
+ }
+
+
+ return g;
+
+}
+
+
+
+/* =========================================================
+   INTERIOR
+========================================================= */
+
+function buildInterior(
+ x,
+ y,
+ w,
+ h
+){
+
+ const g=
+  svgEl("g",{
+   "data-interior":"true"
   });
 
-  document.querySelectorAll('.shading-toggle button').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      document.querySelectorAll('.shading-toggle button').forEach(x=> x.setAttribute('aria-pressed', x===b?'true':'false'));
-      setShadeMode(b.dataset.shade);
-    });
+
+ /* جانبي */
+
+ g.appendChild(
+  svgEl("rect",{
+   x:x,
+   y:y,
+   width:10,
+   height:h,
+   fill:shade(S.color,-.25)
+  })
+ );
+
+ g.appendChild(
+  svgEl("rect",{
+   x:x+w-10,
+   y:y,
+   width:10,
+   height:h,
+   fill:shade(S.color,-.25)
+  })
+ );
+
+
+ /* رف علوي */
+
+ g.appendChild(
+  svgEl("rect",{
+   x:x+10,
+   y:y+20,
+   width:w-20,
+   height:9,
+   fill:shade(S.color,-.32)
+  })
+ );
+
+
+ /* رفوف */
+
+ for(let i=1;i<4;i++){
+
+  const yy=
+   y+
+   h*(i/4);
+
+  g.appendChild(
+   svgEl("rect",{
+    x:x+12,
+    y:yy,
+    width:w-24,
+    height:7,
+    fill:shade(S.color,-.3)
+   })
+  );
+
+ }
+
+
+ /* عمود تعليق */
+
+ if(S.addons.hanging){
+
+  g.appendChild(
+   svgEl("line",{
+    x1:x+w*.20,
+    y1:y+h*.18,
+    x2:x+w*.20,
+    y2:y+h*.84,
+    stroke:"#777",
+    "stroke-width":5
+   })
+  );
+
+ }
+
+
+ /* أدراج */
+
+ if(S.addons.drawers){
+
+  for(let i=0;i<2;i++){
+
+   const yy=
+    y+h*.62+i*h*.12;
+
+   g.appendChild(
+    svgEl("rect",{
+     x:x+w*.48,
+     y:yy,
+     width:w*.35,
+     height:h*.09,
+     rx:2,
+     fill:shade(S.color,-.13),
+     stroke:shade(S.color,-.4),
+     "stroke-width":1
+    })
+   );
+
+   g.appendChild(
+    svgEl("line",{
+     x1:x+w*.62,
+     y1:yy+h*.045,
+     x2:x+w*.69,
+     y2:yy+h*.045,
+     stroke:"#2FD9C4",
+     "stroke-width":2
+    })
+   );
+
+  }
+
+ }
+
+
+ /* مرآة داخلية */
+
+ if(S.addons.mirror){
+
+  g.appendChild(
+   svgEl("rect",{
+    x:x+w*.07,
+    y:y+h*.12,
+    width:w*.28,
+    height:h*.38,
+    fill:"#9bb4b4",
+    opacity:.8,
+    stroke:"#fff"
+   })
+  );
+
+ }
+
+
+ return g;
+
+}
+
+
+
+/* =========================================================
+   DRAW DEFAULT WARDROBE
+========================================================= */
+
+const wardrobeRoot=
+ $("#wardrobeRoot");
+
+
+function drawDefault(){
+
+ wardrobeRoot.innerHTML="";
+
+
+ const W=
+  470+
+  (S.width-180)*.85;
+
+
+ const H=
+  390+
+  (S.height-200)*1.05;
+
+
+ const x=
+  500-W/2;
+
+
+ const y=
+  500-H;
+
+
+ const depth=32;
+
+
+ /* جسم جانبي */
+
+ wardrobeRoot.appendChild(
+  svgEl("polygon",{
+   points:
+    `${x},${y}
+     ${x+depth},${y-depth}
+     ${x+W+depth},${y-depth}
+     ${x+W},${y}`,
+   fill:shade(S.color,.14),
+   stroke:shade(S.color,-.42),
+   "stroke-width":2
+  })
+ );
+
+
+ /* الجانب */
+
+ wardrobeRoot.appendChild(
+  svgEl("polygon",{
+   points:
+    `${x+W},${y}
+     ${x+W+depth},${y-depth}
+     ${x+W+depth},${y+H-depth}
+     ${x+W},${y+H}`,
+   fill:shade(S.color,-.25),
+   stroke:shade(S.color,-.45),
+   "stroke-width":2
+  })
+ );
+
+
+ /* الجسم */
+
+ const body=
+  svgEl("rect",{
+   x:x,
+   y:y,
+   width:W,
+   height:H,
+   rx:3,
+   fill:shade(S.color,-.06),
+   stroke:shade(S.color,-.45),
+   "stroke-width":3,
+   "data-editor-element":"true",
+   "data-name":"جسم الخزانة"
   });
 
-  document.querySelectorAll('.viewport-tools button').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      document.querySelectorAll('.viewport-tools button').forEach(x=> x.setAttribute('aria-pressed', x===b?'true':'false'));
-      goToView(b.dataset.view);
-    });
-  });
 
-  document.querySelectorAll('.type-toggle button').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      state.type = btn.dataset.type;
-      applyDimensionDefaults(state.type, true);
-      document.querySelectorAll('.type-toggle button').forEach(b=>b.setAttribute('aria-pressed', b===btn?'true':'false'));
-      syncTypeUI();
-      lengthSlider.value = state.length;
-      widthSlider.value = state.width;
-      depthSlider.value = state.depth;
-      frameForType(state.type);
-      document.querySelectorAll('.viewport-tools button').forEach(b=> b.setAttribute('aria-pressed', b.dataset.view==='persp' ? 'true':'false'));
-      goToView('persp');
-      render();
-    });
-  });
+ body.style.cursor="pointer";
 
-  const lengthSlider = document.getElementById('lengthSlider');
-  const widthSlider = document.getElementById('widthSlider');
-  const depthSlider = document.getElementById('depthSlider');
-  const thicknessSlider = document.getElementById('thicknessSlider');
-  const edgeSlider = document.getElementById('edgeSlider');
-  const backCurveSlider = document.getElementById('backCurveSlider');
-  lengthSlider.addEventListener('input', ()=>{ state.length = +lengthSlider.value; render(); });
-  widthSlider.addEventListener('input', ()=>{ state.width = +widthSlider.value; render(); });
-  depthSlider.addEventListener('input', ()=>{ state.depth = +depthSlider.value; render(); });
-  thicknessSlider.addEventListener('input', ()=>{ state.thickness = +thicknessSlider.value; render(); });
-  edgeSlider.addEventListener('input', ()=>{ state.edgeRadius = +edgeSlider.value; render(); });
-  backCurveSlider.addEventListener('input', ()=>{ state.backCurve = +backCurveSlider.value; render(); });
-
-  document.querySelectorAll('.step-btn').forEach(btn=>{
-    const targetId = btn.dataset.stepFor;
-    const dir = +btn.dataset.dir;
-    function nudge(){
-      const input = document.getElementById(targetId);
-      const step = +input.step || 1;
-      const min = +input.min, max = +input.max;
-      const next = clamp(+input.value + dir*step, min, max);
-      if(next === +input.value) return;
-      input.value = next;
-      input.dispatchEvent(new Event('input', {bubbles:true}));
-    }
-    let holdTimer = null, repeatTimer = null;
-    btn.addEventListener('click', nudge);
-    btn.addEventListener('pointerdown', ()=>{
-      holdTimer = setTimeout(()=>{ repeatTimer = setInterval(nudge, 90); }, 450);
-    });
-    ['pointerup','pointerleave','pointercancel'].forEach(evt=> btn.addEventListener(evt, ()=>{
-      clearTimeout(holdTimer); clearInterval(repeatTimer);
-    }));
-  });
-
-  // TODO: ضيف رقم واتساب الورشة هنا بصيغة دولية بدون + أو أصفار زيادة (مثال: 201001234567)
-  const WHATSAPP_NUMBER = '';
-
-  function specSummaryText(){
-    const wood = WOODS[state.wood], finish = FINISHES[state.finish];
-    let shapeName;
-    if(['chair','barStool','loungeChair'].includes(state.type)) shapeName=CHAIR_SHAPES[state.chairShape].name;
-    else if(state.type==='table') shapeName=TABLE_SHAPES[state.tableShape].name;
-    else if(state.type==='bedroom') shapeName='جناح نوم متكامل';
-    else if(state.type==='kitchenL') shapeName='توزيع حرف L';
-    else if(state.type==='kitchenIsland') shapeName='مطبخ مع جزيرة وسطية';
-    else shapeName='تصميم مخصص';
-    const lines = [
-      'مرحباً، حابب أستفسر عن تصميم من موقع أساس:',
-      `القطعة: ${TYPES[state.type].name}`,
-      `الشكل: ${shapeName}`,
-      `الخشب: ${wood.name}`,
-      `التشطيب: ${finish.name}`,
-      `نمط الأرجل: ${LEG_STYLES[state.legStyle].name}`,
-      ...(['chair','barStool','loungeChair','rockingChair'].includes(state.type) ? [
-        `عرض المقعد: ${state.width} سم`,
-        `عمق المقعد: ${state.depth} سم`
-      ] : [
-        `الطول: ${state.length} سم`,
-        `العرض: ${state.width} سم`,
-        `العمق: ${state.depth} سم`
-      ]),
-      `السماكة: ${state.thickness} مم`
-    ];
-    if(['chair','loungeChair','rockingChair'].includes(state.type)){
-      lines.push(`ميل الظهر: ${state.backCurve}`);
-      lines.push(`مسند الذراع: ${ARMRESTS[state.armrest].name}`);
-    }
-    lines.push(`السعر التقديري: $${computePrice().toLocaleString('en-US')}`);
-    return lines.join('\n');
+ body.addEventListener(
+  "pointerdown",
+  ()=>{
+   selectDefaultElement(body,"جسم الخزانة");
   }
+ );
 
-  document.getElementById('ctaBtn').addEventListener('click', ()=>{
-    const text = encodeURIComponent(specSummaryText() + (WHATSAPP_NUMBER ? '' : '\n' + shareUrl()));
-    const base = WHATSAPP_NUMBER ? `https://wa.me/${WHATSAPP_NUMBER}` : 'https://wa.me/';
-    window.open(`${base}?text=${text}`, '_blank');
-    document.getElementById('ctaMsg').textContent = 'هيفتح واتساب برسالة فيها كل تفاصيل التصميم جاهزة للإرسال.';
-  });
-
-  function shareUrl(){
-    const payload = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
-    const url = new URL(window.location.href);
-    url.hash = '';
-    url.searchParams.set('d', payload);
-    return url.toString();
-  }
-
-  document.getElementById('shareBtn').addEventListener('click', async ()=>{
-    const url = shareUrl();
-    const msgEl = document.getElementById('ctaMsg');
-    try{
-      await navigator.clipboard.writeText(url);
-      msgEl.textContent = 'اتنسخ الرابط — أي حد يفتحه هيشوف نفس التصميم بالظبط.';
-    }catch(err){
-      window.prompt('انسخ الرابط ده:', url);
-    }
-  });
-
-  function applyLoadedState(loaded){
-    Object.assign(state, loaded);
-    document.querySelectorAll('.type-toggle button').forEach(b=> b.setAttribute('aria-pressed', b.dataset.type===state.type ? 'true':'false'));
-    [...woodSwatches.children].forEach(c=> c.setAttribute('aria-pressed', c.dataset.wood===state.wood ? 'true':'false'));
-    [document.getElementById('finishRow'), document.getElementById('legStyleRow'), document.getElementById('armrestRow'), document.getElementById('tableShapeRow'), document.getElementById('chairShapeRow')].forEach(row=>{
-      [...row.children].forEach(c=>{
-        const map = { finishRow:'finish', legStyleRow:'legStyle', armrestRow:'armrest', tableShapeRow:'tableShape', chairShapeRow:'chairShape' };
-        const key = map[row.id];
-        c.setAttribute('aria-pressed', c.dataset.key===state[key] ? 'true':'false');
-      });
-    });
-    applyDimensionDefaults(state.type);
-    lengthSlider.value = state.length;
-    widthSlider.value = state.width;
-    depthSlider.value = state.depth;
-    thicknessSlider.value = state.thickness;
-    edgeSlider.value = state.edgeRadius;
-    backCurveSlider.value = state.backCurve;
-    syncTypeUI();
-    frameForType(state.type);
-  }
-
-  (function loadFromUrl(){
-    const params = new URLSearchParams(window.location.search);
-    const d = params.get('d');
-    if(!d) return;
-    try{
-      const loaded = JSON.parse(decodeURIComponent(escape(atob(d))));
-      applyLoadedState(loaded);
-    }catch(err){ /* رابط غير صالح، بنتجاهله بهدوء */ }
-  })();
-
-  function computePrice(){
-    const woodFactor = { oak:1, beech:0.85, mahogany:1.35, walnut:1.5 }[state.wood];
-    const legFactor = LEG_STYLES[state.legStyle].priceFactor;
-    const typeBase = TYPES[state.type].base;
-    const lengthFactor=['chair','barStool','loungeChair','rockingChair'].includes(state.type)?0:state.length*1.1;
-    const dimensionFactor = (state.width * 0.8) + (state.depth * 0.6);
-    const thickFactor = state.thickness * 2.4;
-    const shapeFactor = (state.type==='table' && state.tableShape==='round') || (state.type==='chair' && state.chairShape==='round') ? 1.1 : 1;
-    let total = (typeBase + lengthFactor + dimensionFactor + thickFactor) * woodFactor * legFactor * shapeFactor;
-    if(['chair','loungeChair','rockingChair'].includes(state.type)&&state.armrest==='yes') total+=90;
-    if(['bookshelf','cabinet','sideboard'].includes(state.type)) total+=state.depth*2.2;
-    return Math.round(total / 10) * 10;
-  }
-
-  function updateSpecUI(){
-    const wood = WOODS[state.wood], finish = FINISHES[state.finish];
-    let shapeName;
-    if(['chair','barStool','loungeChair'].includes(state.type)) shapeName=CHAIR_SHAPES[state.chairShape].name;
-    else if(state.type==='table') shapeName=TABLE_SHAPES[state.tableShape].name;
-    else if(state.type==='bedroom') shapeName='جناح نوم متكامل';
-    else if(state.type==='kitchenL') shapeName='توزيع حرف L';
-    else if(state.type==='kitchenIsland') shapeName='مطبخ مع جزيرة وسطية';
-    else shapeName='تصميم مخصص';
-
-    document.getElementById('lengthOut').textContent = state.length + ' سم';
-    document.getElementById('widthOut').textContent = state.width + ' سم';
-    document.getElementById('depthOut').textContent = state.depth + ' سم';
-    document.getElementById('thicknessOut').textContent = state.thickness + ' مم';
-    document.getElementById('lengthLegend').textContent = state.type==='chair' ? 'العرض' : 'الطول';
-    document.getElementById('lengthLabel').textContent = state.type==='chair' ? 'عرض الكرسي' : 'طول القطعة';
-    document.getElementById('widthLegend').textContent = state.type==='chair' ? 'عرض الكرسي' : 'العرض';
-    document.getElementById('widthLabel').textContent = state.type==='chair' ? 'عرض المقعد' : 'عرض القطعة';
-    document.getElementById('depthLabel').textContent = state.type==='chair' ? 'عمق المقعد' : (state.type==='bench' ? 'عمق البنش' : 'عمق القطعة');
-    document.getElementById('edgeOut').textContent = state.edgeRadius;
-    document.getElementById('backCurveOut').textContent = state.backCurve;
-    document.getElementById('specType').textContent = TYPES[state.type].name;
-    document.getElementById('specShape').textContent = shapeName;
-    document.getElementById('specWood').textContent = wood.name;
-    document.getElementById('specFinish').textContent = finish.name;
-    document.getElementById('specLeg').textContent = LEG_STYLES[state.legStyle].name;
-    const specLengthRow=document.getElementById('specLengthRow');
-    specLengthRow.style.display=['chair','barStool','loungeChair','rockingChair'].includes(state.type)?'none':'';
-    document.getElementById('specLengthLabel').textContent = 'الطول';
-    document.getElementById('specLength').textContent = state.length + ' سم';
-    document.getElementById('specWidthLabel').textContent = ['chair','barStool','loungeChair','rockingChair'].includes(state.type) ? 'عرض المقعد' : 'العرض';
-    document.getElementById('specWidth').textContent = state.width + ' سم';
-    document.getElementById('specDepthLabel').textContent = ['chair','barStool','loungeChair','rockingChair'].includes(state.type) ? 'عمق المقعد' : 'العمق';
-    document.getElementById('specDepth').textContent = state.depth + ' سم';
-    document.getElementById('specThickness').textContent = state.thickness + ' مم';
-    document.getElementById('priceOut').textContent = '$' + computePrice().toLocaleString('en-US');
-  }
-
-  function updateOutliner(){
-    const list = document.getElementById('outlinerList');
-    list.innerHTML = '';
-    const specialParts = {
-      bedroom:[['room','السرير الرئيسي'],['wardrobe','دولاب الملابس'],['night','الكومودينو والتسريحة']],
-      kitchenL:[['base','الوحدات السفلية'],['wall','الخزائن العلوية'],['island','ركن التحضير']],
-      kitchenIsland:[['base','الوحدات السفلية'],['wall','الخزائن العلوية'],['island','جزيرة المطبخ']]
-    };
-    const labels = {
-      desk:['سطح المكتب','هيكل المكتب'], tvStand:['سطح الوحدة','الأرفف والأدراج'], bookshelf:['هيكل المكتبة','الأرفف'],
-      wardrobe:['هيكل الدولاب','الأبواب والرفوف'], nightstand:['سطح الكومودينو','الأدراج'], console:['سطح الكونسول','الأرجل'],
-      shoeRack:['هيكل الجزامة','الأرفف'], barStool:['المقعد','القاعدة'], loungeChair:['المقعد','الظهر والهيكل'],
-      vanity:['سطح التسريحة','الأدراج والمرآة'], sideboard:['سطح البوفيه','الأبواب والأدراج'], plantStand:['السطح','القاعدة'], wallShelf:['الرف','الحوامل']
-    };
-    let items;
-    if(specialParts[state.type]) items=specialParts[state.type].map(x=>({key:x[0],label:x[1]}));
-    else if(labels[state.type]) items=labels[state.type].map((x,i)=>({key:i?'legs':'top',label:x}));
-    else items=[{key:'top', label: state.type==='chair' ? 'مقعد الكرسي' : 'سطح القطعة'}, {key:'legs', label:'الأرجل'}];
-    if(['chair','barStool','loungeChair'].includes(state.type) && state.type==='chair'){
-      items.push({key:'back',label:'ظهر الكرسي'});
-      if(state.armrest==='yes') items.push({key:'armrest',label:'مسند الذراع'});
-    }
-    items.forEach(it=>{
-      const li=document.createElement('li'); const btn=document.createElement('button'); btn.type='button';
-      btn.innerHTML=`<span class="dot"></span>${it.label}`;
-      btn.addEventListener('click',()=>selectPart(it.key)); li.appendChild(btn); list.appendChild(li);
-    });
-  }
-
-  const PART_TABS = { top:'object', legs:'modifiers', back:'modifiers', armrest:'modifiers', room:'object', wardrobe:'object', night:'object', base:'object', wall:'object', island:'object' };
-  function partFields(key){
-    if(key==='top') return (state.type==='table'||['chair','barStool','loungeChair','rockingChair'].includes(state.type))?[shapeFieldForType()]:[];
-    if(key==='legs') return ['fieldLegs'];
-    if(key==='back') return ['backCurveField'];
-    if(key==='armrest') return ['armrestField'];
-    return [];
-  }
-  function selectPart(key){
-    switchTab(PART_TABS[key] || 'object');
-    flashFields(partFields(key));
-    highlightPart3D(key);
-  }
-  function highlightPart3D(key){
-    if(!pieceGroup) return;
-    const targets = [];
-    pieceGroup.traverse(o=>{ if(o.isMesh && o.userData.partKey===key) targets.push(o); });
-    targets.forEach(o=>{ o.material.emissive.set(0xc89b3c); o.material.emissiveIntensity = 0.55; });
-    setTimeout(()=> targets.forEach(o=>{ o.material.emissiveIntensity = 0; }), 900);
-  }
+ wardrobeRoot.appendChild(body);
 
 
-  /* ---------------- Resizable control panel ---------------- */
-  (function initPropertiesResizer(){
-    const panel = document.querySelector('.properties');
-    const handle = document.getElementById('propertiesResizer');
-    if(!panel || !handle) return;
+ /* الفراغ الداخلي */
 
-    let dragging = false;
-    let startX = 0;
-    let startWidth = 390;
+ const inner=
+  buildInterior(
+   x+7,
+   y+8,
+   W-14,
+   H-16
+  );
 
-    function setWidth(next){
-      const width = clamp(next, 300, Math.min(520, Math.round(window.innerWidth * 0.48)));
-      panel.style.width = width + 'px';
-    }
+ inner.style.pointerEvents="none";
 
-    handle.addEventListener('pointerdown', e=>{
-      if(window.matchMedia('(max-width: 768px)').matches) return;
-      dragging = true;
-      startX = e.clientX;
-      startWidth = panel.getBoundingClientRect().width;
-      handle.classList.add('is-dragging');
-      try{ handle.setPointerCapture(e.pointerId); }catch(err){}
-      document.body.style.cursor = 'col-resize';
-      document.body.style.userSelect = 'none';
-    });
-
-    handle.addEventListener('pointermove', e=>{
-      if(!dragging) return;
-      /* RTL: moving the divider left makes the right-side properties panel wider. */
-      setWidth(startWidth + (startX - e.clientX));
-    });
-
-    function stopDrag(){
-      if(!dragging) return;
-      dragging = false;
-      handle.classList.remove('is-dragging');
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
-    }
-    handle.addEventListener('pointerup', stopDrag);
-    handle.addEventListener('pointercancel', stopDrag);
-
-    handle.addEventListener('keydown', e=>{
-      const current = panel.getBoundingClientRect().width;
-      if(e.key === 'ArrowLeft'){
-        e.preventDefault(); setWidth(current + 20);
-      }else if(e.key === 'ArrowRight'){
-        e.preventDefault(); setWidth(current - 20);
-      }
-    });
-  })();
-
-  /* ---------------- Three.js scene ---------------- */
-  let scene, camera, renderer, canvasEl, viewportEl, raycaster;
-  let pieceGroup = null;
-  const pointer = {x:0,y:0};
-  const camTarget = { x:0, y:45, z:0 };
-  const camState = { theta: Math.PI/4, phi: 1.15, radius: 340 };
-  let camAnim = null;
-  let isDragging = false, dragMoved = false, dragLast = {x:0,y:0};
-  let currentShade = 'solid';
-  let threeReady = false;
-
-  function frameForType(type){
-    const presets={table:{radius:340,ty:45},bench:{radius:320,ty:35},chair:{radius:230,ty:34},desk:{radius:330,ty:45},tvStand:{radius:360,ty:35},bookshelf:{radius:390,ty:90},cabinet:{radius:360,ty:70},nightstand:{radius:240,ty:35},console:{radius:300,ty:45},shoeRack:{radius:280,ty:35},barStool:{radius:220,ty:35},loungeChair:{radius:260,ty:38},rockingChair:{radius:280,ty:40},vanity:{radius:300,ty:45},sideboard:{radius:360,ty:50},plantStand:{radius:230,ty:45},wallShelf:{radius:260,ty:30}};
-    const p = presets[type] || presets.table;
-    camState.radius = p.radius;
-    camTarget.y = p.ty;
-    if(threeReady) updateCameraFromState();
-  }
-
-  function updateCameraFromState(){
-    const { theta, phi, radius } = camState;
-    camera.position.x = camTarget.x + radius * Math.sin(phi) * Math.sin(theta);
-    camera.position.y = camTarget.y + radius * Math.cos(phi);
-    camera.position.z = camTarget.z + radius * Math.sin(phi) * Math.cos(theta);
-    camera.lookAt(camTarget.x, camTarget.y, camTarget.z);
-  }
-
-  function goToView(name){
-    const baseR=({table:340,bench:320,chair:230,desk:330,tvStand:360,bookshelf:390,cabinet:360,nightstand:240,console:300,shoeRack:280,barStool:220,loungeChair:260,rockingChair:280,vanity:300,sideboard:360,plantStand:230,wallShelf:260})[state.type]||320;
-    const presets = {
-      persp: { theta:Math.PI/4, phi:1.15, radius:baseR },
-      front: { theta:0, phi:Math.PI/2, radius:baseR*0.9 },
-      side:  { theta:Math.PI/2, phi:Math.PI/2, radius:baseR*0.9 },
-      top:   { theta:0.001, phi:0.28, radius:baseR }
-    };
-    camAnim = { from:{...camState}, to:presets[name] || presets.persp, start:performance.now(), duration:450 };
-  }
-
-  function setShadeMode(mode){
-    currentShade = mode;
-    applyShadeToScene();
-  }
-  function applyShadeToScene(){
-    if(!pieceGroup) return;
-    pieceGroup.traverse(o=>{ if(o.isMesh) o.material.wireframe = currentShade==='wire'; });
-  }
-
-  function roundedRectShape(w,h,r){
-    const shape = new THREE.Shape();
-    const x=-w/2, y=-h/2;
-    r = Math.max(0, Math.min(r, w/2, h/2));
-    if(r < 0.05){
-      shape.moveTo(x,y); shape.lineTo(x+w,y); shape.lineTo(x+w,y+h); shape.lineTo(x,y+h); shape.closePath();
-      return shape;
-    }
-    shape.moveTo(x+r,y);
-    shape.lineTo(x+w-r,y);
-    shape.quadraticCurveTo(x+w,y,x+w,y+r);
-    shape.lineTo(x+w,y+h-r);
-    shape.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-    shape.lineTo(x+r,y+h);
-    shape.quadraticCurveTo(x,y+h,x,y+h-r);
-    shape.lineTo(x,y+r);
-    shape.quadraticCurveTo(x,y,x+r,y);
-    return shape;
-  }
-  function roundedPanelGeometry(faceW, faceH, thickness, radius){
-    const shape = roundedRectShape(faceW, faceH, radius);
-    const geo = new THREE.ExtrudeGeometry(shape, {depth:thickness, bevelEnabled:false, curveSegments:6});
-    geo.center();
-    return geo;
-  }
-
-  function cylinderBetween(pA, pB, radiusA, radiusB, material, segments){
-    segments = segments || 12;
-    const a = new THREE.Vector3(pA.x,pA.y,pA.z), b = new THREE.Vector3(pB.x,pB.y,pB.z);
-    const dir = new THREE.Vector3().subVectors(b,a);
-    const len = dir.length() || 0.001;
-    const geo = new THREE.CylinderGeometry(radiusB, radiusA, len, segments);
-    geo.translate(0, len/2, 0);
-    const mesh = new THREE.Mesh(geo, material);
-    mesh.position.copy(a);
-    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.normalize());
-    mesh.castShadow = true; mesh.receiveShadow = true;
-    return mesh;
-  }
-
-  function buildLeg(kind, footPos, topPos, material, metalMaterial){
-    const group = new THREE.Group();
-    const sx = footPos.x === 0 ? 1 : Math.sign(footPos.x);
-    const sz = footPos.z === 0 ? 1 : Math.sign(footPos.z);
-    if(kind === 'straight'){
-      group.add(cylinderBetween(topPos, footPos, 2.6, 2.6, material));
-    } else if(kind === 'hairpin'){
-      const perp = new THREE.Vector3(-sz, 0, sx).normalize().multiplyScalar(3.4);
-      const footA = new THREE.Vector3(footPos.x+perp.x, footPos.y, footPos.z+perp.z);
-      const footB = new THREE.Vector3(footPos.x-perp.x, footPos.y, footPos.z-perp.z);
-      group.add(cylinderBetween(topPos, footA, 0.85, 0.85, metalMaterial, 8));
-      group.add(cylinderBetween(topPos, footB, 0.85, 0.85, metalMaterial, 8));
-    } else if(kind === 'cabriole'){
-      const h = topPos.y - footPos.y;
-      const p0 = new THREE.Vector3(topPos.x, topPos.y, topPos.z);
-      const p1 = new THREE.Vector3(topPos.x + sx*4.6, topPos.y - h*0.28, topPos.z + sz*4.6);
-      const p2 = new THREE.Vector3(topPos.x + sx*2.1, topPos.y - h*0.62, topPos.z + sz*2.1);
-      const p3 = new THREE.Vector3(footPos.x, footPos.y, footPos.z);
-      const curve = new THREE.CatmullRomCurve3([p0,p1,p2,p3]);
-      const geo = new THREE.TubeGeometry(curve, 24, 2.3, 8, false);
-      const mesh = new THREE.Mesh(geo, material);
-      mesh.castShadow = true; mesh.receiveShadow = true;
-      group.add(mesh);
-    } else {
-      group.add(cylinderBetween(topPos, footPos, 3.1, 1.8, material));
-    }
-    return group;
-  }
-
-  function disposeObject3D(obj){
-    obj.traverse(child=>{
-      if(child.geometry) child.geometry.dispose();
-      if(child.material){
-        if(Array.isArray(child.material)) child.material.forEach(m=>m.dispose());
-        else child.material.dispose();
-      }
-    });
-  }
-
-  const woodTextureCache = {};
-  function makeWoodTexture(baseHex, grainHex, cacheKey){
-    if(woodTextureCache[cacheKey]) return woodTextureCache[cacheKey];
-    const w = 256, h = 256;
-    const canvas = document.createElement('canvas');
-    canvas.width = w; canvas.height = h;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = baseHex;
-    ctx.fillRect(0,0,w,h);
-    ctx.globalAlpha = 0.3;
-    for(let i=0;i<46;i++){
-      const y0 = Math.random()*h;
-      ctx.strokeStyle = grainHex;
-      ctx.lineWidth = 0.5 + Math.random()*1.6;
-      ctx.beginPath();
-      let cy = y0;
-      ctx.moveTo(0, cy);
-      for(let x=0; x<=w; x+=14){
-        cy += (Math.random()-0.5)*7;
-        ctx.lineTo(x, cy);
-      }
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-    woodTextureCache[cacheKey] = tex;
-    return tex;
-  }
-
-  function makeCoreMaterials(){
-    const wood = WOODS[state.wood], finish = FINISHES[state.finish];
-    const baseColor = new THREE.Color(finish.apply(wood.base));
-    const grainColor = new THREE.Color(state.finish==='white' ? mix(wood.grain,'#e9e2d3',0.55) : finish.apply(wood.grain));
-    const cacheKey = state.wood + '_' + state.finish;
-    const woodTex = makeWoodTexture('#'+baseColor.getHexString(), '#'+grainColor.getHexString(), cacheKey);
-    const topMat = new THREE.MeshStandardMaterial({map:woodTex, roughness:0.55, metalness:0.04});
-    const legMat = new THREE.MeshStandardMaterial({map:woodTex, roughness:0.5, metalness:0.05});
-    const metalMat = new THREE.MeshStandardMaterial({color:0x2b2b2b, roughness:0.35, metalness:0.75});
-    return {topMat, legMat, metalMat};
-  }
-
-  const shadowTextureCache = {};
-  function getShadowTexture(){
-    if(shadowTextureCache.tex) return shadowTextureCache.tex;
-    const size = 256;
-    const canvas = document.createElement('canvas');
-    canvas.width = size; canvas.height = size;
-    const ctx = canvas.getContext('2d');
-    const grad = ctx.createRadialGradient(size/2,size/2,0, size/2,size/2,size/2);
-    grad.addColorStop(0, 'rgba(0,0,0,0.5)');
-    grad.addColorStop(0.65, 'rgba(0,0,0,0.2)');
-    grad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0,0,size,size);
-    shadowTextureCache.tex = new THREE.CanvasTexture(canvas);
-    return shadowTextureCache.tex;
-  }
-  function addContactShadow(g, halfX, halfZ){
-    const mat = new THREE.MeshBasicMaterial({map:getShadowTexture(), transparent:true, depthWrite:false});
-    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(halfX*2*1.4, halfZ*2*1.4), mat);
-    mesh.rotation.x = -Math.PI/2;
-    mesh.position.y = 0.12;
-    mesh.renderOrder = -1;
-    g.add(mesh);
-  }
-
-  function buildTableGroup(){
-    const g = new THREE.Group();
-    const isBench = state.type === 'bench';
-    const isRound = state.type === 'table' && state.tableShape === 'round';
-    const {topMat, legMat, metalMat} = makeCoreMaterials();
-
-    const length = mapRange(state.length,80,240, 100,200);
-    const width = mapRange(state.width,30,120, 32,110);
-    const depth = mapRange(state.depth,30,120, 30,105);
-    const thick = mapRange(state.thickness,15,40, 2.4,5.6);
-    const height = isBench ? 45 : 74;
-    const legTopY = height - thick;
-    const inset = isBench ? 6 : 10;
-    const halfLen = length/2, halfDep = depth/2;
-
-    let topMesh;
-    if(isRound){
-      const r = length/2;
-      topMesh = new THREE.Mesh(new THREE.CylinderGeometry(r,r,thick,48), topMat);
-    } else {
-      const radius = clamp(state.edgeRadius,0,30)*0.15;
-      const geo = roundedPanelGeometry(length, depth, thick, radius);
-      geo.rotateX(Math.PI/2);
-      topMesh = new THREE.Mesh(geo, topMat);
-    }
-    topMesh.position.set(0, height - thick/2, 0);
-    topMesh.castShadow = true; topMesh.receiveShadow = true;
-    topMesh.userData.partKey = 'top';
-    g.add(topMesh);
-
-    const legPositions = isRound
-      ? [[length*0.31, length*0.31],[length*0.31,-length*0.31],[-length*0.31, length*0.31],[-length*0.31,-length*0.31]]
-      : [[halfLen-inset, halfDep-inset],[halfLen-inset, -(halfDep-inset)],[-(halfLen-inset), halfDep-inset],[-(halfLen-inset), -(halfDep-inset)]];
-
-    legPositions.forEach(([lx,lz])=>{
-      const topPos = {x:lx, y:legTopY, z:lz};
-      const footPos = {x:lx, y:0, z:lz};
-      const legGroup = buildLeg(state.legStyle, footPos, topPos, legMat, metalMat);
-      legGroup.traverse(o=>{ if(o.isMesh) o.userData.partKey = 'legs'; });
-      g.add(legGroup);
-    });
-
-    if(!isRound){
-      const apronH = 6;
-      [halfDep-inset, -(halfDep-inset)].forEach(az=>{
-        const apronMesh = new THREE.Mesh(new THREE.BoxGeometry(Math.max(10,length-2*inset-6), apronH, 3), legMat);
-        apronMesh.position.set(0, legTopY-apronH/2, az);
-        apronMesh.castShadow = true;
-        apronMesh.userData.partKey = 'legs';
-        g.add(apronMesh);
-      });
-    }
-    addContactShadow(g, isRound ? length/2 : halfLen, isRound ? length/2 : halfDep);
-    return g;
-  }
-
-  function buildChairGroup(){
-    const g = new THREE.Group();
-    const isRound = state.chairShape === 'round';
-    const {topMat:seatMat, legMat, metalMat} = makeCoreMaterials();
-    const backMat = legMat.clone();
-    const armMat = legMat.clone();
-
-    const seatW = mapRange(state.width,30,120, 38,68);
-    const seatD = mapRange(state.depth,30,120, 32,58);
-    const thick = mapRange(state.thickness,15,40, 1.8,4.2);
-    const seatHeight = 45;
-    const legTopY = seatHeight - thick;
-    const inset = 4;
-    const halfW = seatW/2, halfD = seatD/2;
-
-    let seatMesh;
-    if(isRound){
-      const r = seatW/2;
-      seatMesh = new THREE.Mesh(new THREE.CylinderGeometry(r,r,thick,40), seatMat);
-    } else {
-      const radius = clamp(state.edgeRadius,0,30)*0.12;
-      const geo = roundedPanelGeometry(seatW, seatD, thick, radius);
-      geo.rotateX(Math.PI/2);
-      seatMesh = new THREE.Mesh(geo, seatMat);
-    }
-    seatMesh.position.set(0, seatHeight - thick/2, 0);
-    seatMesh.castShadow = true; seatMesh.receiveShadow = true;
-    seatMesh.userData.partKey = 'top';
-    g.add(seatMesh);
-
-    const legPositions = isRound
-      ? [[halfW*0.62, halfD*0.62],[halfW*0.62,-halfD*0.62],[-halfW*0.62, halfD*0.62],[-halfW*0.62,-halfD*0.62]]
-      : [[halfW-inset, halfD-inset],[halfW-inset, -(halfD-inset)],[-(halfW-inset), halfD-inset],[-(halfW-inset), -(halfD-inset)]];
-    legPositions.forEach(([lx,lz])=>{
-      const topPos = {x:lx, y:legTopY, z:lz};
-      const footPos = {x:lx, y:0, z:lz};
-      const legGroup = buildLeg(state.legStyle, footPos, topPos, legMat, metalMat);
-      legGroup.traverse(o=>{ if(o.isMesh) o.userData.partKey = 'legs'; });
-      g.add(legGroup);
-    });
-
-    const backZ = isRound ? -halfD*0.62 : -(halfD-inset);
-    const backHeight = 46;
-    const backThick = mapRange(state.thickness,15,40, 1.6,3.4);
-    const backW = isRound ? seatW*0.78 : seatW - 6;
-    const angle = mapRange(clamp(state.backCurve,0,30),0,30, 0.03, 0.36);
-    const backRadius = clamp(state.edgeRadius,0,30)*0.1;
-
-    const backPivot = new THREE.Group();
-    backPivot.position.set(0, seatHeight, backZ);
-    backPivot.rotation.x = -angle;
-    const backGeo = roundedPanelGeometry(backW, backHeight, backThick, backRadius);
-    const backMesh = new THREE.Mesh(backGeo, backMat);
-    backMesh.position.set(0, backHeight/2, 0);
-    backMesh.castShadow = true; backMesh.receiveShadow = true;
-    backMesh.userData.partKey = 'back';
-    backPivot.add(backMesh);
-    g.add(backPivot);
-
-    if(state.armrest === 'yes'){
-      const armHeight = 23;
-      const frontZ = isRound ? halfD*0.62*0.55 : (halfD-inset)*0.55;
-      const railBackZ = backZ + 4;
-      [-1,1].forEach(side=>{
-        const x = side*(halfW-inset*0.5);
-        const postBottom = {x, y:seatHeight, z:frontZ};
-        const postTop = {x, y:seatHeight+armHeight, z:frontZ};
-        const railEnd = {x, y:seatHeight+armHeight, z:railBackZ};
-        const post = cylinderBetween(postTop, postBottom, 1.6,1.6, armMat, 8);
-        const rail = cylinderBetween(postTop, railEnd, 1.6,1.6, armMat, 8);
-        post.userData.partKey = 'armrest'; rail.userData.partKey = 'armrest';
-        g.add(post); g.add(rail);
-      });
-    }
-    addContactShadow(g, isRound ? seatW/2 : halfW, isRound ? seatW/2 : halfD);
-    return g;
-  }
+ wardrobeRoot.appendChild(inner);
 
 
-  function addBox(g,w,h,d,y,mat,x=0,z=0){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;g.add(m);return m;}
-  function addLegs(g,w,d,h,mat,metal,inset=7){[-1,1].forEach(sx=>[-1,1].forEach(sz=>{const x=sx*Math.max(4,w/2-inset),z=sz*Math.max(4,d/2-inset),leg=buildLeg(state.legStyle,{x,y:0,z},{x,y:h,z},mat,metal);leg.traverse(o=>{if(o.isMesh)o.userData.partKey='legs'});g.add(leg);}));}
-  function finishGeneric(g,w,d){addContactShadow(g,w/2,d/2);return g;}
-  function buildDeskGroup(){const g=new THREE.Group(),m=makeCoreMaterials(),w=mapRange(state.length,40,240,80,200),d=state.width,h=mapRange(state.depth,30,120,65,82),t=mapRange(state.thickness,15,40,2.5,5);addBox(g,w,t,d,h-t/2,m.topMat).userData.partKey='top';addLegs(g,w,d,h-t,m.legMat,m.metalMat,10);return finishGeneric(g,w,d);}
-  function buildTvStandGroup(){const g=new THREE.Group(),m=makeCoreMaterials(),w=mapRange(state.length,40,240,110,220),d=mapRange(state.width,20,120,30,60),h=mapRange(state.depth,30,120,35,65);addBox(g,w,5,d,h,m.topMat).userData.partKey='top';addBox(g,w-10,h-5,d-8,(h-5)/2,m.legMat);const div=new THREE.Mesh(new THREE.BoxGeometry(3,h-10,d-6),m.legMat);div.position.set(0,(h-5)/2,0);div.userData.partKey='legs';g.add(div);return finishGeneric(g,w,d);}
-  function buildBookshelfGroup(){const g=new THREE.Group(),m=makeCoreMaterials(),w=mapRange(state.length,40,240,60,160),d=mapRange(state.width,20,120,24,55),h=mapRange(state.depth,40,200,100,220),t=4;addBox(g,t,h,d,h/2,m.legMat,-w/2+t/2).userData.partKey='legs';addBox(g,t,h,d,h/2,m.legMat,w/2-t/2).userData.partKey='legs';addBox(g,w,t,d,h-t/2,m.topMat).userData.partKey='top';addBox(g,w,t,d,t/2,m.topMat).userData.partKey='top';for(let i=1;i<4;i++)addBox(g,w-6,3,d-3,h*i/4,m.legMat).userData.partKey='top';return finishGeneric(g,w,d);}
-  function buildCabinetGroup(){const g=new THREE.Group(),m=makeCoreMaterials(),w=mapRange(state.length,40,240,70,170),d=mapRange(state.width,20,120,30,65),h=mapRange(state.depth,40,200,60,180);addBox(g,w,h,d,h/2,m.legMat);addBox(g,w+3,5,d+3,h+2,m.topMat).userData.partKey='top';const div=new THREE.Mesh(new THREE.BoxGeometry(3,h-12,d-8),m.legMat);div.position.y=h/2;div.userData.partKey='legs';g.add(div);return finishGeneric(g,w,d);}
-  function buildNightstandGroup(){const g=new THREE.Group(),m=makeCoreMaterials(),w=mapRange(state.length,40,240,45,75),d=mapRange(state.width,20,120,32,55),h=mapRange(state.depth,40,120,45,75);addBox(g,w,h,d,h/2,m.legMat);addBox(g,w+3,4,d+3,h+2,m.topMat).userData.partKey='top';addBox(g,w-8,3,d-6,h*.58,m.topMat).userData.partKey='top';return finishGeneric(g,w,d);}
-  function buildConsoleGroup(){const g=new THREE.Group(),m=makeCoreMaterials(),w=mapRange(state.length,40,240,80,190),d=mapRange(state.width,20,120,25,45),h=mapRange(state.depth,40,120,65,95);addBox(g,w,4,d,h,m.topMat).userData.partKey='top';addLegs(g,w,d,h-4,m.legMat,m.metalMat,12);return finishGeneric(g,w,d);}
-  function buildShoeRackGroup(){const g=new THREE.Group(),m=makeCoreMaterials(),w=mapRange(state.length,40,240,80,170),d=mapRange(state.width,20,120,28,55),h=mapRange(state.depth,40,120,45,85);addBox(g,w,h,d,h/2,m.legMat);addBox(g,w+2,4,d+2,h+2,m.topMat).userData.partKey='top';for(let i=1;i<3;i++)addBox(g,w-8,3,d-4,h*i/3,m.topMat).userData.partKey='top';return finishGeneric(g,w,d);}
-  function buildBarStoolGroup(){const g=new THREE.Group(),m=makeCoreMaterials(),w=state.width,d=state.depth,h=70;addBox(g,w,3,d,h,m.topMat).userData.partKey='top';addLegs(g,w,d,h-3,m.legMat,m.metalMat,5);return finishGeneric(g,w,d);}
-  function buildLoungeChairGroup(){const g=buildChairGroup();g.scale.set(.98,1.05,1.08);return g;}
-  function buildRockingChairGroup(){const g=buildChairGroup(),m=makeCoreMaterials();for(const x of [-28,28]){const r=new THREE.Mesh(new THREE.CylinderGeometry(3,3,58,12),m.legMat);r.rotation.z=Math.PI/2;r.position.set(x,3,0);r.userData.partKey='legs';g.add(r);}return g;}
-  function buildVanityGroup(){const g=new THREE.Group(),m=makeCoreMaterials(),w=mapRange(state.length,40,240,80,160),d=mapRange(state.width,20,120,30,55),h=mapRange(state.depth,40,120,65,90);addBox(g,w,h*.72,d,h*.36,m.legMat);addBox(g,w+3,4,d+3,h*.72+2,m.topMat).userData.partKey='top';addBox(g,w*.42,4,3,h*.72+18,m.topMat).userData.partKey='back';return finishGeneric(g,w,d);}
-  function buildSideboardGroup(){const g=new THREE.Group(),m=makeCoreMaterials(),w=mapRange(state.length,40,240,110,210),d=mapRange(state.width,20,120,35,65),h=mapRange(state.depth,40,120,65,95);addBox(g,w,h,d,h/2,m.legMat);addBox(g,w+3,5,d+3,h+2,m.topMat).userData.partKey='top';for(const x of [-w*.25,w*.25]){const div=new THREE.Mesh(new THREE.BoxGeometry(3,h-10,d-8),m.legMat);div.position.set(x,(h-10)/2,0);div.userData.partKey='legs';g.add(div);}return finishGeneric(g,w,d);}
-  function buildPlantStandGroup(){const g=new THREE.Group(),m=makeCoreMaterials(),w=mapRange(state.length,40,120,30,65),d=mapRange(state.width,20,80,30,65),h=mapRange(state.depth,40,120,55,100);addBox(g,w,4,d,h,m.topMat).userData.partKey='top';addLegs(g,w,d,h-4,m.legMat,m.metalMat,5);return finishGeneric(g,w,d);}
-  function buildWallShelfGroup(){const g=new THREE.Group(),m=makeCoreMaterials(),w=mapRange(state.length,40,240,60,170),d=mapRange(state.width,20,60,18,35),h=mapRange(state.depth,25,80,18,40);addBox(g,w,5,d,h,m.topMat).userData.partKey='top';addBox(g,w,5,4,h+6,m.legMat,0,-d/2+2).userData.partKey='legs';return finishGeneric(g,w,d);}
-  function buildExtraFurnitureGroup(){switch(state.type){case'desk':return buildDeskGroup();case'tvStand':return buildTvStandGroup();case'bookshelf':return buildBookshelfGroup();case'cabinet':return buildCabinetGroup();case'nightstand':return buildNightstandGroup();case'console':return buildConsoleGroup();case'shoeRack':return buildShoeRackGroup();case'barStool':return buildBarStoolGroup();case'loungeChair':return buildLoungeChairGroup();case'rockingChair':return buildRockingChairGroup();case'vanity':return buildVanityGroup();case'sideboard':return buildSideboardGroup();case'plantStand':return buildPlantStandGroup();case'wallShelf':return buildWallShelfGroup();default:return null;}}
+ /* الأبواب */
 
-  function addDistinctBox(g,w,h,d,x,y,z,mat,bevel=0){
-    let geo=bevel>0?roundedPanelGeometry(w,d,h,Math.min(bevel,w/2,d/2)):new THREE.BoxGeometry(w,h,d);
-    if(bevel>0) geo.rotateX(Math.PI/2);
-    const m=new THREE.Mesh(geo,mat); m.position.set(x,y,z); m.castShadow=true; m.receiveShadow=true; g.add(m); return m;
-  }
-  function buildDistinctGroup(){
-    const g=new THREE.Group(); const {topMat,legMat,metalMat}=makeCoreMaterials();
-    const L=Math.max(80,state.length||140), W=Math.max(30,state.width||70), D=Math.max(30,state.depth||70);
-    const leg=(x,z,h=45)=>g.add(buildLeg(state.legStyle,{x,y:0,z},{x,y:h,z},legMat,metalMat));
-    if(state.type==='desk'){ addDistinctBox(g,L,5,D,0,74,0,topMat,3); for(const x of [-L/2+10,L/2-10]) for(const z of [-D/2+8,D/2-8]) leg(x,z,69); addDistinctBox(g,L*.34,55,D*.82,0,30,0,legMat,2); }
-    else if(state.type==='tvStand'){ addDistinctBox(g,L,8,D,0,58,0,topMat,3); addDistinctBox(g,8,50,D-4,-L/2+5,30,0,legMat); addDistinctBox(g,8,50,D-4,L/2-5,30,0,legMat); addDistinctBox(g,L*.28,42,D-8,-L*.22,32,0,legMat,2); addDistinctBox(g,L*.28,42,D-8,L*.22,32,0,legMat,2); }
-    else if(state.type==='bookshelf'){ const h=D,w=L; addDistinctBox(g,w,5,W,0,h,0,topMat,2); addDistinctBox(g,5,h,W,-w/2,h/2,0,legMat); addDistinctBox(g,5,h,W,w/2,h/2,0,legMat); for(let i=1;i<5;i++) addDistinctBox(g,w-8,3,W-4,0,h*i/5,0,topMat); }
-    else if(state.type==='wardrobe'){ const h=D,w=L; addDistinctBox(g,w,5,W,0,h,0,topMat,2); addDistinctBox(g,w,5,W,0,2,0,topMat); addDistinctBox(g,6,h,W,-w/2,h/2,0,legMat); addDistinctBox(g,6,h,W,w/2,h/2,0,legMat); addDistinctBox(g,w/2-5,h-8,3,-w/4,h/2,W/2+1,topMat,2); addDistinctBox(g,w/2-5,h-8,3,w/4,h/2,W/2+1,topMat,2); addDistinctBox(g,3,h-20,W-8,0,h/2,0,legMat); for(let y=45;y<h-25;y+=42) addDistinctBox(g,w-18,3,W-8,0,y,0,topMat); }
-    else if(state.type==='nightstand'){ addDistinctBox(g,L,5,D,0,55,0,topMat,3); addDistinctBox(g,L-8,43,D-6,0,29,0,legMat,3); addDistinctBox(g,L*.72,15,3,0,38,D/2+1,topMat,2); addDistinctBox(g,L*.72,15,3,0,20,D/2+1,topMat,2); }
-    else if(state.type==='console'){ addDistinctBox(g,L,5,D,0,78,0,topMat,3); for(const x of [-L/2+7,L/2-7]) leg(x,-D/2+5,75); addDistinctBox(g,L*.75,28,5,0,31,0,legMat,2); }
-    else if(state.type==='shoeRack'){ const h=D; addDistinctBox(g,L,5,W,0,h,0,topMat); for(let y=18;y<h;y+=18) addDistinctBox(g,L-8,3,W-4,0,y,0,topMat); addDistinctBox(g,5,h,W,-L/2,h/2,0,legMat); addDistinctBox(g,5,h,W,L/2,h/2,0,legMat); }
-    else if(state.type==='barStool'){ const r=W/2, m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,5,40),topMat); m.position.y=72;m.castShadow=true;g.add(m); for(const a of [0,Math.PI/2,Math.PI,Math.PI*1.5]) leg(Math.cos(a)*r*.65,Math.sin(a)*r*.65,70); addDistinctBox(g,W*.55,4,W*.55,0,38,0,metalMat,1); }
-    else if(state.type==='loungeChair'){ addDistinctBox(g,W,7,D,0,45,0,topMat,8); const back=new THREE.Mesh(new THREE.BoxGeometry(W,55,7),legMat); back.position.set(0,72,-D/2+5); back.rotation.x=-.18;back.castShadow=true;g.add(back); leg(-W/2+7,0,43);leg(W/2-7,0,43); }
-    else if(state.type==='vanity'){ addDistinctBox(g,L,5,D,0,76,0,topMat,3); addDistinctBox(g,L*.25,45,D-4,-L*.32,35,0,legMat,2); addDistinctBox(g,L*.25,45,D-4,L*.32,35,0,legMat,2); addDistinctBox(g,L*.62,38,3,0,116,-D/2+2,topMat,2); addDistinctBox(g,L*.56,5,4,0,100,-D/2+4,metalMat,1); }
-    else if(state.type==='sideboard'){ addDistinctBox(g,L,6,D,0,70,0,topMat,3); addDistinctBox(g,6,66,D,-L/2+6,34,0,legMat); addDistinctBox(g,6,66,D,L/2-6,34,0,legMat); for(const x of [-L*.3,0,L*.3]) addDistinctBox(g,L*.23,48,3,x,34,D/2+1,topMat,2); }
-    else if(state.type==='plantStand'){ addDistinctBox(g,W,5,D,0,80,0,topMat,4); leg(-W*.32,0,78);leg(W*.32,0,78); }
-    else if(state.type==='wallShelf'){ addDistinctBox(g,L,5,D,0,65,0,topMat,2); addDistinctBox(g,5,40,5,-L/2+10,43,-D/2+2,metalMat); addDistinctBox(g,5,40,5,L/2-10,43,-D/2+2,metalMat); }
-    else if(state.type==='bedroom'){ const rw=L,rd=W; addDistinctBox(g,rw,3,rd,0,1,0,legMat); const bedW=Math.min(180,rw*.48),bedD=Math.min(210,rd*.68); addDistinctBox(g,bedW,18,bedD,0,28,0,topMat,8); addDistinctBox(g,bedW+10,10,bedD+10,0,15,0,legMat,10); addDistinctBox(g,bedW,65,8,0,58,-bedD/2+5,legMat,4); for(const x of [-bedW/2-42,bedW/2+42]){addDistinctBox(g,48,42,48,x,22,-35,topMat,5);addDistinctBox(g,48,28,3,x,45,-60,topMat,3);} addDistinctBox(g,130,8,45,0,95,rd/2-30,topMat,4); addDistinctBox(g,130,75,5,0,132,rd/2-8,legMat,2); }
-    else if(state.type==='kitchenL'){ const a=L*.72,b=W*.72,h=88,c=62; addDistinctBox(g,a,h,c,-L*.1,h/2,-W/2+c/2,legMat,2); addDistinctBox(g,c,h,b,L/2-c/2,h/2,-W*.1,legMat,2); addDistinctBox(g,a+8,5,c+4,-L*.1,h+2,-W/2+c/2,topMat,2); addDistinctBox(g,c+4,5,b+8,L/2-c/2,h+2,-W*.1,topMat,2); for(let x=-L*.38;x<L*.32;x+=42) addDistinctBox(g,34,55,3,x,32,-W/2+2,topMat,2); for(let z=-W*.32;z<W*.2;z+=42) addDistinctBox(g,3,55,34,L/2-2,z,topMat,2); for(let x=-L*.25;x<L*.3;x+=48) addDistinctBox(g,42,38,4,x,138,-W/2+2,legMat,2); }
-    else if(state.type==='kitchenIsland'){ const a=L*.65,b=W*.62,h=88; addDistinctBox(g,a,h,60,-L*.12,h/2,-W*.22,legMat,2); addDistinctBox(g,60,h,b,L*.28,h/2,-W*.02,legMat,2); addDistinctBox(g,a+8,5,68,-L*.12,h+2,-W*.22,topMat,3); const iw=Math.min(180,L*.4),id=85; addDistinctBox(g,iw,5,id,L*.08,h+5,W*.12,topMat,8); for(const x of [-iw/2+7,iw/2-7]) for(const z of [-id/2+7,id/2-7]) g.add(buildLeg('straight',{x:x+L*.08,y:0,z:z+W*.12},{x:x+L*.08,y:h,z:z+W*.12},legMat,metalMat)); }
-    addContactShadow(g,Math.max(L/2,120),Math.max(W/2,80)); return g;
-  }
+ const gap=5;
 
-  function render(){
-    if(!threeReady) return;
-    if(pieceGroup){ scene.remove(pieceGroup); disposeObject3D(pieceGroup); }
-    if(state.type==='chair') pieceGroup=buildChairGroup(); else if(state.type==='table'||state.type==='bench') pieceGroup=buildTableGroup(); else pieceGroup=buildExtraFurnitureGroup(); if(!pieceGroup) pieceGroup=buildTableGroup();
-    scene.add(pieceGroup);
-    applyShadeToScene();
-    updateOutliner();
-    updateSpecUI();
-  }
+ const total=
+  W-
+  gap*(S.doors-1)-
+  12;
 
-  function resizeRenderer(){
-    if(!renderer || !viewportEl) return;
-    const w = viewportEl.clientWidth, h = viewportEl.clientHeight;
-    if(w===0 || h===0) return;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-  }
+ const widths=
+  computeDoorWidths(
+   S.doors,
+   total
+  );
 
-  function onPointerDown(e){
-    isDragging = true; dragMoved = false;
-    dragLast = {x:e.clientX, y:e.clientY};
-    try{ canvasEl.setPointerCapture(e.pointerId); }catch(err){}
-  }
-  function onPointerMove(e){
-    if(!isDragging) return;
-    const dx = e.clientX - dragLast.x, dy = e.clientY - dragLast.y;
-    if(Math.abs(dx)+Math.abs(dy) > 4) dragMoved = true;
-    camState.theta -= dx * 0.006;
-    camState.phi = clamp(camState.phi - dy * 0.006, 0.15, Math.PI - 0.1);
-    dragLast = {x:e.clientX, y:e.clientY};
-    camAnim = null;
-    updateCameraFromState();
-  }
-  function onPointerUp(e){
-    if(isDragging && !dragMoved) handleCanvasClick(e);
-    isDragging = false;
-  }
-  function onWheel(e){
-    e.preventDefault();
-    camState.radius = clamp(camState.radius + e.deltaY*0.4, 110, 800);
-    camAnim = null;
-    updateCameraFromState();
-  }
-  let pinchStartDist = null, pinchStartRadius = null;
-  function touchDist(touches){
-    const dx = touches[0].clientX - touches[1].clientX;
-    const dy = touches[0].clientY - touches[1].clientY;
-    return Math.hypot(dx, dy);
-  }
-  function onTouchStart(e){
-    if(e.touches.length===2){
-      isDragging = false;
-      pinchStartDist = touchDist(e.touches);
-      pinchStartRadius = camState.radius;
-    }
-  }
-  function onTouchMove(e){
-    if(e.touches.length===2 && pinchStartDist){
-      e.preventDefault();
-      const dist = touchDist(e.touches);
-      camState.radius = clamp(pinchStartRadius * (pinchStartDist / dist), 110, 800);
-      camAnim = null;
-      updateCameraFromState();
-    }
-  }
-  function onTouchEnd(e){
-    if(e.touches.length < 2) pinchStartDist = null;
-  }
-  function handleCanvasClick(e){
-    if(!pieceGroup) return;
-    const rect = canvasEl.getBoundingClientRect();
-    const px = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const py = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-    raycaster.setFromCamera({x:px, y:py}, camera);
-    const hits = raycaster.intersectObject(pieceGroup, true);
-    if(hits.length && hits[0].object.userData.partKey){
-      selectPart(hits[0].object.userData.partKey);
-    }
-  }
+ let cursor=
+  x+6;
 
-  function updateGizmo(){
-    const svg = document.getElementById('gizmo');
-    if(!svg) return;
-    const size = 70, center = size/2, R = 24;
-    const axes = [
-      {v:new THREE.Vector3(1,0,0), color:'#d9704f', label:'X'},
-      {v:new THREE.Vector3(-1,0,0), color:'#7a3a2a', label:''},
-      {v:new THREE.Vector3(0,1,0), color:'#8fbf5c', label:'Y'},
-      {v:new THREE.Vector3(0,-1,0), color:'#42552e', label:''},
-      {v:new THREE.Vector3(0,0,1), color:'#5f9fd9', label:'Z'},
-      {v:new THREE.Vector3(0,0,-1), color:'#324a63', label:''}
-    ];
-    const invQ = camera.quaternion.clone().invert();
-    const items = axes.map(a=>{
-      const cs = a.v.clone().applyQuaternion(invQ);
-      return {color:a.color, label:a.label, x:center+cs.x*R, y:center-cs.y*R, z:cs.z};
-    });
-    items.sort((a,b)=> a.z-b.z);
-    let out = '';
-    items.forEach(it=>{
-      const front = it.z > 0.02;
-      out += `<line x1="${center}" y1="${center}" x2="${it.x.toFixed(1)}" y2="${it.y.toFixed(1)}" stroke="${it.color}" stroke-width="1" opacity="${front?0.5:0.18}"/>`;
-      out += `<circle cx="${it.x.toFixed(1)}" cy="${it.y.toFixed(1)}" r="6.5" fill="${front?it.color:'transparent'}" stroke="${it.color}" stroke-width="1.1" opacity="${front?1:0.5}"/>`;
-      if(it.label) out += `<text x="${it.x.toFixed(1)}" y="${(it.y+2.8).toFixed(1)}" font-size="7.5" text-anchor="middle" fill="${front?'#1a1512':it.color}" font-family="Cairo, sans-serif">${it.label}</text>`;
-    });
-    svg.innerHTML = out;
-  }
 
-  function animate(){
-    requestAnimationFrame(animate);
-    if(camAnim){
-      const t = Math.min(1, (performance.now() - camAnim.start) / camAnim.duration);
-      const ease = t < 0.5 ? 2*t*t : -1 + (4-2*t)*t;
-      camState.theta = lerp(camAnim.from.theta, camAnim.to.theta, ease);
-      camState.phi = lerp(camAnim.from.phi, camAnim.to.phi, ease);
-      camState.radius = lerp(camAnim.from.radius, camAnim.to.radius, ease);
-      updateCameraFromState();
-      if(t >= 1) camAnim = null;
-    }
-    renderer.render(scene, camera);
-    updateGizmo();
-  }
+ for(
+  let i=0;
+  i<S.doors;
+  i++
+ ){
 
-  function initThree(){
-    viewportEl = document.getElementById('viewport');
-    canvasEl = document.getElementById('three-canvas');
-    if(typeof THREE === 'undefined'){
-      document.getElementById('threeFallback').style.display = 'flex';
-      const loadingEl = document.getElementById('viewportLoading');
-      if(loadingEl) loadingEl.classList.add('hidden');
-      return;
-    }
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x241d17);
-    scene.fog = new THREE.Fog(0x241d17, 420, 950);
+  const dw=
+   widths[i];
 
-    camera = new THREE.PerspectiveCamera(38, 1, 1, 2000);
-    updateCameraFromState();
 
-    try{
-      renderer = new THREE.WebGLRenderer({canvas:canvasEl, antialias:true});
-    }catch(err){
-      document.getElementById('threeFallback').style.display = 'flex';
-      const loadingEl = document.getElementById('viewportLoading');
-      if(loadingEl) loadingEl.classList.add('hidden');
-      return;
-    }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const door=
+   buildDoorFace(
+    cursor,
+    y+5,
+    dw,
+    H-10,
+    i
+   );
 
-    const hemi = new THREE.HemisphereLight(0xf3e6c8, 0x2a1d12, 0.65);
-    scene.add(hemi);
-    const key = new THREE.DirectionalLight(0xfff1d6, 1.05);
-    key.position.set(160,220,140);
-    key.castShadow = true;
-    key.shadow.mapSize.set(1024,1024);
-    key.shadow.camera.left = -220; key.shadow.camera.right = 220;
-    key.shadow.camera.top = 220; key.shadow.camera.bottom = -220;
-    key.shadow.camera.far = 600;
-    scene.add(key);
-    const fill = new THREE.DirectionalLight(0x8fa3c9, 0.28);
-    fill.position.set(-160,120,-120);
-    scene.add(fill);
 
-    const ground = new THREE.Mesh(
-      new THREE.PlaneGeometry(2000,2000),
-      new THREE.MeshStandardMaterial({color:0x1c1712, roughness:1})
+  door.style.cursor="pointer";
+
+
+  door.addEventListener(
+   "pointerdown",
+   event=>{
+    event.stopPropagation();
+
+    selectDefaultElement(
+     door,
+     "الباب "+(i+1)
     );
-    ground.rotation.x = -Math.PI/2;
-    ground.position.y = -0.05;
-    ground.receiveShadow = true;
-    scene.add(ground);
 
-    const grid = new THREE.GridHelper(500, 40, 0x8a6a3d, 0x3a2f24);
-    grid.material.opacity = 0.35;
-    grid.material.transparent = true;
-    scene.add(grid);
+   }
+  );
 
-    raycaster = new THREE.Raycaster();
 
-    canvasEl.addEventListener('pointerdown', onPointerDown);
-    window.addEventListener('pointermove', onPointerMove);
-    window.addEventListener('pointerup', onPointerUp);
-    canvasEl.addEventListener('wheel', onWheel, {passive:false});
-    canvasEl.addEventListener('touchstart', onTouchStart, {passive:false});
-    canvasEl.addEventListener('touchmove', onTouchMove, {passive:false});
-    canvasEl.addEventListener('touchend', onTouchEnd, {passive:false});
-    window.addEventListener('resize', resizeRenderer);
-    if(window.ResizeObserver) new ResizeObserver(resizeRenderer).observe(viewportEl);
+  wardrobeRoot.appendChild(door);
 
-    threeReady = true;
-    resizeRenderer();
-    animate();
-    const loadingEl = document.getElementById('viewportLoading');
-    if(loadingEl) requestAnimationFrame(()=> requestAnimationFrame(()=> loadingEl.classList.add('hidden')));
+
+  cursor+=
+   dw+
+   gap;
+
+ }
+
+
+ /* القاعدة */
+
+ const base=
+  svgEl("rect",{
+   x:x+10,
+   y:y+H,
+   width:W-20,
+   height:18,
+   fill:"#0c1310",
+   stroke:"#26342d",
+   "stroke-width":2,
+   "data-editor-element":"true",
+   "data-name":"قاعدة الخزانة"
+  });
+
+
+ base.style.cursor="pointer";
+
+
+ base.addEventListener(
+  "pointerdown",
+  ()=>{
+   selectDefaultElement(
+    base,
+    "قاعدة الخزانة"
+   );
+  }
+ );
+
+
+ wardrobeRoot.appendChild(base);
+
+
+ /* أرجل */
+
+ for(let i=0;i<4;i++){
+
+  const px=
+   x+
+   25+
+   i*((W-50)/3);
+
+  wardrobeRoot.appendChild(
+   svgEl("rect",{
+    x:px,
+    y:y+H+18,
+    width:13,
+    height:20,
+    rx:3,
+    fill:"#121a17"
+   })
+  );
+
+ }
+
+
+ /* تحديث الظل */
+
+ $("#wardrobeShadow").setAttribute(
+  "rx",
+  Math.min(370,W*.62)
+ );
+
+}
+
+
+
+/* =========================================================
+   DEFAULT SELECTION
+========================================================= */
+
+function selectDefaultElement(
+ element,
+ name
+){
+
+ S.selected=
+  element;
+
+ S.selectedName=
+  name;
+
+ $("#selectedName").textContent=
+  name;
+
+ showSelectedTab();
+
+ updateDefaultSelectionBox();
+
+ toast(
+  "تم تحديد "+name
+ );
+
+}
+
+
+function updateDefaultSelectionBox(){
+
+ if(!S.selected){
+  $("#selectionBox")
+   .classList.remove("show");
+
+  return;
+ }
+
+
+ try{
+
+  const rect=
+   S.selected.getBoundingClientRect();
+
+  const stage=
+   $(".stage-inner")
+    .getBoundingClientRect();
+
+  const box=
+   $("#selectionBox");
+
+
+  box.style.left=
+   (rect.left-stage.left)+"px";
+
+  box.style.top=
+   (rect.top-stage.top)+"px";
+
+  box.style.width=
+   rect.width+"px";
+
+  box.style.height=
+   rect.height+"px";
+
+  box.classList.add("show");
+
+
+  $("#selectionLabel").textContent=
+   S.selectedName;
+
+
+  const bb=
+   S.selected.getBBox();
+
+
+  $("#posX").value=
+   Math.round(bb.x);
+
+  $("#posY").value=
+   Math.round(bb.y);
+
+  $("#elementWidth").value=
+   Math.round(bb.width);
+
+  $("#elementHeight").value=
+   Math.round(bb.height);
+
+ }catch(e){}
+
+}
+
+
+
+/* =========================================================
+   TABS
+========================================================= */
+
+$$(".tab").forEach(tab=>{
+
+ tab.onclick=()=>{
+
+  activate(
+   ".tab",
+   tab
+  );
+
+  const name=
+   tab.dataset.tab;
+
+  $$(".panel").forEach(
+   p=>{
+    p.classList.toggle(
+     "active",
+     p.dataset.panel===name
+    );
+   }
+  );
+
+ };
+
+});
+
+
+function showSelectedTab(){
+
+ const tab=
+  document.querySelector(
+   '.tab[data-tab="selected"]'
+  );
+
+ activate(
+  ".tab",
+  tab
+ );
+
+ $$(".panel").forEach(
+  p=>{
+   p.classList.toggle(
+    "active",
+    p.dataset.panel==="selected"
+   );
+  }
+ );
+
+}
+
+
+
+/* =========================================================
+   DIMENSIONS
+========================================================= */
+
+function syncDimensions(){
+
+ S.width=
+  clamp(
+   Number($("#widthInput").value)||240,
+   120,
+   400
+  );
+
+ S.height=
+  clamp(
+   Number($("#heightInput").value)||240,
+   180,
+   350
+  );
+
+
+ $("#widthInput").value=
+  S.width;
+
+ $("#heightInput").value=
+  S.height;
+
+ $("#widthRange").value=
+  S.width;
+
+ $("#heightRange").value=
+  S.height;
+
+ $("#widthValue").textContent=
+  S.width+" سم";
+
+ $("#heightValue").textContent=
+  S.height+" سم";
+
+
+ if(!S.uploaded){
+
+  drawDefault();
+
+ }else{
+
+  applyUploadedDimensions();
+
+ }
+
+
+ updatePrice();
+
+}
+
+
+
+$("#widthInput").oninput=
+ syncDimensions;
+
+$("#heightInput").oninput=
+ syncDimensions;
+
+
+$("#widthRange").oninput=e=>{
+
+ $("#widthInput").value=
+  e.target.value;
+
+ syncDimensions();
+
+};
+
+
+$("#heightRange").oninput=e=>{
+
+ $("#heightInput").value=
+  e.target.value;
+
+ syncDimensions();
+
+};
+
+
+
+/* =========================================================
+   DOORS
+========================================================= */
+
+$$("#doorGroup button").forEach(
+ button=>{
+
+  button.onclick=()=>{
+
+   activate(
+    "#doorGroup button",
+    button
+   );
+
+   S.doors=
+    Number(button.dataset.count);
+
+   $("#doorsText").textContent=
+    S.doors+" أبواب";
+
+   drawDefault();
+
+   regenerateUploadedDoors();
+
+   updatePrice();
+
+  };
+
+ });
+
+
+
+/* =========================================================
+   DOOR LAYOUT
+========================================================= */
+
+$$("#layoutGroup button").forEach(
+ button=>{
+
+  button.onclick=()=>{
+
+   activate(
+    "#layoutGroup button",
+    button
+   );
+
+   S.doorLayout=
+    button.dataset.layout;
+
+   drawDefault();
+
+   regenerateUploadedDoors();
+
+  };
+
+ });
+
+
+
+/* =========================================================
+   DOOR STYLE
+========================================================= */
+
+$$("#styleGroup button").forEach(
+ button=>{
+
+  button.onclick=()=>{
+
+   activate(
+    "#styleGroup button",
+    button
+   );
+
+   S.style=
+    button.dataset.style;
+
+   drawDefault();
+
+   regenerateUploadedDoors();
+
+   updatePrice();
+
+  };
+
+ });
+
+
+
+/* =========================================================
+   MATERIAL
+========================================================= */
+
+$$("#materialGroup button").forEach(
+ button=>{
+
+  button.onclick=()=>{
+
+   activate(
+    "#materialGroup button",
+    button
+   );
+
+   S.color=
+    button.dataset.color;
+
+   drawDefault();
+
+   updateUploadedMaterial();
+
+   regenerateUploadedDoors();
+
+   updatePrice();
+
+  };
+
+ });
+
+
+
+/* =========================================================
+   HANDLES
+========================================================= */
+
+$$("#handleGroup button").forEach(
+ button=>{
+
+  button.onclick=()=>{
+
+   activate(
+    "#handleGroup button",
+    button
+   );
+
+   S.handle=
+    button.dataset.handle;
+
+   drawDefault();
+
+   regenerateUploadedDoors();
+
+   updatePrice();
+
+  };
+
+ });
+
+
+
+/* =========================================================
+   ADDONS
+========================================================= */
+
+$$(".addon").forEach(
+ button=>{
+
+  button.onclick=()=>{
+
+   const key=
+    button.dataset.addon;
+
+   S.addons[key]=
+    !S.addons[key];
+
+   button.classList.toggle(
+    "on",
+    S.addons[key]
+   );
+
+   drawDefault();
+
+   regenerateUploadedDoors();
+
+   updatePrice();
+
+  };
+
+ });
+
+
+
+/* =========================================================
+   UPLOAD SVG
+========================================================= */
+
+$("#uploadBtn").onclick=
+ ()=>{
+  $("#svgFile").click();
+ };
+
+
+$("#svgFile").onchange=
+ event=>{
+
+  const file=
+   event.target.files[0];
+
+  if(!file)
+   return;
+
+
+  if(
+   !file.name
+    .toLowerCase()
+    .endsWith(".svg")
+  ){
+
+   toast("اختر ملف SVG فقط");
+
+   return;
+
   }
 
-  applyDimensionDefaults(state.type);
-  initThree();
-  syncTypeUI();
-  render();
-})();
+
+  const reader=
+   new FileReader();
+
+
+  reader.onload=e=>{
+
+   loadSvgFromString(
+    String(e.target.result),
+    file.name
+   );
+
+  };
+
+
+  reader.readAsText(file);
+
+ };
+
+
+
+/* =========================================================
+   LOAD SVG
+========================================================= */
+
+function loadSvgFromString(
+ raw,
+ name
+){
+
+ const parser=
+  new DOMParser();
+
+ const doc=
+  parser.parseFromString(
+   raw,
+   "image/svg+xml"
+  );
+
+ const svg=
+  doc.documentElement;
+
+
+ if(
+  !svg ||
+  svg.nodeName.toLowerCase()!=="svg" ||
+  doc.querySelector("parsererror")
+ ){
+
+  toast("ملف SVG غير صالح");
+
+  return;
+
+ }
+
+
+ /* تنظيف */
+
+ svg.querySelectorAll(
+  "script,foreignObject,iframe,object,embed"
+ ).forEach(
+  n=>n.remove()
+ );
+
+
+ svg.querySelectorAll("*").forEach(
+  node=>{
+
+   [...node.attributes].forEach(
+    attr=>{
+
+     if(
+      /^on/i.test(attr.name) ||
+      /javascript:/i.test(attr.value)
+     ){
+
+      node.removeAttribute(
+       attr.name
+      );
+
+     }
+
+    }
+   );
+
+  }
+ );
+
+
+ const host=
+  $("#uploadedHost");
+
+ host.innerHTML="";
+
+ host.appendChild(
+  document.importNode(
+   svg,
+   true
+  )
+ );
+
+
+ S.uploaded=true;
+ S.uploadedRaw=raw;
+ S.uploadedName=name;
+
+
+ $("#fileName").textContent=
+  name;
+
+ $("#modelTitle").textContent=
+  name;
+
+ $("#mainSvg").style.display=
+  "none";
+
+ host.classList.add("active");
+
+
+ prepareUploadedSVG();
+
+
+ try{
+
+  localStorage.setItem(
+   "dar_svg",
+   raw
+  );
+
+  localStorage.setItem(
+   "dar_svg_name",
+   name
+  );
+
+ }catch(e){}
+
+
+ toast(
+  "تم رفع الخزانة — حدد واجهة الباب من الرسم"
+ );
+
+}
+
+
+
+/* =========================================================
+   PREPARE UPLOADED SVG
+========================================================= */
+
+function prepareUploadedSVG(){
+
+ const svg=
+  $("#uploadedHost svg");
+
+ if(!svg)
+  return;
+
+
+ svg.style.pointerEvents=
+  "auto";
+
+ svg.style.userSelect=
+  "none";
+
+
+ let root=
+  svg.querySelector(
+   '[data-model-root="true"]'
+  );
+
+
+ if(!root){
+
+  root=
+   svgEl("g",{
+    "data-model-root":"true"
+   });
+
+
+  while(svg.firstChild){
+
+   root.appendChild(
+    svg.firstChild
+   );
+
+  }
+
+
+  svg.appendChild(root);
+
+ }
+
+
+ try{
+
+  const bbox=
+   root.getBBox();
+
+  S.modelBaseBox={
+   x:bbox.x,
+   y:bbox.y,
+   width:bbox.width,
+   height:bbox.height
+  };
+
+ }catch(e){
+
+  S.modelBaseBox=null;
+
+ }
+
+
+ S.doorRegion=null;
+ S.doorContainer=null;
+ S.selected=null;
+
+
+ $("#selectionBox")
+  .classList.remove("show");
+
+ $("#selectedName").textContent=
+  "لا يوجد";
+
+ $("#unmarkDoorBtn").style.display=
+  "none";
+
+
+ const graphics=
+  svg.querySelectorAll(
+   "g,rect,circle,ellipse,path,polygon,polyline,line,image"
+  );
+
+
+ graphics.forEach(
+  element=>{
+
+   if(
+    element===root ||
+    element.closest(
+     '[data-model-root="true"]'
+    )===element
+   )
+    return;
+
+
+   element.style.cursor=
+    "pointer";
+
+   element.dataset.editorElement=
+    "true";
+
+
+   element.addEventListener(
+    "pointerdown",
+    uploadedPointerDown
+   );
+
+  }
+ );
+
+
+ updateUploadedMaterial();
+
+ applyUploadedDimensions();
+
+}
+
+
+
+/* =========================================================
+   UPLOADED SELECT
+========================================================= */
+
+function uploadedPointerDown(event){
+
+ if(!S.uploaded)
+  return;
+
+ event.stopPropagation();
+
+ selectUploadedElement(
+  event.currentTarget
+ );
+
+}
+
+
+function selectUploadedElement(
+ element
+){
+
+ S.selected=
+  element;
+
+ S.selectedName=
+  element.dataset.name ||
+  element.tagName;
+
+ $("#selectedName").textContent=
+  S.selectedName;
+
+
+ const isDoorPiece=
+  !!element.closest(
+   '[data-door-container="true"]'
+  );
+
+
+ $("#unmarkDoorBtn").style.display=
+  isDoorPiece
+   ? "block"
+   : "none";
+
+
+ showSelectedTab();
+
+ updateSelectionBox();
+
+ toast(
+  "تم تحديد "+S.selectedName
+ );
+
+}
+
+
+
+/* =========================================================
+   UPLOADED BOUNDING BOX
+========================================================= */
+
+function updateSelectionBox(){
+
+ if(!S.selected){
+
+  $("#selectionBox")
+   .classList.remove("show");
+
+  return;
+
+ }
+
+
+ try{
+
+  const rect=
+   S.selected.getBoundingClientRect();
+
+  const stage=
+   $(".stage-inner")
+    .getBoundingClientRect();
+
+  const box=
+   $("#selectionBox");
+
+
+  box.style.left=
+   (rect.left-stage.left)+"px";
+
+  box.style.top=
+   (rect.top-stage.top)+"px";
+
+  box.style.width=
+   rect.width+"px";
+
+  box.style.height=
+   rect.height+"px";
+
+  box.classList.add("show");
+
+
+  $("#selectionLabel").textContent=
+   S.selectedName;
+
+
+  const bb=
+   S.selected.getBBox();
+
+
+  $("#posX").value=
+   Math.round(bb.x);
+
+  $("#posY").value=
+   Math.round(bb.y);
+
+  $("#elementWidth").value=
+   Math.round(bb.width);
+
+  $("#elementHeight").value=
+   Math.round(bb.height);
+
+ }catch(e){
+
+  $("#selectionBox")
+   .classList.remove("show");
+
+ }
+
+}
+
+
+
+/* =========================================================
+   ELEMENT TRANSFORM
+========================================================= */
+
+function applyElementTransform(){
+
+ if(!S.selected)
+  return;
+
+
+ const x=
+  Number($("#posX").value)||0;
+
+ const y=
+  Number($("#posY").value)||0;
+
+ const w=
+  Math.max(
+   1,
+   Number($("#elementWidth").value)||1
+  );
+
+ const h=
+  Math.max(
+   1,
+   Number($("#elementHeight").value)||1
+  );
+
+
+ try{
+
+  const old=
+   S.selected.getBBox();
+
+
+  const sx=
+   w/
+   Math.max(
+    old.width,
+    1
+   );
+
+
+  const sy=
+   h/
+   Math.max(
+    old.height,
+    1
+   );
+
+
+  S.selected.setAttribute(
+   "transform",
+   `
+   translate(
+    ${x-old.x}
+    ${y-old.y}
+   )
+   scale(
+    ${sx}
+    ${sy}
+   )
+   `
+  );
+
+
+  updateSelectionBox();
+
+ }catch(e){
+
+  toast(
+   "تعذر تعديل هذا العنصر"
+  );
+
+ }
+
+}
+
+
+$("#posX").oninput=
+ applyElementTransform;
+
+$("#posY").oninput=
+ applyElementTransform;
+
+$("#elementWidth").oninput=
+ applyElementTransform;
+
+$("#elementHeight").oninput=
+ applyElementTransform;
+
+
+
+/* =========================================================
+   MARK DOOR REGION
+========================================================= */
+
+$("#markDoorBtn").onclick=()=>{
+
+ if(!S.selected){
+
+  toast(
+   "حدد واجهة الباب أولاً"
+  );
+
+  return;
+
+ }
+
+
+ if(
+  S.selected.closest(
+   '[data-door-container="true"]'
+  )
+ ){
+
+  toast(
+   "هذا العنصر بالفعل منطقة أبواب"
+  );
+
+  return;
+
+ }
+
+
+ try{
+
+  const bbox=
+   S.selected.getBBox();
+
+  const parent=
+   S.selected.parentNode;
+
+
+  const container=
+   svgEl("g",{
+    "data-door-container":"true"
+   });
+
+
+  parent.insertBefore(
+   container,
+   S.selected
+  );
+
+
+  S.selected.remove();
+
+
+  S.doorRegion={
+   x:bbox.x,
+   y:bbox.y,
+   width:Math.max(
+    bbox.width,
+    1
+   ),
+   height:Math.max(
+    bbox.height,
+    1
+   )
+  };
+
+
+  S.doorContainer=
+   container;
+
+
+  S.selected=null;
+
+
+  $("#selectionBox")
+   .classList.remove("show");
+
+  $("#selectedName").textContent=
+   "لا يوجد";
+
+  $("#unmarkDoorBtn").style.display=
+   "none";
+
+
+  regenerateUploadedDoors();
+
+
+  toast(
+   "تم تعيين منطقة الأبواب بنجاح"
+  );
+
+ }catch(e){
+
+  toast(
+   "تعذر تعيين منطقة الأبواب"
+  );
+
+ }
+
+};
+
+
+
+/* =========================================================
+   UNMARK DOOR
+========================================================= */
+
+$("#unmarkDoorBtn").onclick=()=>{
+
+ if(!S.doorContainer)
+  return;
+
+
+ S.doorContainer.remove();
+
+ S.doorContainer=null;
+ S.doorRegion=null;
+ S.selected=null;
+
+
+ $("#selectionBox")
+  .classList.remove("show");
+
+ $("#selectedName").textContent=
+  "لا يوجد";
+
+ $("#unmarkDoorBtn").style.display=
+  "none";
+
+
+ toast(
+  "تم إلغاء منطقة الأبواب"
+ );
+
+};
+
+
+
+/* =========================================================
+   REGENERATE UPLOADED DOORS
+========================================================= */
+
+function regenerateUploadedDoors(){
+
+ if(
+  !S.uploaded ||
+  !S.doorContainer ||
+  !S.doorRegion
+ )
+  return;
+
+
+ const container=
+  S.doorContainer;
+
+
+ container.innerHTML="";
+
+
+ const r=
+  S.doorRegion;
+
+
+ const gap=
+  Math.max(
+   1,
+   r.width*.012
+  );
+
+
+ const usable=
+  r.width-
+  gap*(S.doors-1);
+
+
+ const widths=
+  computeDoorWidths(
+   S.doors,
+   usable
+  );
+
+
+ let cursor=
+  r.x;
+
+
+ for(
+  let i=0;
+  i<S.doors;
+  i++
+ ){
+
+  const door=
+   buildDoorFace(
+    cursor,
+    r.y,
+    widths[i],
+    r.height,
+    i
+   );
+
+
+  door.style.cursor=
+   "pointer";
+
+
+  door.addEventListener(
+   "pointerdown",
+   event=>{
+
+    event.stopPropagation();
+
+    selectUploadedElement(
+     door
+    );
+
+   }
+  );
+
+
+  container.appendChild(
+   door
+  );
+
+
+  cursor+=
+   widths[i]+gap;
+
+ }
+
+}
+
+
+
+/* =========================================================
+   UPLOADED MATERIAL
+========================================================= */
+
+function updateUploadedMaterial(){
+
+ if(!S.uploaded)
+  return;
+
+
+ const svg=
+  $("#uploadedHost svg");
+
+ if(!svg)
+  return;
+
+
+ svg.querySelectorAll(
+  "[data-editor-element]"
+ ).forEach(
+  element=>{
+
+   if(
+    element.closest(
+     '[data-door-container="true"]'
+    )
+   )
+    return;
+
+
+   const fill=
+    element.getAttribute("fill");
+
+
+   if(
+    fill &&
+    fill!=="none" &&
+    !fill.startsWith("url(")
+   ){
+
+    const f=
+     fill.toLowerCase();
+
+
+    if(
+     ![
+      "#000",
+      "#000000",
+      "#fff",
+      "#ffffff",
+      "black",
+      "white"
+     ].includes(f)
+    ){
+
+     element.setAttribute(
+      "fill",
+      S.color
+     );
+
+    }
+
+   }
+
+  }
+ );
+
+}
+
+
+
+/* =========================================================
+   UPLOADED DIMENSIONS
+========================================================= */
+
+function applyUploadedDimensions(){
+
+ if(
+  !S.uploaded ||
+  !S.modelBaseBox
+ )
+  return;
+
+
+ const svg=
+  $("#uploadedHost svg");
+
+ const root=
+  svg?.querySelector(
+   '[data-model-root="true"]'
+  );
+
+
+ if(!root)
+  return;
+
+
+ const sx=
+  S.width/240;
+
+ const sy=
+  S.height/240;
+
+
+ const {
+  x,
+  y
+ }=
+  S.modelBaseBox;
+
+
+ root.setAttribute(
+  "transform",
+  `
+  translate(${x} ${y})
+  scale(${sx} ${sy})
+  translate(${-x} ${-y})
+  `
+ );
+
+}
+
+
+
+/* =========================================================
+   REMOVE SVG
+========================================================= */
+
+$("#removeBtn").onclick=()=>{
+
+ S.uploaded=false;
+ S.uploadedRaw="";
+ S.uploadedName="";
+ S.selected=null;
+ S.modelBaseBox=null;
+ S.doorRegion=null;
+ S.doorContainer=null;
+
+
+ $("#uploadedHost").innerHTML="";
+ $("#uploadedHost").classList.remove("active");
+
+ $("#mainSvg").style.display=
+  "block";
+
+ $("#selectionBox")
+  .classList.remove("show");
+
+ $("#fileName").textContent=
+  "لم يتم رفع ملف";
+
+ $("#modelTitle").textContent=
+  "خزانة 4 أبواب";
+
+ $("#selectedName").textContent=
+  "لا يوجد";
+
+ $("#unmarkDoorBtn").style.display=
+  "none";
+
+ $("#svgFile").value="";
+
+
+ try{
+
+  localStorage.removeItem(
+   "dar_svg"
+  );
+
+  localStorage.removeItem(
+   "dar_svg_name"
+  );
+
+ }catch(e){}
+
+
+ drawDefault();
+
+ toast(
+  "تمت إزالة الخزانة المرفوعة"
+ );
+
+};
+
+
+
+/* =========================================================
+   ZOOM
+========================================================= */
+
+$("#zoomIn").onclick=()=>{
+
+ S.zoom=
+  Math.min(
+   1.6,
+   S.zoom+.1
+  );
+
+ applyZoom();
+
+};
+
+
+$("#zoomOut").onclick=()=>{
+
+ S.zoom=
+  Math.max(
+   .5,
+   S.zoom-.1
+  );
+
+ applyZoom();
+
+};
+
+
+$("#zoomReset").onclick=()=>{
+
+ S.zoom=1;
+
+ applyZoom();
+
+};
+
+
+function applyZoom(){
+
+ if(S.uploaded){
+
+  const svg=
+   $("#uploadedHost svg");
+
+  if(svg){
+
+   svg.style.transform=
+    `scale(${S.zoom})`;
+
+  }
+
+ }else{
+
+  $("#mainSvg").style.transform=
+   `scale(${S.zoom})`;
+
+ }
+
+}
+
+
+
+/* =========================================================
+   DRAG DEFAULT
+========================================================= */
+
+let dragData=null;
+
+
+document.addEventListener(
+ "pointerdown",
+ event=>{
+
+  if(
+   !S.selected ||
+   S.uploaded
+  )
+   return;
+
+
+  if(
+   !event.target.closest(
+    "#mainSvg"
+   )
+  )
+   return;
+
+
+  const target=
+   event.target;
+
+
+  if(
+   target===S.selected ||
+   target.closest(
+    "[data-door]"
+   )===S.selected
+  ){
+
+   dragData={
+    element:S.selected,
+    startX:event.clientX,
+    startY:event.clientY,
+    originalTransform:
+     S.selected.getAttribute(
+      "transform"
+     )||""
+   };
+
+  }
+
+ }
+);
+
+
+document.addEventListener(
+ "pointermove",
+ event=>{
+
+  if(!dragData)
+   return;
+
+
+  const dx=
+   event.clientX-
+   dragData.startX;
+
+
+  const dy=
+   event.clientY-
+   dragData.startY;
+
+
+  const svg=
+   $("#mainSvg");
+
+  const rect=
+   svg.getBoundingClientRect();
+
+
+  const vb=
+   svg.viewBox.baseVal;
+
+
+  const sx=
+   vb.width/
+   rect.width;
+
+  const sy=
+   vb.height/
+   rect.height;
+
+
+  const tx=
+   dx*sx;
+
+  const ty=
+   dy*sy;
+
+
+  dragData.element.setAttribute(
+   "transform",
+   `${dragData.originalTransform} translate(${tx} ${ty})`
+  );
+
+
+  updateDefaultSelectionBox();
+
+ }
+);
+
+
+document.addEventListener(
+ "pointerup",
+ ()=>{
+  dragData=null;
+ }
+);
+
+
+
+/* =========================================================
+   UPLOADED DRAG
+========================================================= */
+
+let uploadedDrag=null;
+
+
+$("#uploadedHost").addEventListener(
+ "pointerdown",
+ event=>{
+
+  if(
+   !S.uploaded ||
+   !S.selected
+  )
+   return;
+
+
+  if(
+   !event.target.closest(
+    "#uploadedHost"
+   )
+  )
+   return;
+
+
+  uploadedDrag={
+   element:S.selected,
+   startX:event.clientX,
+   startY:event.clientY,
+   oldTransform:
+    S.selected.getAttribute(
+     "transform"
+    )||""
+  };
+
+ }
+);
+
+
+document.addEventListener(
+ "pointermove",
+ event=>{
+
+  if(!uploadedDrag)
+   return;
+
+
+  const dx=
+   event.clientX-
+   uploadedDrag.startX;
+
+  const dy=
+   event.clientY-
+   uploadedDrag.startY;
+
+
+  const svg=
+   $("#uploadedHost svg");
+
+  const rect=
+   $(".stage-inner")
+    .getBoundingClientRect();
+
+
+  const vb=
+   svg?.viewBox?.baseVal;
+
+
+  const sx=
+   vb && rect.width
+    ? vb.width/rect.width
+    : 1;
+
+  const sy=
+   vb && rect.height
+    ? vb.height/rect.height
+    : 1;
+
+
+  uploadedDrag.element.setAttribute(
+   "transform",
+   `${uploadedDrag.oldTransform} translate(${dx*sx} ${dy*sy})`
+  );
+
+
+  updateSelectionBox();
+
+ }
+);
+
+
+document.addEventListener(
+ "pointerup",
+ ()=>{
+  uploadedDrag=null;
+ }
+);
+
+
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+$("#deleteBtn").onclick=()=>{
+
+ if(!S.selected){
+
+  toast("حدد عنصرًا أولاً");
+
+  return;
+
+ }
+
+
+ if(
+  S.selected.closest(
+   '[data-door-container="true"]'
+  )
+ ){
+
+  toast(
+   "استخدم إلغاء منطقة الأبواب"
+  );
+
+  return;
+
+ }
+
+
+ S.selected.remove();
+
+ S.selected=null;
+
+ $("#selectionBox")
+  .classList.remove("show");
+
+ $("#selectedName").textContent=
+  "لا يوجد";
+
+
+ toast(
+  "تم حذف العنصر"
+ );
+
+};
+
+
+
+/* =========================================================
+   DUPLICATE
+========================================================= */
+
+$("#duplicateBtn").onclick=()=>{
+
+ if(!S.selected){
+
+  toast("حدد عنصرًا أولاً");
+
+  return;
+
+ }
+
+
+ if(
+  S.selected.closest(
+   '[data-door-container="true"]'
+  )
+ ){
+
+  toast(
+   "غيّر عدد الأبواب بدل نسخ الباب"
+  );
+
+  return;
+
+ }
+
+
+ const copy=
+  S.selected.cloneNode(true);
+
+
+ copy.setAttribute(
+  "transform",
+  `
+  ${copy.getAttribute("transform")||""}
+  translate(20 20)
+  `
+ );
+
+
+ copy.dataset.editorElement=
+  "true";
+
+
+ copy.dataset.name=
+  (S.selectedName||"عنصر")+" — نسخة";
+
+
+ if(S.uploaded){
+
+  copy.addEventListener(
+   "pointerdown",
+   uploadedPointerDown
+  );
+
+  S.selected.parentNode
+   .appendChild(copy);
+
+  selectUploadedElement(copy);
+
+ }else{
+
+  copy.addEventListener(
+   "pointerdown",
+   ()=>{
+    selectDefaultElement(
+     copy,
+     copy.dataset.name
+    );
+   }
+  );
+
+  S.selected.parentNode
+   .appendChild(copy);
+
+  selectDefaultElement(
+   copy,
+   copy.dataset.name
+  );
+
+ }
+
+};
+
+
+
+/* =========================================================
+   FRONT / BACK
+========================================================= */
+
+$("#frontBtn").onclick=()=>{
+
+ if(!S.selected){
+
+  toast("حدد عنصرًا أولاً");
+
+  return;
+
+ }
+
+ S.selected.parentNode
+  .appendChild(
+   S.selected
+  );
+
+ toast(
+  "تم تقديم العنصر للأمام"
+ );
+
+};
+
+
+$("#backBtn").onclick=()=>{
+
+ if(!S.selected){
+
+  toast("حدد عنصرًا أولاً");
+
+  return;
+
+ }
+
+ const parent=
+  S.selected.parentNode;
+
+ parent.insertBefore(
+  S.selected,
+  parent.firstChild
+ );
+
+ toast(
+  "تم إرسال العنصر للخلف"
+ );
+
+};
+
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+$("#saveBtn").onclick=()=>{
+
+ const data={
+  state:{
+   ...S,
+   selected:null
+  },
+  svg:S.uploadedRaw,
+  name:S.uploadedName
+ };
+
+
+ try{
+
+  localStorage.setItem(
+   "dar_design",
+   JSON.stringify(data)
+  );
+
+  toast(
+   "تم حفظ التصميم على الجهاز"
+  );
+
+ }catch(e){
+
+  toast(
+   "تعذر حفظ التصميم"
+  );
+
+ }
+
+};
+
+
+
+/* =========================================================
+   LOAD
+========================================================= */
+
+function loadSaved(){
+
+ try{
+
+  const raw=
+   localStorage.getItem(
+    "dar_design"
+   );
+
+
+  if(!raw)
+   return;
+
+
+  const data=
+   JSON.parse(raw);
+
+
+  if(data.state){
+
+   Object.assign(
+    S,
+    data.state
+   );
+
+  }
+
+
+  if(
+   data.svg &&
+   data.name
+  ){
+
+   loadSvgFromString(
+    data.svg,
+    data.name
+   );
+
+  }
+
+
+  $("#widthInput").value=
+   S.width;
+
+  $("#heightInput").value=
+   S.height;
+
+  $("#widthRange").value=
+   S.width;
+
+  $("#heightRange").value=
+   S.height;
+
+  $("#widthValue").textContent=
+   S.width+" سم";
+
+  $("#heightValue").textContent=
+   S.height+" سم";
+
+  $("#doorsText").textContent=
+   S.doors+" أبواب";
+
+  updatePrice();
+
+ }catch(e){}
+
+}
+
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+$("#resetBtn").onclick=()=>{
+
+ if(
+  !confirm(
+   "هل تريد إعادة التصميم للوضع الافتراضي؟"
+  )
+ )
+  return;
+
+
+ Object.assign(
+  S,
+  {
+   width:240,
+   height:240,
+   doors:4,
+   doorLayout:"equal",
+   color:"#EDEDE9",
+   style:"flat",
+   handle:"bar",
+   zoom:1,
+   selected:null,
+   selectedName:"",
+   uploaded:false,
+   uploadedRaw:"",
+   uploadedName:"",
+   modelBaseBox:null,
+   doorRegion:null,
+   doorContainer:null,
+   addons:{
+    led:true,
+    drawers:false,
+    hanging:true,
+    mirror:false
+   }
+  }
+ );
+
+
+ $("#widthInput").value=240;
+ $("#heightInput").value=240;
+
+ $("#widthRange").value=240;
+ $("#heightRange").value=240;
+
+ $("#widthValue").textContent=
+  "240 سم";
+
+ $("#heightValue").textContent=
+  "240 سم";
+
+ $("#doorsText").textContent=
+  "4 أبواب";
+
+
+ $("#uploadedHost").innerHTML="";
+ $("#uploadedHost")
+  .classList.remove("active");
+
+ $("#mainSvg").style.display=
+  "block";
+
+ $("#selectionBox")
+  .classList.remove("show");
+
+ $("#fileName").textContent=
+  "لم يتم رفع ملف";
+
+ $("#modelTitle").textContent=
+  "خزانة 4 أبواب";
+
+ $("#selectedName").textContent=
+  "لا يوجد";
+
+ $("#unmarkDoorBtn").style.display=
+  "none";
+
+ $("#svgFile").value="";
+
+
+ $$(".addon").forEach(
+  a=>{
+   const key=
+    a.dataset.addon;
+
+   a.classList.toggle(
+    "on",
+    S.addons[key]
+   );
+  }
+ );
+
+
+ $$("#doorGroup button")
+  .forEach(
+   b=>{
+    b.classList.toggle(
+     "active",
+     Number(b.dataset.count)===4
+    );
+   }
+  );
+
+
+ $$("#layoutGroup button")
+  .forEach(
+   b=>{
+    b.classList.toggle(
+     "active",
+     b.dataset.layout==="equal"
+    );
+   }
+  );
+
+
+ $$("#styleGroup button")
+  .forEach(
+   b=>{
+    b.classList.toggle(
+     "active",
+     b.dataset.style==="flat"
+    );
+   }
+  );
+
+
+ $$("#handleGroup button")
+  .forEach(
+   b=>{
+    b.classList.toggle(
+     "active",
+     b.dataset.handle==="bar"
+    );
+   }
+  );
+
+
+ $$("#materialGroup button")
+  .forEach(
+   b=>{
+    b.classList.toggle(
+     "active",
+     b.dataset.color==="#EDEDE9"
+    );
+   }
+  );
+
+
+ drawDefault();
+
+ updatePrice();
+
+ applyZoom();
+
+ toast(
+  "تمت إعادة الخزانة إلى 4 أبواب"
+ );
+
+};
+
+
+
+/* =========================================================
+   UNDO
+========================================================= */
+
+$("#undoBtn").onclick=()=>{
+
+ toast(
+  "استخدم Ctrl + Z للرجوع"
+ );
+
+};
+
+
+
+/* =========================================================
+   QUOTE
+========================================================= */
+
+$("#quoteBtn").onclick=()=>{
+ $("#quoteModal")
+  .classList.add("show");
+};
+
+
+$("#nextBtn").onclick=()=>{
+ $("#quoteModal")
+  .classList.add("show");
+};
+
+
+$("#closeModal").onclick=()=>{
+ $("#quoteModal")
+  .classList.remove("show");
+};
+
+
+$("#quoteModal").onclick=e=>{
+
+ if(
+  e.target.id==="quoteModal"
+ ){
+
+  $("#quoteModal")
+   .classList.remove("show");
+
+ }
+
+};
+
+
+
+$("#sendWhatsApp").onclick=()=>{
+
+ const name=
+  $("#customerName")
+   .value.trim();
+
+ const phone=
+  $("#customerPhone")
+   .value.trim();
+
+ const note=
+  $("#customerNote")
+   .value.trim();
+
+
+ if(!name || !phone){
+
+  toast(
+   "أدخل الاسم ورقم الهاتف"
+  );
+
+  return;
+
+ }
+
+
+ const message=
+`طلب تصميم خزانة من دار
+
+الاسم: ${name}
+الهاتف: ${phone}
+
+مقاس الخزانة:
+العرض: ${S.width} سم
+الارتفاع: ${S.height} سم
+
+عدد الأبواب:
+${S.doors}
+
+توزيع الأبواب:
+${S.doorLayout}
+
+الخامة:
+${S.color}
+
+شكل الباب:
+${S.style}
+
+المقبض:
+${S.handle}
+
+الموديل:
+${S.uploadedName || "خزانة دار الافتراضية"}
+
+الإضافات:
+LED: ${S.addons.led ? "نعم":"لا"}
+أدراج: ${S.addons.drawers ? "نعم":"لا"}
+وحدات تعليق: ${S.addons.hanging ? "نعم":"لا"}
+مرآة داخلية: ${S.addons.mirror ? "نعم":"لا"}
+
+السعر التقديري:
+$ ${getPrice()}
+
+الملاحظات:
+${note || "لا توجد"}`;
+
+
+ /*
+   ضع رقم واتساب الخاص بك هنا
+   بدون + أو مسافات
+ */
+
+ const whatsappNumber=
+  "249XXXXXXXXX";
+
+
+ const url=
+  "https://wa.me/"+
+  whatsappNumber+
+  "?text="+
+  encodeURIComponent(message);
+
+
+ window.open(
+  url,
+  "_blank"
+ );
+
+};
+
+
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
+document.addEventListener(
+ "keydown",
+ event=>{
+
+  if(
+   event.key==="Delete" &&
+   S.selected
+  ){
+
+   $("#deleteBtn").click();
+
+  }
+
+
+  if(
+   event.key==="Escape"
+  ){
+
+   S.selected=null;
+
+   $("#selectionBox")
+    .classList.remove("show");
+
+   $("#selectedName")
+    .textContent=
+     "لا يوجد";
+
+  }
+
+ });
+
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+window.addEventListener(
+ "resize",
+ ()=>{
+
+  if(S.uploaded)
+   updateSelectionBox();
+  else
+   updateDefaultSelectionBox();
+
+ });
+
+
+
+/* =========================================================
+   3D BUTTON
+========================================================= */
+
+$("#mode3d").onclick=()=>{
+
+ toast(
+  "وضع 3D يمكن ربطه لاحقًا بـ Three.js أو Blender"
+ );
+
+};
+
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+drawDefault();
+
+updatePrice();
+
+loadSaved();
+
 </script>
 
 </body>
 </html>
+```
