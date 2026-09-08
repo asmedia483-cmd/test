@@ -780,8 +780,8 @@ canvas{
 
     .viewer{
         order:1;
-        height:65vh;
-        min-height:480px;
+        height:58vh;
+        min-height:440px;
     }
 
     .sidebar{
@@ -795,12 +795,133 @@ canvas{
         max-height:300px;
     }
 
+    /* شريط علوي أنحف */
+
+    .topbar{
+        top:10px;
+        right:10px;
+        left:10px;
+        height:44px;
+        padding:0 8px;
+        border-radius:11px;
+    }
+
+    .topbar-title{
+        font-size:11px;
+    }
+
+    .topbar-buttons{
+        gap:4px;
+    }
+
+    .topbar-buttons button{
+        font-size:10px;
+        padding:6px 8px;
+    }
+
+    /* لوحة الأبعاد: مخفية افتراضياً، شريحة صغيرة أعلى اليسار عند التفعيل */
+
+    .dimensions{
+        display:none;
+        top:62px;
+        left:10px;
+        width:150px;
+        padding:9px 11px;
+    }
+
+    .dim-title{
+        font-size:10px;
+        margin-bottom:4px;
+    }
+
+    .dim-row{
+        padding:5px 0;
+    }
+
+    .dim-label{
+        font-size:10px;
+    }
+
+    .dim-value{
+        font-size:12px;
+    }
+
+    /* الجزء المحدد: شريحة صغيرة أعلى اليمين بدل بطاقة كبيرة أسفل الشاشة */
+
+    .selected{
+        top:62px;
+        bottom:auto;
+        right:10px;
+        left:auto;
+        width:auto;
+        max-width:140px;
+        padding:7px 10px;
+    }
+
+    .selected-small{
+        font-size:9px;
+    }
+
+    .selected-name{
+        margin-top:2px;
+        font-size:12px;
+    }
+
+    /* أزرار ومكتبة الخامات: أنحف قليلاً لإفساح مساحة للمعاينة */
+
     .material-library{
-        height:135px;
+        height:118px;
+        padding:9px 12px 8px;
+    }
+
+    .material-header{
+        height:22px;
+        margin-bottom:5px;
+    }
+
+    .material-header-title{
+        font-size:12px;
+    }
+
+    .material-scroll{
+        height:70px;
+    }
+
+    .material-card{
+        flex:0 0 88px;
+        width:88px;
+        height:66px;
+    }
+
+    .material-image{
+        height:44px;
     }
 
     .material-actions{
-        bottom:142px;
+        bottom:130px;
+        left:10px;
+        gap:6px;
+    }
+
+    .material-actions button{
+        font-size:9px;
+        padding:7px 10px;
+    }
+
+    /* الشعار داخل السايدبار على الموبايل */
+
+    .logo{
+        padding:16px;
+    }
+
+    .logo-icon{
+        width:40px;
+        height:40px;
+        min-width:40px;
+    }
+
+    .logo-text h1{
+        font-size:21px;
     }
 
 }
@@ -3683,8 +3804,14 @@ function toggleDimensions(){
         );
 
 
+    const currentDisplay =
+        window.getComputedStyle(
+            panel
+        ).display;
+
+
     panel.style.display =
-        panel.style.display === "none"
+        currentDisplay === "none"
         ?
         "block"
         :
