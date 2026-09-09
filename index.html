@@ -88,11 +88,10 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
 /* ============ LIBRARY ============ */
 .library{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-width:0;overflow:hidden;}
 .libraryHeader{padding:16px 15px 12px;border-bottom:1px solid var(--line);}
-.libraryTitle{display:flex;justify-content:space-between;align-items:center;flex:1;}
+.libraryTitle{display:flex;justify-content:space-between;align-items:center;}
 .libraryTitle h3{font-size:13.5px;font-weight:700;}
 .libraryTitle span{color:var(--muted-dim);font-size:9px;font-family:var(--mono);}
-.librarySearchWrap{padding:12px 15px 0;}
-.searchBox{position:relative;}
+.searchBox{position:relative;margin-top:12px;}
 .searchBox input{width:100%;height:35px;background:var(--bg);border:1px solid var(--line);color:var(--text);outline:none;padding:0 34px 0 10px;font-size:11.5px;}
 .searchBox input:focus{border-color:var(--brass);}
 .searchBox span{position:absolute;right:11px;top:9px;color:var(--muted-dim);font-size:13px;}
@@ -187,7 +186,6 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
 .swatch{width:28px;height:28px;border:2px solid transparent;cursor:pointer;}
 .swatch.active{border-color:var(--brass-light);}
 .note{padding:10px;background:rgba(193,121,60,.05);border:1px solid rgba(193,121,60,.15);color:var(--muted);font-size:9px;line-height:1.7;}
-.sheetCloseBtn{display:none;}
 
 /* ============ COUNT SLIDER (drag) ============ */
 .countSlider{display:flex;align-items:center;gap:10px;}
@@ -235,89 +233,18 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
     #app{grid-template-columns:250px 1fr 280px;}
 }
 @media(max-width:850px){
-    /* on phones the side panels are never permanent columns — the workspace
-       gets the full width, and the library / properties become slide-up sheets
-       opened from the bottom nav so they never crowd or break the 3D view */
-    #app{grid-template-columns:1fr;grid-template-rows:54px 1fr;}
-    .topbar{grid-column:1/2;padding:0 10px;gap:8px;}
-
-    .library,.properties{
-        display:flex;flex-direction:column;
-        position:fixed;left:0;right:0;bottom:0;
-        max-height:78vh;
-        overflow-y:auto;
-        background:var(--panel);
-        border:1px solid var(--line2);border-bottom:0;
-        border-radius:16px 16px 0 0;
-        box-shadow:0 -8px 28px rgba(0,0,0,.45);
-        z-index:850;
-        transform:translateY(105%);
-        transition:transform .28s cubic-bezier(.2,.7,.3,1);
-        pointer-events:none;
-        width:100%;
-    }
-    .library.mobileOpen,.properties.mobileOpen{
-        transform:translateY(0);
-        pointer-events:auto;
-        padding-bottom:env(safe-area-inset-bottom,0);
-    }
-    .library{max-height:70vh;}
-    .properties{max-height:82vh;}
-
-    /* sheet drag-handle for a clear, professional "this is a panel" affordance */
-    .library:before,.properties:before{
-        content:"";
-        display:block;
-        width:38px;height:4px;
-        background:var(--line2);
-        border-radius:2px;
-        margin:9px auto 2px;
-    }
-
-    .libraryHeader,.propertiesHeader{
-        display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
-        position:sticky;top:0;background:var(--panel);z-index:2;
-    }
-    .furnitureList{max-height:none;}
-    .propertyBody{padding-bottom:26px;}
-
-    .sheetCloseBtn{
-        display:flex;
-        flex-shrink:0;width:30px;height:30px;
-        display:flex;align-items:center;justify-content:center;
-        background:var(--panel2);border:1px solid var(--line2);
-        color:var(--muted);font-size:16px;line-height:1;
-        border-radius:2px;
-    }
-    .sheetCloseBtn:hover{color:var(--text);border-color:var(--brass);}
-
-    .mobileSheetBackdrop{
-        position:fixed;inset:0;z-index:840;
-        background:rgba(8,6,4,.55);
-        opacity:0;pointer-events:none;
-        transition:opacity .25s;
-    }
-    .mobileSheetBackdrop.show{opacity:1;pointer-events:auto;}
-
+    #app{grid-template-columns:210px 1fr;}
+    .properties{display:none;}
+    .properties.mobileOpen{display:block;position:fixed;inset:58px 0 0 0;z-index:800;width:100%;padding-bottom:60px;}
+    .topbar{grid-column:1/3;}
     .roomCards{grid-template-columns:1fr;}
     .roomCard{height:220px;}
+    .library{display:none;}
+    .library.mobileOpen{display:flex;position:fixed;inset:58px 0 0 0;z-index:800;width:100%;}
+    .workspace{grid-column:1/3;}
+    #app{grid-template-columns:1fr;}
     .mobileNav{display:flex;}
     .zoomControl,.statusBar{bottom:70px;}
-
-    /* topbar: keep only the essentials visible and scrollable so nothing
-       overlaps or gets clipped on narrow phone widths */
-    .topBrand{min-width:0;gap:7px;}
-    .topBrand small{display:none;}
-    .roomPill{min-width:0;flex:1;padding:7px 8px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .toolGroup{gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;max-width:46vw;}
-    .toolGroup::-webkit-scrollbar{display:none;}
-    .toolBtn{padding:0 8px;font-size:10px;min-width:30px;flex-shrink:0;}
-    .toolBtn.primary{padding:0 10px;flex-shrink:0;}
-}
-@media(max-width:400px){
-    .fields.three{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;}
-    .field input{padding:0 4px;font-size:11px;}
-    .actionGrid{gap:6px;}
 }
 /* touch devices (Android phones/tablets) get bigger, simpler tap targets */
 @media(pointer:coarse){
@@ -334,8 +261,6 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
     .switch.active i{transform:translateX(18px);}
     .field input,.rotationBox input{height:40px;font-size:12px;}
     .furnitureItem{padding:12px;}
-    .propertySection{margin-bottom:19px;}
-    .propertySectionTitle{margin-bottom:10px;}
 }
 /* simple bottom navigation shown only on touch/small screens to reach the library and properties panels */
 .mobileNav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:900;background:var(--panel);border-top:1px solid var(--line2);}
@@ -343,6 +268,244 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
 .mobileNav button:first-child{border-left:0;}
 .mobileNav button.active{color:var(--brass-light);}
 .mobileNav button span{font-size:16px;}
+
+/* =========================================================
+   MOBILE PRO UI — all existing controls remain available
+   without squeezing the desktop interface on phones.
+========================================================= */
+@media (max-width:850px){
+    html,body{width:100%;height:100%;overflow:hidden;overscroll-behavior:none;}
+    #app{position:fixed;inset:0;width:100%;height:100dvh;display:none;grid-template-columns:1fr;grid-template-rows:56px minmax(0,1fr);}
+    #app.active{display:grid;}
+
+    .topbar{
+        grid-column:1;
+        grid-row:1;
+        height:56px;
+        min-width:0;
+        padding:0 8px;
+        gap:7px;
+        overflow:hidden;
+    }
+    .topBrand{min-width:auto;flex:0 0 auto;gap:7px;}
+    .topBrand strong,.topBrand small{display:none;}
+    .topLogo{width:32px;height:32px;flex:0 0 32px;}
+    .roomPill{
+        min-width:0;
+        flex:1 1 auto;
+        max-width:none;
+        height:36px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:0 9px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        font-size:11px;
+    }
+    .toolGroup{
+        flex:0 0 auto;
+        max-width:46vw;
+        min-width:0;
+        overflow-x:auto;
+        overflow-y:hidden;
+        scrollbar-width:none;
+        -webkit-overflow-scrolling:touch;
+        gap:5px;
+    }
+    .toolGroup::-webkit-scrollbar{display:none;}
+    .toolBtn{
+        flex:0 0 auto;
+        height:38px;
+        min-width:38px;
+        padding:0 10px;
+        white-space:nowrap;
+        font-size:10px;
+    }
+    .toolGroup .sep{display:none;}
+
+    .workspace{grid-column:1;grid-row:2;width:100%;height:100%;min-width:0;min-height:0;}
+    #three-canvas{width:100%;height:100%;touch-action:none;}
+
+    .canvasTools{top:10px;left:10px;gap:6px;}
+    .canvasTool{width:42px;height:42px;border-radius:10px;background:rgba(20,17,13,.92);backdrop-filter:blur(8px);}
+    .viewToggle{top:10px;right:10px;border-radius:10px;overflow:hidden;backdrop-filter:blur(8px);}
+    .viewToggle button{height:40px;padding:0 11px;font-size:10px;}
+
+    .hint{
+        top:60px;
+        width:calc(100% - 92px);
+        max-width:360px;
+        text-align:center;
+        padding:7px 9px;
+        border-radius:9px;
+        font-size:9.5px;
+        line-height:1.5;
+    }
+
+    .zoomControl{
+        left:10px;
+        bottom:calc(68px + env(safe-area-inset-bottom));
+        border-radius:11px;
+        overflow:hidden;
+        backdrop-filter:blur(8px);
+    }
+    .zoomControl button{width:42px;height:42px;}
+    .zoomValue{min-width:54px;}
+    .statusBar{
+        right:10px;
+        bottom:calc(68px + env(safe-area-inset-bottom));
+        gap:5px;
+        max-width:58%;
+        overflow:hidden;
+    }
+    .statusChip{padding:6px 8px;font-size:8px;white-space:nowrap;}
+    .statusChip:first-child{display:none;}
+
+    /* Library and properties become real bottom sheets. */
+    .library,.properties{
+        display:none;
+        position:fixed!important;
+        left:0!important;
+        right:0!important;
+        top:auto!important;
+        bottom:calc(56px + env(safe-area-inset-bottom))!important;
+        width:100%!important;
+        height:min(76dvh,620px)!important;
+        max-height:calc(100dvh - 68px);
+        z-index:800!important;
+        border:1px solid var(--line2)!important;
+        border-bottom:0!important;
+        border-radius:20px 20px 0 0;
+        box-shadow:0 -18px 50px rgba(0,0,0,.42);
+        background:rgba(27,23,18,.98);
+        overflow:hidden!important;
+    }
+    .library.mobileOpen,.properties.mobileOpen{display:flex;}
+    .properties.mobileOpen{flex-direction:column;}
+
+    .library:before,.properties:before{
+        content:"";
+        position:absolute;
+        top:8px;
+        left:50%;
+        transform:translateX(-50%);
+        width:42px;
+        height:4px;
+        border-radius:99px;
+        background:var(--line2);
+        z-index:10;
+    }
+    .libraryHeader,.propertiesHeader{padding:25px 16px 12px;flex:0 0 auto;}
+    .libraryTitle h3,.propertiesHeader h3{font-size:14px;}
+    .libraryTitle span{font-size:8px;}
+    .searchBox{margin-top:10px;}
+    .searchBox input{height:44px;border-radius:10px;font-size:12px;}
+    .categoryBar{
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        scrollbar-width:none;
+        padding:8px 12px;
+        -webkit-overflow-scrolling:touch;
+    }
+    .categoryBar::-webkit-scrollbar{display:none;}
+    .category{flex:0 0 auto;height:38px;padding:0 13px;border-radius:9px;font-size:10.5px;}
+    .furnitureList{padding:9px 10px 18px;overscroll-behavior:contain;}
+    .furnitureItem{
+        grid-template-columns:72px 1fr;
+        gap:12px;
+        min-height:82px;
+        padding:10px;
+        margin-bottom:7px;
+        border-color:var(--line);
+        border-radius:12px;
+        background:rgba(34,28,21,.72);
+    }
+    .furnitureItem:active{background:var(--panel3);transform:scale(.995);}
+    .blueIcon{height:68px;border-radius:9px;}
+    .itemName{font-size:12px;margin-top:3px;}
+    .itemDesc{font-size:9px;line-height:1.55;}
+    .itemPlus{left:9px;top:9px;width:25px;height:25px;border-radius:7px;opacity:1;font-size:16px;}
+
+    .properties{overflow-y:auto!important;overscroll-behavior:contain;}
+    .propertyBody{padding:12px 13px 22px;}
+    .selectedInfo{border-radius:12px;padding:11px;margin-bottom:12px;}
+    .propertySection{margin-bottom:14px;}
+    .propertySectionTitle span{font-size:11px;}
+    .fields,.fields.three{grid-template-columns:1fr 1fr;gap:8px;}
+    .field label{font-size:9px;}
+    .field input{height:44px;border-radius:9px;font-size:12px;}
+    .stepBtn{width:42px;height:44px;border-radius:9px;font-size:19px;}
+    .rotationBox{gap:5px;}
+    .rotatePreset{height:44px;min-width:42px;border-radius:9px;}
+    .actionGrid{grid-template-columns:1fr 1fr;gap:8px;}
+    .action{height:44px;border-radius:9px;font-size:10px;}
+    .swatch{width:38px;height:38px;border-radius:8px;}
+    .toggleRow{padding:12px;border-radius:10px;}
+    .switch{width:44px;height:25px;border-radius:99px;}
+    .switch i{width:17px;height:17px;border-radius:50%;}
+    .switch.active i{transform:translateX(17px);}
+
+    .mobileNav{
+        display:flex;
+        height:calc(56px + env(safe-area-inset-bottom));
+        padding-bottom:env(safe-area-inset-bottom);
+        background:rgba(27,23,18,.98);
+        backdrop-filter:blur(14px);
+        box-shadow:0 -8px 30px rgba(0,0,0,.28);
+    }
+    .mobileNav button{
+        height:56px;
+        border-left:1px solid var(--line);
+        font-size:10px;
+        gap:2px;
+        transition:.15s;
+    }
+    .mobileNav button:active{background:var(--panel3);}
+    .mobileNav button span{font-size:18px;line-height:18px;}
+
+    .roomMenu{align-items:flex-end;padding:0;}
+    .roomMenuBox{
+        width:100%;
+        max-height:86dvh;
+        overflow:auto;
+        border-radius:20px 20px 0 0;
+        border-left:0;border-right:0;border-bottom:0;
+        padding:25px 14px calc(18px + env(safe-area-inset-bottom));
+    }
+    .roomMenuHeader{margin-bottom:12px;padding-bottom:12px;}
+    .roomMenuChoices{grid-template-columns:1fr;gap:8px;}
+    .roomMenuChoice{min-height:62px;padding:10px 14px;display:flex;align-items:center;gap:12px;text-align:right;border-radius:10px;}
+    .roomMenuChoice b{margin:0;font-size:12px;}
+    .roomMenuChoice span{margin:0;font-size:8px;}
+    .closeMenu{width:40px;height:40px;border-radius:9px;}
+
+    .toast{
+        bottom:calc(66px + env(safe-area-inset-bottom));
+        max-width:calc(100vw - 30px);
+        text-align:center;
+        border-radius:10px;
+        padding:9px 13px;
+    }
+}
+
+@media (max-width:430px){
+    .toolGroup{max-width:42vw;}
+    .topLogo{width:30px;height:30px;flex-basis:30px;}
+    .roomPill{font-size:10px;}
+    .canvasTools{top:8px;left:8px;}
+    .canvasTool{width:40px;height:40px;}
+    .viewToggle{top:8px;right:8px;}
+    .viewToggle button{padding:0 9px;font-size:9px;}
+    .hint{top:55px;width:calc(100% - 82px);font-size:9px;}
+}
+
+@media (max-height:620px) and (max-width:850px){
+    .library,.properties{height:82dvh!important;}
+    .roomMenuBox{max-height:94dvh;}
+}
+
 </style>
 </head>
 <body>
@@ -424,9 +587,6 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
     <aside class="library">
         <div class="libraryHeader">
             <div class="libraryTitle"><h3>مكتبة النماذج</h3><span id="itemCount">0 MODELS</span></div>
-            <button class="sheetCloseBtn" onclick="closeMobilePanels()" title="إغلاق">×</button>
-        </div>
-        <div class="librarySearchWrap">
             <div class="searchBox"><span>⌕</span><input id="search" type="text" placeholder="بحث في النماذج..." oninput="renderLibrary()"></div>
         </div>
         <div class="categoryBar" id="categoryBar"></div>
@@ -462,10 +622,7 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
     </section>
 
     <aside class="properties" id="propertiesPanel">
-        <div class="propertiesHeader">
-            <div><h3>خصائص العنصر</h3><p>التحكم الدقيق في القطعة المحددة</p></div>
-            <button class="sheetCloseBtn" onclick="closeMobilePanels()" title="إغلاق">×</button>
-        </div>
+        <div class="propertiesHeader"><h3>خصائص العنصر</h3><p>التحكم الدقيق في القطعة المحددة</p></div>
         <div id="propertyContent">
             <div class="emptyProperty">
                 <div class="emptyPropertyIcon">⊙</div>
@@ -492,8 +649,6 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
         </div>
     </div>
 </div>
-
-<div class="mobileSheetBackdrop" id="mobileSheetBackdrop" onclick="closeMobilePanels()"></div>
 
 <div class="toast" id="toast"></div>
 
@@ -1365,7 +1520,7 @@ function updateHintForDevice(){
     const touch = window.matchMedia("(pointer:coarse)").matches;
     if(hintEl){
         hintEl.textContent = touch
-            ? "إصبع واحد: تحريك القطعة أو تدوير الكاميرا · إصبعان: تكبير وتصغير"
+            ? "اسحب القطعة بإصبع واحد للتحريك · اسحب الفراغ للدوران · إصبعان للتكبير والتصغير"
             : "اسحب القطعة بالماوس لتحريكها · اسحب الفراغ لتدوير الكاميرا · عجلة الماوس للتكبير";
         hintEl.classList.remove("hide");
     }
@@ -1386,10 +1541,6 @@ function setMobileNavState(which){
     if(navProps) navProps.classList.toggle("active", which==="properties");
     if(navScene) navScene.classList.toggle("active", which==="scene");
 }
-function setBackdrop(show){
-    const bd = document.getElementById("mobileSheetBackdrop");
-    if(bd) bd.classList.toggle("show", show);
-}
 function toggleMobilePanel(name){
     const libEl = document.querySelector(".library");
     const propEl = document.getElementById("propertiesPanel");
@@ -1399,13 +1550,11 @@ function toggleMobilePanel(name){
         libEl.classList.toggle("mobileOpen", opening);
         propEl.classList.remove("mobileOpen");
         setMobileNavState(opening ? "library" : "scene");
-        setBackdrop(opening);
     } else if(name==="properties"){
         const opening = !propEl.classList.contains("mobileOpen");
         propEl.classList.toggle("mobileOpen", opening);
         libEl.classList.remove("mobileOpen");
         setMobileNavState(opening ? "properties" : "scene");
-        setBackdrop(opening);
     }
 }
 function showMobileProperties(){
@@ -1415,7 +1564,6 @@ function showMobileProperties(){
     if(libEl) libEl.classList.remove("mobileOpen");
     propEl.classList.add("mobileOpen");
     setMobileNavState("properties");
-    setBackdrop(true);
 }
 function closeMobilePanels(){
     const libEl = document.querySelector(".library");
@@ -1423,7 +1571,6 @@ function closeMobilePanels(){
     if(libEl) libEl.classList.remove("mobileOpen");
     if(propEl) propEl.classList.remove("mobileOpen");
     setMobileNavState("scene");
-    setBackdrop(false);
 }
 function switchRoom(id){
     closeRoomMenu();
