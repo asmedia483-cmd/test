@@ -1689,8 +1689,9 @@ function initThree(){
     scene.add(roomGroup);
 
     window.addEventListener("resize", onResize);
-    canvasEl.addEventListener("pointerdown", onPointerDown);
+    canvasEl.addEventListener("pointerdown", function(e){ rememberCanvasPointer(e); onPointerDown(e); });
     canvasEl.addEventListener("pointermove", onPointerMove);
+    canvasEl.addEventListener("click", selectObjectFromCanvasTap);
     window.addEventListener("pointerup", onPointerUp);
     window.addEventListener("pointercancel", onPointerUp);
     canvasEl.addEventListener("wheel", onWheel, {passive:false});
@@ -1882,7 +1883,9 @@ function showMobileProperties(){
     if(!propEl) return;
     if(libEl) libEl.classList.remove("mobileOpen");
     propEl.classList.add("mobileOpen");
+    propEl.style.visibility = "visible";
     setMobileNavState("properties");
+    if(selectedId){ renderMobileWizard(); }
 }
 function closeMobilePanels(){
     const libEl = document.querySelector(".library");
@@ -2212,6 +2215,30 @@ function onPointerUp(e){
     orbitDrag = null;
     canvasEl.classList.remove("dragging-obj");
     canvasEl.classList.remove("orbiting");
+}
+
+// Robust Android tap selection: some mobile browsers deliver a click after
+// pointer events even when the 3D canvas is under other touch UI layers.
+let lastCanvasPointer = null;
+function selectObjectFromCanvasTap(e){
+    if(!canvasEl || !isMobileLayout()) return;
+    const p = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0] : e;
+    const x = p.clientX, y = p.clientY;
+    if(lastCanvasPointer){
+        const dx=x-lastCanvasPointer.x, dy=y-lastCanvasPointer.y;
+        if(Math.hypot(dx,dy)>14) return; // it was a drag, not a tap
+    }
+    const hit = pickObjectAt(x,y);
+    if(!hit) return;
+    selectedId = hit.id;
+    updateSelectionVisuals();
+    renderProperties();
+    showMobileProperties();
+    updateMobileGameStep(4,'إعدادات المجسم • '+hit.name);
+}
+
+function rememberCanvasPointer(e){
+    lastCanvasPointer={x:e.clientX,y:e.clientY};
 }
 
 function onWheel(e){
