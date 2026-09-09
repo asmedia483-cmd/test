@@ -358,290 +358,33 @@ const ROOMS = {
     kitchen:{ name:"المطبخ", english:"KITCHEN", width:4.6, depth:3.2, floor:0xb9c2c4 }
 };
 
-const FINISHES = {
-    wood: [
-        {id:"oak_light", label:"بلوط فاتح", hex:0xcaa06e, type:"wood"},
-        {id:"oak_honey", label:"بلوط عسلي", hex:0xa9784f, type:"wood"},
-        {id:"walnut", label:"جوز دافئ", hex:0x6b4a34, type:"wood"},
-        {id:"walnut_dark", label:"جوز غامق", hex:0x3c2a1e, type:"wood"},
-        {id:"ash_white", label:"دردار أبيض", hex:0xe3d9c4, type:"wood"},
-        {id:"wenge", label:"وينج أسود", hex:0x2b2118, type:"wood"},
-        {id:"cherry", label:"كرز محمر", hex:0x7a3b2c, type:"wood"}
-    ],
-    fabric: [
-        {id:"fab_gray", label:"قماش رمادي", hex:0x7d7d7d, type:"fabric"},
-        {id:"fab_cream", label:"قماش كريمي", hex:0xe3ddce, type:"fabric"},
-        {id:"fab_forest", label:"قماش أخضر", hex:0x4f6a55, type:"fabric"},
-        {id:"fab_rust", label:"قماش طوبي", hex:0x8a4a2a, type:"fabric"},
-        {id:"fab_navy", label:"قماش كحلي", hex:0x2e3a52, type:"fabric"},
-        {id:"fab_sand", label:"قماش رملي", hex:0xa88a6b, type:"fabric"}
-    ]
-};
-
-/* =========================================================
-   REALISTIC PROCEDURAL MATERIALS (canvas-based, no external files)
-========================================================= */
-const _texCache = {};
-
-function hexStr(h){ return "#" + ("000000" + h.toString(16)).slice(-6); }
-function shade(hex, amt){
-    const r=(hex>>16)&255, g=(hex>>8)&255, b=hex&255;
-    function adj(c){ const v = amt>0 ? c+(255-c)*amt : c+c*amt; return Math.max(0,Math.min(255,Math.round(v))); }
-    return (adj(r)<<16)|(adj(g)<<8)|adj(b);
-}
-function makeCanvas(size){ const c=document.createElement("canvas"); c.width=size; c.height=size; return c; }
-function toGrayscale(srcCanvas){
-    const size = srcCanvas.width;
-    const out = makeCanvas(size);
-    const octx = out.getContext("2d");
-    octx.drawImage(srcCanvas,0,0);
-    const id = octx.getImageData(0,0,size,size);
-    const d = id.data;
-    for(let i=0;i<d.length;i+=4){
-        const g = d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114;
-        d[i]=d[i+1]=d[i+2]=g;
-    }
-    octx.putImageData(id,0,0);
-    return out;
-}
-
-function buildWoodCanvas(hex){
-    const size=128; const cvs=makeCanvas(size); const ctx=cvs.getContext("2d");
-    ctx.fillStyle = hexStr(hex); ctx.fillRect(0,0,size,size);
-    for(let i=0;i<60;i++){
-        const y = Math.random()*size;
-        const dark = Math.random()>0.45;
-        ctx.strokeStyle = hexStr(shade(hex, dark ? -0.22*Math.random() : 0.16*Math.random()));
-        ctx.globalAlpha = 0.22+Math.random()*0.28;
-        ctx.lineWidth = 0.6+Math.random()*1.8;
-        ctx.beginPath();
-        let cy = y;
-        ctx.moveTo(0,cy);
-        for(let x=8;x<=size;x+=10){ cy += (Math.random()-0.5)*5; ctx.lineTo(x,cy); }
-        ctx.stroke();
-    }
-    ctx.globalAlpha = 0.08;
-    for(let i=0;i<400;i++){
-        ctx.fillStyle = hexStr(shade(hex, (Math.random()-0.5)*.3));
-        ctx.fillRect(Math.random()*size, Math.random()*size, 1, 1);
-    }
-    ctx.globalAlpha=1;
-    return {color:cvs, roughness:0.62, metalness:0.02, bumpScale:0.004};
-}
-function buildFabricCanvas(hex){
-    const size=96; const cvs=makeCanvas(size); const ctx=cvs.getContext("2d");
-    ctx.fillStyle = hexStr(hex); ctx.fillRect(0,0,size,size);
-    const cell=4;
-    for(let y=0;y<size;y+=cell){
-        for(let x=0;x<size;x+=cell){
-            const alt = ((x/cell)+(y/cell))%2===0;
-            ctx.fillStyle = hexStr(shade(hex, alt? 0.05 : -0.06));
-            ctx.globalAlpha = 0.5;
-            ctx.fillRect(x,y,cell,cell);
-        }
-    }
-    ctx.globalAlpha = 0.06;
-    for(let i=0;i<900;i++){
-        ctx.fillStyle = Math.random()>0.5 ? "#ffffff" : "#000000";
-        ctx.fillRect(Math.random()*size, Math.random()*size, 1, 1);
-    }
-    ctx.globalAlpha=1;
-    return {color:cvs, roughness:0.92, metalness:0, bumpScale:0.0016};
-}
-function buildStoneCanvas(hex){
-    const size=128; const cvs=makeCanvas(size); const ctx=cvs.getContext("2d");
-    ctx.fillStyle = hexStr(hex); ctx.fillRect(0,0,size,size);
-    for(let i=0;i<10;i++){
-        ctx.fillStyle = hexStr(shade(hex, (Math.random()-0.5)*.18));
-        ctx.globalAlpha = 0.12;
-        ctx.beginPath();
-        ctx.ellipse(Math.random()*size, Math.random()*size, 20+Math.random()*35, 12+Math.random()*22, Math.random()*Math.PI, 0, Math.PI*2);
-        ctx.fill();
-    }
-    ctx.globalAlpha = 0.4;
-    for(let i=0;i<7;i++){
-        ctx.strokeStyle = hexStr(shade(hex, Math.random()>0.5 ? -0.3 : 0.25));
-        ctx.lineWidth = 0.6+Math.random()*1.2;
-        ctx.beginPath();
-        let x=Math.random()*size, y=Math.random()*size;
-        ctx.moveTo(x,y);
-        for(let s=0;s<5;s++){
-            x += (Math.random()-0.5)*50; y += (Math.random()-0.5)*50;
-            ctx.lineTo(x,y);
-        }
-        ctx.stroke();
-    }
-    ctx.globalAlpha=1;
-    return {color:cvs, roughness:0.22, metalness:0.05, bumpScale:0.0012};
-}
-function buildMetalCanvas(hex){
-    const size=96; const cvs=makeCanvas(size); const ctx=cvs.getContext("2d");
-    ctx.fillStyle = hexStr(hex); ctx.fillRect(0,0,size,size);
-    for(let y=0;y<size;y++){
-        ctx.strokeStyle = hexStr(shade(hex, (Math.random()-0.5)*.22));
-        ctx.globalAlpha = 0.25;
-        ctx.beginPath(); ctx.moveTo(0,y+0.5); ctx.lineTo(size,y+0.5); ctx.stroke();
-    }
-    ctx.globalAlpha=1;
-    return {color:cvs, roughness:0.32, metalness:0.78, bumpScale:0.0009};
-}
-function buildCeramicCanvas(hex){
-    const size=96; const cvs=makeCanvas(size); const ctx=cvs.getContext("2d");
-    ctx.fillStyle = hexStr(hex); ctx.fillRect(0,0,size,size);
-    const grad = ctx.createRadialGradient(size*.3,size*.25,4,size*.3,size*.25,size*.8);
-    grad.addColorStop(0, hexStr(shade(hex,0.22)));
-    grad.addColorStop(1, hexStr(hex));
-    ctx.globalAlpha = 0.5;
-    ctx.fillStyle = grad;
-    ctx.fillRect(0,0,size,size);
-    ctx.globalAlpha=1;
-    return {color:cvs, roughness:0.16, metalness:0.05, bumpScale:0.0005};
-}
-function buildGlassCanvas(hex){
-    const size=96; const cvs=makeCanvas(size); const ctx=cvs.getContext("2d");
-    ctx.fillStyle = hexStr(hex); ctx.fillRect(0,0,size,size);
-    const grad = ctx.createLinearGradient(0,0,size,size);
-    grad.addColorStop(0, hexStr(shade(hex,0.35)));
-    grad.addColorStop(.45, hexStr(hex));
-    grad.addColorStop(.55, hexStr(hex));
-    grad.addColorStop(1, hexStr(shade(hex,0.1)));
-    ctx.globalAlpha = 0.6;
-    ctx.fillStyle = grad;
-    ctx.fillRect(0,0,size,size);
-    ctx.globalAlpha=1;
-    return {color:cvs, roughness:0.08, metalness:0.3, bumpScale:0.0003};
-}
-
-const _texBuilders = {wood:buildWoodCanvas, fabric:buildFabricCanvas, stone:buildStoneCanvas, metal:buildMetalCanvas, ceramic:buildCeramicCanvas, glass:buildGlassCanvas};
-
-function getTexSet(desc){
-    const key = desc.type + "_" + desc.hex;
-    if(_texCache[key]) return _texCache[key];
-    const builder = _texBuilders[desc.type] || buildWoodCanvas;
-    const result = builder(desc.hex);
-    result.bumpCanvas = toGrayscale(result.color);
-    _texCache[key] = result;
-    return result;
-}
-
-function makeMaterial(desc, w, h, d){
-    if(typeof desc === "number") desc = {hex:desc, type:"wood"};
-    if(!desc) desc = {hex:0x8a6b4c, type:"wood"};
-    const set = getTexSet(desc);
-    const colorTex = new THREE.CanvasTexture(set.color);
-    colorTex.wrapS = colorTex.wrapT = THREE.RepeatWrapping;
-    const rx = Math.max(1, Math.round((w||0.4)/0.32));
-    const ry = Math.max(1, Math.round((Math.max(h||0.4, d||0.4))/0.32));
-    colorTex.repeat.set(rx, ry);
-    colorTex.needsUpdate = true;
-    const bumpTex = new THREE.CanvasTexture(set.bumpCanvas);
-    bumpTex.wrapS = bumpTex.wrapT = THREE.RepeatWrapping;
-    bumpTex.repeat.copy(colorTex.repeat);
-    bumpTex.needsUpdate = true;
-    return new THREE.MeshStandardMaterial({
-        map: colorTex,
-        bumpMap: bumpTex,
-        bumpScale: set.bumpScale || 0.003,
-        roughness: set.roughness != null ? set.roughness : 0.7,
-        metalness: set.metalness || 0
-    });
-}
+const SWATCHES = [
+    {id:"wood", label:"خشب دافئ", hex:0xa9784f},
+    {id:"gray", label:"رمادي", hex:0x7d7d7d},
+    {id:"cream", label:"كريمي", hex:0xe3ddce},
+    {id:"charcoal", label:"فحمي", hex:0x33302b},
+    {id:"forest", label:"أخضر غامق", hex:0x4f6a55},
+    {id:"rust", label:"نحاسي", hex:0xa8552f}
+];
 
 /* =========================================================
    3D BUILDER HELPERS
 ========================================================= */
-function mesh(w,h,d,desc,x,y,z){
+function mesh(w,h,d,color,x,y,z){
     const g = new THREE.BoxGeometry(w,h,d);
-    const m = makeMaterial(desc, w, h, d);
+    const m = new THREE.MeshStandardMaterial({color:color, roughness:.75, metalness:.05});
     const mo = new THREE.Mesh(g,m);
     mo.position.set(x||0,y||0,z||0);
     mo.castShadow = true; mo.receiveShadow = true;
     return mo;
 }
-function cyl(rt,rb,h,desc,x,y,z,segs){
+function cyl(rt,rb,h,color,x,y,z,segs){
     const g = new THREE.CylinderGeometry(rt,rb,h,segs||20);
-    const m = makeMaterial(desc, rt*2, h, rb*2);
+    const m = new THREE.MeshStandardMaterial({color:color, roughness:.6, metalness:.1});
     const mo = new THREE.Mesh(g,m);
     mo.position.set(x||0,y||0,z||0);
     mo.castShadow = true; mo.receiveShadow = true;
     return mo;
-}
-
-/* =========================================================
-   CONFIGURABLE CABINET / WARDROBE BUILDER
-   w,d,h in meters. cfg = {doors, shelves, drawers}
-   Returns a THREE.Group whose userData holds doorPivots / drawerNodes
-   so they can be opened, closed and animated live.
-========================================================= */
-function buildCabinetBody(w,d,h,mat,cfg){
-    cfg = cfg || {};
-    const grp = new THREE.Group();
-    const t = 0.018;
-    const handleMat = {hex:0x2b2b2b, type:"metal"};
-
-    grp.add(mesh(w,t,d,mat,0,t/2,0));            // bottom
-    grp.add(mesh(w,t,d,mat,0,h-t/2,0));          // top
-    grp.add(mesh(t,h,d,mat,-w/2+t/2,h/2,0));     // left side
-    grp.add(mesh(t,h,d,mat,w/2-t/2,h/2,0));      // right side
-    grp.add(mesh(w,h,t,mat,0,h/2,-d/2+t/2));     // back
-
-    const doorPivots = [];
-    const drawerNodes = [];
-    const drawers = cfg.drawers||0;
-
-    if(drawers>0){
-        const rowH = (h-2*t)/drawers;
-        for(let i=0;i<drawers;i++){
-            const y = t + rowH*(i+0.5);
-            const node = new THREE.Group();
-            const front = mesh(w-t*1.8, rowH-0.012, 0.022, mat, 0,0,0);
-            node.add(front);
-            const handle = cyl(0.006,0.006, Math.min(0.18,w*0.35), handleMat, 0,0,0.03);
-            handle.rotation.z = Math.PI/2;
-            node.add(handle);
-            const closedZ = d/2-0.02;
-            node.position.set(0,y,closedZ);
-            node.userData.closedZ = closedZ;
-            node.userData.openZ = closedZ + d*0.62;
-            grp.add(node);
-            drawerNodes.push(node);
-        }
-    } else {
-        const shelves = cfg.shelves||0;
-        for(let i=1;i<=shelves;i++){
-            const y = t + (h-2*t) * (i/(shelves+1));
-            grp.add(mesh(w-2*t, 0.016, d-t*1.8, mat, 0,y,t*0.1));
-        }
-        const doors = cfg.doors||0;
-        if(doors>0){
-            const colW = w/doors;
-            const doorH = h - t*2;
-            const doorY = t + doorH/2;
-            for(let i=0;i<doors;i++){
-                const isLeftHalf = i < doors/2;
-                const colLeftX = -w/2 + i*colW;
-                const colRightX = colLeftX + colW;
-                const hingeX = isLeftHalf ? colLeftX+0.003 : colRightX-0.003;
-                const doorW = colW - 0.008;
-                const pivot = new THREE.Group();
-                pivot.position.set(hingeX, doorY, d/2 - t/2);
-                const localX = isLeftHalf ? doorW/2 : -doorW/2;
-                const doorMesh = mesh(doorW, doorH, 0.02, mat, localX,0,0);
-                const handleX = isLeftHalf ? doorW-0.055 : -(doorW-0.055);
-                const handle = cyl(0.007,0.007,0.16,handleMat, handleX,0,0.022);
-                handle.rotation.x = Math.PI/2;
-                pivot.add(doorMesh);
-                pivot.add(handle);
-                pivot.userData.openRot = isLeftHalf ? -Math.PI*0.52 : Math.PI*0.52;
-                grp.add(pivot);
-                doorPivots.push(pivot);
-            }
-        }
-    }
-
-    grp.userData.doorPivots = doorPivots;
-    grp.userData.drawerNodes = drawerNodes;
-    return grp;
 }
 
 /* =========================================================
@@ -651,7 +394,6 @@ const FURNITURE = [
 
 /* ---------------- BEDROOM ---------------- */
 {id:"bed", room:"bedroom", category:"السرير", name:"سرير مزدوج", desc:"180×200 سم", width:180, depth:200, height:95, iconAspect:[180,200],
- finishGroup:"wood",
  build:function(w,d,h,c){
     const grp = new THREE.Group();
     const frameH = h*.28;
@@ -664,36 +406,81 @@ const FURNITURE = [
     return grp;
  }},
 {id:"nightstand", room:"bedroom", category:"التخزين", name:"كومود", desc:"45×40×55 سم", width:45, depth:40, height:55, iconAspect:[45,40],
- hasDrawers:true, drawersMin:1, drawersMax:3, defaultDrawers:2, finishGroup:"wood",
- build:function(w,d,h,c,obj){
-    const cfg = {doors:0, shelves:0, drawers:(obj&&obj.drawerCount!=null)?obj.drawerCount:2};
-    return buildCabinetBody(w,d,h,c.body,cfg);
+ build:function(w,d,h,c){
+    const grp = new THREE.Group();
+    grp.add(mesh(w,h,d,c.body,0,h/2,0));
+    grp.add(mesh(w*.8,h*.35,d*.06,c.accent,0,h*.68,d/2-.01));
+    grp.add(mesh(w*.8,h*.35,d*.06,c.accent,0,h*.28,d/2-.01));
+    return grp;
  }},
 {id:"wardrobe", room:"bedroom", category:"التخزين", name:"دولاب ملابس", desc:"200×60×220 سم", width:200, depth:60, height:220, iconAspect:[200,60],
- cabinet:true, doorsMin:1, doorsMax:4, defaultDoors:3, shelvesMin:0, shelvesMax:6, defaultShelves:3, finishGroup:"wood",
- build:function(w,d,h,c,obj){
-    const cfg = {
-        doors:(obj&&obj.doorCount!=null)?obj.doorCount:3,
-        shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:3,
-        drawers:0
-    };
-    return buildCabinetBody(w,d,h,c.body,cfg);
+ build:function(w,d,h,c){
+    const grp = new THREE.Group();
+    /* الهيكل */
+    const sideT = Math.max(.025,w*.025);
+    const topT = Math.max(.035,h*.025);
+    grp.add(mesh(w,h,d,c.body,0,h/2,0));
+
+    /* فتحات داخلية واضحة */
+    const innerW = w-sideT*2;
+    const shelfDepth = d*.86;
+    const shelfCount = 5;
+    for(let i=1;i<shelfCount;i++){
+        grp.add(mesh(innerW,.028,shelfDepth,c.accent,0,h*(i/shelfCount),-d*.035));
+    }
+
+    /* تقسيم رأسي */
+    grp.add(mesh(.028,h*.91,d*.86,c.accent,0,h*.5,-d*.035));
+
+    /* بابان منفصلان، كل واحد مثبت على طرفه الخارجي */
+    const doorGap = .012;
+    const doorW = (w-doorGap)/2;
+    const doorH = h*.91;
+    const doorY = h*.5;
+    const doorZ = d/2+.012;
+    const leftDoor = mesh(doorW,doorH,.045,c.body,-doorW/2-doorGap/2,doorY,doorZ);
+    const rightDoor = mesh(doorW,doorH,.045,c.body,doorW/2+doorGap/2,doorY,doorZ);
+    leftDoor.userData.isCabinetDoor = true;
+    rightDoor.userData.isCabinetDoor = true;
+    leftDoor.userData.side = "left";
+    rightDoor.userData.side = "right";
+    grp.add(leftDoor); grp.add(rightDoor);
+
+    /* مقابض */
+    const handleMat = new THREE.MeshStandardMaterial({color:c.accent,roughness:.45,metalness:.35});
+    const handleL = new THREE.Mesh(new THREE.BoxGeometry(.025,.12,.035),handleMat);
+    const handleR = new THREE.Mesh(new THREE.BoxGeometry(.025,.12,.035),handleMat);
+    handleL.position.set(-.025,doorY,doorZ+.035);
+    handleR.position.set(.025,doorY,doorZ+.035);
+    grp.add(handleL); grp.add(handleR);
+
+    /* يبدأ الدولاب مفتوحاً بصرياً: البابان يتحركان إلى الخارج */
+    leftDoor.userData.closedX = leftDoor.position.x;
+    rightDoor.userData.closedX = rightDoor.position.x;
+    leftDoor.userData.openX = leftDoor.position.x-doorW*.92;
+    rightDoor.userData.openX = rightDoor.position.x+doorW*.92;
+    leftDoor.userData.handle = handleL;
+    rightDoor.userData.handle = handleR;
+    leftDoor.userData.open = true;
+    rightDoor.userData.open = true;
+    leftDoor.position.x = leftDoor.userData.openX;
+    rightDoor.position.x = rightDoor.userData.openX;
+    handleL.position.x = leftDoor.position.x;
+    handleR.position.x = rightDoor.position.x;
+
+    grp.userData.cabinetDoors = [leftDoor,rightDoor];
+    grp.userData.cabinetOpen = true;
+    return grp;
  }},
 {id:"dresser", room:"bedroom", category:"التسريحة", name:"تسريحة ومرآة", desc:"120×45×140 سم", width:120, depth:45, height:140, iconAspect:[120,45],
- hasDrawers:true, drawersMin:2, drawersMax:4, defaultDrawers:3, finishGroup:"wood",
- build:function(w,d,h,c,obj){
+ build:function(w,d,h,c){
     const grp = new THREE.Group();
     const baseH = h*.42;
-    const cfg = {doors:0, shelves:0, drawers:(obj&&obj.drawerCount!=null)?obj.drawerCount:3};
-    const base = buildCabinetBody(w, d, baseH, c.body, cfg);
-    grp.add(base);
+    grp.add(mesh(w,baseH,d,c.body,0,baseH/2,0));
     grp.add(mesh(w*.35,h-baseH,.03,c.mirrorFrame,0,baseH+(h-baseH)/2,-d/2+.02));
-    grp.userData.doorPivots = base.userData.doorPivots;
-    grp.userData.drawerNodes = base.userData.drawerNodes;
     return grp;
  }},
 {id:"bedChair", room:"bedroom", category:"الجلوس", name:"كرسي غرفة النوم", desc:"55×55×85 سم", width:55, depth:55, height:85, iconAspect:[55,55],
- finishGroup:"fabric",
  build:function(w,d,h,c){
     const grp = new THREE.Group();
     const seatH = h*.5;
@@ -709,7 +496,6 @@ const FURNITURE = [
 
 /* ---------------- LIVING ---------------- */
 {id:"sofa3", room:"living", category:"الكنب", name:"كنبة ثلاثية", desc:"220×90×80 سم", width:220, depth:90, height:80, iconAspect:[220,90],
- finishGroup:"fabric",
  build:function(w,d,h,c){
     const grp = new THREE.Group();
     const seatH=h*.4;
@@ -720,7 +506,6 @@ const FURNITURE = [
     return grp;
  }},
 {id:"sofa2", room:"living", category:"الكنب", name:"كنبة ثنائية", desc:"160×90×80 سم", width:160, depth:90, height:80, iconAspect:[160,90],
- finishGroup:"fabric",
  build:function(w,d,h,c){
     const grp = new THREE.Group();
     const seatH=h*.4;
@@ -731,7 +516,6 @@ const FURNITURE = [
     return grp;
  }},
 {id:"armchair", room:"living", category:"الجلوس", name:"كرسي استقبال", desc:"80×80×80 سم", width:80, depth:80, height:80, iconAspect:[80,80],
- finishGroup:"fabric",
  build:function(w,d,h,c){
     const grp = new THREE.Group();
     const seatH=h*.42;
@@ -742,7 +526,6 @@ const FURNITURE = [
     return grp;
  }},
 {id:"coffeeTable", room:"living", category:"الطاولات", name:"طاولة وسط", desc:"120×80×40 سم", width:120, depth:80, height:40, iconAspect:[120,80],
- finishGroup:"wood", finishKey:"top",
  build:function(w,d,h,c){
     const grp = new THREE.Group();
     grp.add(mesh(w,h*.1,d,c.top,0,h-h*.05,0));
@@ -753,7 +536,6 @@ const FURNITURE = [
     return grp;
  }},
 {id:"tvUnit", room:"living", category:"التلفزيون", name:"وحدة تلفزيون", desc:"180×45×130 سم", width:180, depth:45, height:130, iconAspect:[180,45],
- finishGroup:"wood",
  build:function(w,d,h,c){
     const grp = new THREE.Group();
     const standH = h*.32;
@@ -762,42 +544,33 @@ const FURNITURE = [
     return grp;
  }},
 {id:"livingCabinet", room:"living", category:"التخزين", name:"مكتبة", desc:"110×40×180 سم", width:110, depth:40, height:180, iconAspect:[110,40],
- cabinet:true, shelvesMin:1, shelvesMax:6, defaultShelves:3, finishGroup:"wood",
- build:function(w,d,h,c,obj){
-    const cfg = {doors:0, shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:3, drawers:0};
-    return buildCabinetBody(w,d,h,c.body,cfg);
+ build:function(w,d,h,c){
+    const grp = new THREE.Group();
+    grp.add(mesh(w,h,d,c.body,0,h/2,0));
+    for(let i=1;i<4;i++){ grp.add(mesh(w*.92,.02,d*.85,c.accent,0,h*(i/4),0)); }
+    return grp;
  }},
 
 /* ---------------- KITCHEN ---------------- */
 {id:"baseCabinet", room:"kitchen", category:"الخزائن", name:"خزانة أرضية", desc:"60×60×90 سم", width:60, depth:60, height:90, iconAspect:[60,60],
- cabinet:true, doorsMin:1, doorsMax:2, defaultDoors:1, shelvesMin:0, shelvesMax:2, defaultShelves:1, finishGroup:"wood",
- build:function(w,d,h,c,obj){
+ build:function(w,d,h,c){
     const grp = new THREE.Group();
-    const cfg = {doors:(obj&&obj.doorCount!=null)?obj.doorCount:1, shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:1, drawers:0};
-    const body = buildCabinetBody(w, d, h*.94, c.body, cfg);
-    grp.add(body);
+    grp.add(mesh(w,h*.94,d,c.body,0,h*.47,0));
     grp.add(mesh(w*1.03,h*.06,d*1.05,c.top,0,h*.97,0));
-    grp.userData.doorPivots = body.userData.doorPivots;
-    grp.userData.drawerNodes = body.userData.drawerNodes;
     return grp;
  }},
 {id:"wallCabinet", room:"kitchen", category:"الخزائن", name:"خزانة علوية", desc:"60×35×60 سم — معلّقة", width:60, depth:35, height:60, iconAspect:[60,35],
- cabinet:true, doorsMin:1, doorsMax:2, defaultDoors:2, shelvesMin:0, shelvesMax:2, defaultShelves:1, finishGroup:"wood",
- build:function(w,d,h,c,obj){
-    const cfg = {doors:(obj&&obj.doorCount!=null)?obj.doorCount:2, shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:1, drawers:0};
-    const body = buildCabinetBody(w,d,h,c.body,cfg);
-    const outer = new THREE.Group();
-    body.position.set(0,1.5,0);
-    outer.add(body);
-    outer.userData.doorPivots = body.userData.doorPivots;
-    outer.userData.drawerNodes = body.userData.drawerNodes;
-    return outer;
+ build:function(w,d,h,c){
+    const grp = new THREE.Group();
+    const mo = mesh(w,h,d,c.body,0,1.5+h/2,0);
+    grp.add(mo);
+    return grp;
  }},
 {id:"tallKitchen", room:"kitchen", category:"الخزائن", name:"خزانة طويلة", desc:"60×60×200 سم", width:60, depth:60, height:200, iconAspect:[60,60],
- cabinet:true, doorsMin:1, doorsMax:2, defaultDoors:2, shelvesMin:0, shelvesMax:5, defaultShelves:3, finishGroup:"wood",
- build:function(w,d,h,c,obj){
-    const cfg = {doors:(obj&&obj.doorCount!=null)?obj.doorCount:2, shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:3, drawers:0};
-    return buildCabinetBody(w,d,h,c.body,cfg);
+ build:function(w,d,h,c){
+    const grp = new THREE.Group();
+    grp.add(mesh(w,h,d,c.body,0,h/2,0));
+    return grp;
  }},
 {id:"sink", room:"kitchen", category:"الأجهزة", name:"حوض مطبخ", desc:"60×60×90 سم", width:60, depth:60, height:90, iconAspect:[60,60],
  build:function(w,d,h,c){
@@ -827,46 +600,34 @@ const FURNITURE = [
     return grp;
  }},
 {id:"island", room:"kitchen", category:"الجزر", name:"جزيرة مطبخ", desc:"150×80×90 سم", width:150, depth:80, height:90, iconAspect:[150,80],
- cabinet:true, doorsMin:0, doorsMax:3, defaultDoors:2, finishGroup:"wood",
- build:function(w,d,h,c,obj){
+ build:function(w,d,h,c){
     const grp = new THREE.Group();
-    const cfg = {doors:(obj&&obj.doorCount!=null)?obj.doorCount:2, shelves:0, drawers:0};
-    const body = buildCabinetBody(w,d,h*.94,c.body,cfg);
-    grp.add(body);
+    grp.add(mesh(w,h*.94,d,c.body,0,h*.47,0));
     grp.add(mesh(w*1.04,h*.06,d*1.08,c.top,0,h*.97,0));
-    grp.userData.doorPivots = body.userData.doorPivots;
-    grp.userData.drawerNodes = body.userData.drawerNodes;
     return grp;
  }}
 ];
 
-/* default material palettes per item id — each part carries a real-material type */
-function W(hex){ return {hex:hex, type:"wood"}; }
-function F(hex){ return {hex:hex, type:"fabric"}; }
-function S(hex){ return {hex:hex, type:"stone"}; }
-function M(hex){ return {hex:hex, type:"metal"}; }
-function C(hex){ return {hex:hex, type:"ceramic"}; }
-function G(hex){ return {hex:hex, type:"glass"}; }
-
+/* default material palettes per item id */
 const PALETTE = {
-    bed:{body:W(0x6b4a34), mattress:F(0xece4d5), accent:F(0xd7c9b3)},
-    nightstand:{body:W(0x8a6b4c), accent:M(0xb08a5c)},
-    wardrobe:{body:W(0x5c4230), accent:M(0x2c2117)},
-    dresser:{body:W(0x8a6b4c), mirrorFrame:G(0xcbd5d5)},
-    bedChair:{body:F(0xa88a6b), legs:M(0x4d392a)},
-    sofa3:{body:F(0x7c7368), accent:F(0x5f564a)},
-    sofa2:{body:F(0x7c7368), accent:F(0x5f564a)},
-    armchair:{body:F(0xa07d5c), accent:F(0x7f634a)},
-    coffeeTable:{top:S(0xddc2a0), legs:M(0x3a3a3a)},
-    tvUnit:{body:W(0x896c51), screen:G(0x0c0f12)},
-    livingCabinet:{body:W(0x896c51), accent:W(0xc1a27d)},
-    baseCabinet:{body:W(0x8a6b4c), top:S(0xddd7ce)},
-    wallCabinet:{body:W(0xa58a6f)},
-    tallKitchen:{body:W(0x806a55)},
-    sink:{body:W(0x8a6b4c), top:S(0xd9d4cc), bowl:C(0xe7e9ea), faucet:M(0x555b5b)},
-    stove:{stove:M(0x42474b), oven:M(0x202528), burner:M(0x171a1c)},
-    fridge:{fridge:M(0xcbd0cf), fridgeLine:M(0x8a908f)},
-    island:{body:W(0x8d755d), top:S(0xded8ce)}
+    bed:{body:0x6b4a34, mattress:0xece4d5, accent:0xd7c9b3},
+    nightstand:{body:0x8a6b4c, accent:0xc2a27e},
+    wardrobe:{body:0x5c4230, accent:0x2c2117},
+    dresser:{body:0x8a6b4c, mirrorFrame:0xcbd5d5},
+    bedChair:{body:0xa88a6b, legs:0x4d392a},
+    sofa3:{body:0x7c7368, accent:0x64594c},
+    sofa2:{body:0x7c7368, accent:0x64594c},
+    armchair:{body:0xa07d5c, accent:0x7f634a},
+    coffeeTable:{top:0xddc2a0, legs:0x6b4e38},
+    tvUnit:{body:0x896c51, screen:0x1c2227},
+    livingCabinet:{body:0x896c51, accent:0xc1a27d},
+    baseCabinet:{body:0x8a6b4c, top:0xddd7ce},
+    wallCabinet:{body:0xa58a6f},
+    tallKitchen:{body:0x806a55},
+    sink:{body:0x8a6b4c, top:0xd9d4cc, bowl:0x9aa4a4, faucet:0x555b5b},
+    stove:{stove:0x42474b, oven:0x202528, burner:0x171a1c},
+    fridge:{fridge:0xcbd0cf, fridgeLine:0x8a908f},
+    island:{body:0x8d755d, top:0xded8ce}
 };
 
 /* =========================================================
@@ -961,32 +722,21 @@ function onResize(){
     updateOrthoFrustum();
 }
 
-let clock = new THREE.Clock();
 function animate(){
     requestAnimationFrame(animate);
-    const dt = Math.min(0.1, clock.getDelta());
     updateCameraFromOrbit();
-    updateAnimatedParts(dt);
-    renderer.render(scene, activeCam);
-}
-
-function updateAnimatedParts(dt){
-    const speed = Math.min(1, dt*6);
+    /* إبقاء أبواب الخزانات والدولاب مفتوحة عند ظهورها حتى تظهر الرفوف مباشرة */
     objects.forEach(function(o){
-        if(!o.three) return;
-        let touched = false;
-        (o.three.doorPivots||[]).forEach(function(p,i){
-            const isOpen = o.doorsOpen && o.doorsOpen[i];
-            const target = isOpen ? p.userData.openRot : 0;
-            if(Math.abs(target-p.rotation.y) > 0.0005){ p.rotation.y += (target-p.rotation.y)*speed; touched = true; }
+        if(!o.three || !o.three.group || !o.three.group.userData.cabinetDoors) return;
+        const doors = o.three.group.userData.cabinetDoors;
+        doors.forEach(function(door){
+            if(!door.userData.open) return;
+            const target = door.userData.side === "left" ? door.userData.openX : door.userData.openX;
+            door.position.x += (target-door.position.x)*.18;
+            if(door.userData.handle) door.userData.handle.position.x = door.position.x;
         });
-        (o.three.drawerNodes||[]).forEach(function(n,i){
-            const isOpen = o.drawersOpen && o.drawersOpen[i];
-            const target = isOpen ? n.userData.openZ : n.userData.closedZ;
-            if(Math.abs(target-n.position.z) > 0.0005){ n.position.z += (target-n.position.z)*speed; touched = true; }
-        });
-        if(touched && o.id===selectedId) o.three.helper.update();
     });
+    renderer.render(scene, activeCam);
 }
 
 /* =========================================================
@@ -997,10 +747,7 @@ function buildRoom(){
     const data = ROOMS[currentRoom];
     const w = data.width, d = data.depth;
 
-    const floorDesc = currentRoom==="kitchen" ? {hex:data.floor, type:"stone"} : {hex:data.floor, type:"wood"};
-    const floorMat = makeMaterial(floorDesc, w, w, d);
-    floorMat.map.repeat.set(Math.max(1,Math.round(w/0.6)), Math.max(1,Math.round(d/0.6)));
-    floorMat.bumpMap.repeat.copy(floorMat.map.repeat);
+    const floorMat = new THREE.MeshStandardMaterial({color:data.floor, roughness:.9});
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(w,d), floorMat);
     floor.rotation.x = -Math.PI/2;
     floor.receiveShadow = true;
@@ -1013,9 +760,7 @@ function buildRoom(){
     roomGroup.add(grid);
 
     wallsGroup = new THREE.Group();
-    const wallMat = makeMaterial({hex:0xede4d3, type:"fabric"}, w, 2.6, 2.6);
-    wallMat.bumpScale = 0.0006;
-    wallMat.roughness = 0.96;
+    const wallMat = new THREE.MeshStandardMaterial({color:0xede4d3, roughness:.95});
     const wallH = 2.6, wallT = .08;
 
     const backWall = new THREE.Mesh(new THREE.BoxGeometry(w+wallT, wallH, wallT), wallMat);
@@ -1168,73 +913,39 @@ function renderLibrary(){
 /* =========================================================
    ADD / BUILD 3D OBJECT
 ========================================================= */
-function paletteFor(item, colorOverride){
-    const key = item.finishKey || "body";
-    const base = PALETTE[item.id] || {body:W(0x8a6b4c)};
-    if(!colorOverride) return base;
-    const out = Object.assign({}, base);
-    out[key] = colorOverride;
+function paletteFor(item, colorOverrideHex){
+    const base = PALETTE[item.id] || {body:0x8a6b4c};
+    if(!colorOverrideHex) return base;
+    const out = {};
+    Object.keys(base).forEach(function(k){ out[k] = k==="body" ? colorOverrideHex : base[k]; });
+    if(!out.body) out.body = colorOverrideHex;
     return out;
-}
-
-function resizeBoolArray(arr, n){
-    arr = arr ? arr.slice() : [];
-    while(arr.length<n) arr.push(false);
-    arr.length = n;
-    return arr;
 }
 
 function instantiateThree(obj){
     const item = FURNITURE.find(function(x){ return x.id===obj.itemId; });
-    const pal = paletteFor(item, obj.colorHex ? {hex:obj.colorHex, type:obj.colorType||"wood"} : null);
-    const grp = item.build(obj.width/100, obj.depth/100, obj.height/100, pal, obj);
+    const pal = paletteFor(item, obj.colorHex);
+    const grp = item.build(obj.width/100, obj.depth/100, obj.height/100, pal);
     grp.position.set(obj.x, 0, obj.z);
     grp.rotation.y = obj.rotY * Math.PI/180;
-
-    const doorPivots = grp.userData.doorPivots || [];
-    doorPivots.forEach(function(p,i){
-        p.rotation.y = (obj.doorsOpen && obj.doorsOpen[i]) ? p.userData.openRot : 0;
-    });
-    const drawerNodes = grp.userData.drawerNodes || [];
-    drawerNodes.forEach(function(n,i){
-        n.position.z = (obj.drawersOpen && obj.drawersOpen[i]) ? n.userData.openZ : n.userData.closedZ;
-    });
-
     scene.add(grp);
     const helper = new THREE.BoxHelper(grp, 0xe6ac6e);
     helper.visible = false;
     scene.add(helper);
-    obj.three = {group:grp, helper:helper, doorPivots:doorPivots, drawerNodes:drawerNodes};
+    obj.three = {group:grp, helper:helper};
 }
 
 function addFurniture(item){
-    // كل نوع أثاث يضاف مرة واحدة من المكتبة؛ النسخ الصريح من زر "نسخ القطعة" يظل مسموحاً.
-    const existing = objects.find(function(o){ return o.itemId===item.id; });
-    if(existing){
-        selectedId = existing.id;
-        updateSelectionVisuals();
-        renderProperties();
-        showToast("هذه القطعة مضافة بالفعل — استخدم نسخ القطعة إذا أردت نسخة أخرى");
-        return;
-    }
     objectCounter++;
     const id = "obj_" + Date.now() + "_" + objectCounter;
     const data = ROOMS[currentRoom];
     const offset = objects.length * .25;
-    const doorCount = item.cabinet ? (item.defaultDoors!=null?item.defaultDoors:(item.doorsMin||0)) : 0;
-    const shelfCount = item.shelvesMax ? (item.defaultShelves!=null?item.defaultShelves:(item.shelvesMin||0)) : 0;
-    const drawerCount = item.hasDrawers ? (item.defaultDrawers!=null?item.defaultDrawers:(item.drawersMin||0)) : 0;
     const obj = {
         id:id, itemId:item.id, name:item.name,
         x: Math.max(-(data.width/2-item.width/200), Math.min(data.width/2-item.width/200, (offset%1.6)-0.5)),
         z: Math.max(-(data.depth/2-item.depth/200), Math.min(data.depth/2-item.depth/200, (offset%1.2)-0.3)),
         rotY:0, width:item.width, depth:item.depth, height:item.height,
-        colorHex:null, colorType:null, locked:false,
-        doorCount:doorCount, shelfCount:shelfCount, drawerCount:drawerCount,
-        // عند ظهور أي خزانة/دولاب لأول مرة: الأبواب تفتح تلقائياً
-        // حتى تظهر الرفوف والمساحة الداخلية للمستخدم مباشرة.
-        doorsOpen:item.cabinet ? new Array(doorCount).fill(true) : new Array(doorCount).fill(false),
-        drawersOpen:new Array(drawerCount).fill(false)
+        colorHex:null, locked:false
     };
     instantiateThree(obj);
     objects.push(obj);
@@ -1411,61 +1122,11 @@ function renderProperties(){
         return;
     }
     const item = FURNITURE.find(function(x){ return x.id===obj.itemId; });
-
-    let finishHtml = "";
-    if(item.finishGroup && FINISHES[item.finishGroup]){
-        FINISHES[item.finishGroup].forEach(function(s){
-            const active = obj.colorHex === s.hex;
-            finishHtml += '<div class="swatch ' + (active?"active":"") + '" style="background:#' + s.hex.toString(16).padStart(6,"0") + '" title="' + s.label + '" onclick="changeObjectColor(' + s.hex + ',\'' + s.type + '\')"></div>';
-        });
-    }
-
-    let configHtml = "";
-    if(item.cabinet && item.doorsMax){
-        configHtml +=
-        '<div class="propertySection"><div class="propertySectionTitle"><span>عدد الأبواب</span><small>DOORS</small></div>' +
-        '<div class="rotationBox">' +
-            '<button class="rotatePreset" onclick="changeDoorCount(-1)">−</button>' +
-            '<div class="field" style="flex:1;"><input type="text" readonly value="' + obj.doorCount + ' من ' + item.doorsMax + '"></div>' +
-            '<button class="rotatePreset" onclick="changeDoorCount(1)">+</button>' +
-        '</div></div>';
-        if(obj.doorCount>0){
-            let doorToggles = "";
-            for(let i=0;i<obj.doorCount;i++){
-                const isOpen = obj.doorsOpen && obj.doorsOpen[i];
-                doorToggles += '<div class="toggleRow" style="margin-bottom:6px;"><div class="toggleText"><strong>الباب ' + (i+1) + '</strong><span>' + (isOpen?"مفتوح":"مغلق") + '</span></div>' +
-                '<div class="switch ' + (isOpen?"active":"") + '" onclick="toggleDoor(' + i + ')"><i></i></div></div>';
-            }
-            configHtml += '<div class="propertySection"><div class="propertySectionTitle"><span>فتح الأبواب</span><small>OPEN / CLOSE</small></div>' + doorToggles + '</div>';
-        }
-    }
-    if(item.shelvesMax){
-        configHtml +=
-        '<div class="propertySection"><div class="propertySectionTitle"><span>عدد الأرفف</span><small>SHELVES</small></div>' +
-        '<div class="rotationBox">' +
-            '<button class="rotatePreset" onclick="changeShelfCount(-1)">−</button>' +
-            '<div class="field" style="flex:1;"><input type="text" readonly value="' + obj.shelfCount + ' من ' + item.shelvesMax + '"></div>' +
-            '<button class="rotatePreset" onclick="changeShelfCount(1)">+</button>' +
-        '</div></div>';
-    }
-    if(item.hasDrawers && item.drawersMax){
-        configHtml +=
-        '<div class="propertySection"><div class="propertySectionTitle"><span>عدد الأدراج</span><small>DRAWERS</small></div>' +
-        '<div class="rotationBox">' +
-            '<button class="rotatePreset" onclick="changeDrawerCount(-1)">−</button>' +
-            '<div class="field" style="flex:1;"><input type="text" readonly value="' + obj.drawerCount + ' من ' + item.drawersMax + '"></div>' +
-            '<button class="rotatePreset" onclick="changeDrawerCount(1)">+</button>' +
-        '</div></div>';
-        if(obj.drawerCount>0){
-            let drawerToggles = "";
-            for(let i=0;i<obj.drawerCount;i++){
-                const isOpen = obj.drawersOpen && obj.drawersOpen[i];
-                drawerToggles += '<div class="toggleRow" style="margin-bottom:6px;"><div class="toggleText"><strong>الدرج ' + (i+1) + '</strong><span>' + (isOpen?"مفتوح":"مغلق") + '</span></div>' +
-                '<div class="switch ' + (isOpen?"active":"") + '" onclick="toggleDrawer(' + i + ')"><i></i></div></div>';
-            }
-            configHtml += '<div class="propertySection"><div class="propertySectionTitle"><span>فتح الأدراج</span><small>OPEN / CLOSE</small></div>' + drawerToggles + '</div>';
-        }
-    }
+    let swatchesHtml = "";
+    SWATCHES.forEach(function(s){
+        const active = obj.colorHex === s.hex;
+        swatchesHtml += '<div class="swatch ' + (active?"active":"") + '" style="background:#' + s.hex.toString(16).padStart(6,"0") + '" title="' + s.label + '" onclick="changeObjectColor(' + s.hex + ')"></div>';
+    });
 
     propertyContent.innerHTML =
     '<div class="propertyBody">' +
@@ -1491,8 +1152,6 @@ function renderProperties(){
         '<button class="rotatePreset" onclick="setRotation(90)">90°</button>' +
         '<button class="rotatePreset" onclick="setRotation(180)">180°</button></div></div>' +
 
-        configHtml +
-
         '<div class="propertySection"><div class="toggleRow"><div class="toggleText"><strong>قفل القطعة</strong><span>منع التحريك والتعديل</span></div>' +
         '<div class="switch ' + (obj.locked?"active":"") + '" onclick="toggleLock()"><i></i></div></div></div>' +
 
@@ -1505,14 +1164,13 @@ function renderProperties(){
             '<button class="action delete" onclick="deleteSelected()" style="grid-column:1/3;">حذف القطعة</button>' +
         '</div></div>' +
 
-        (finishHtml ? ('<div class="propertySection"><div class="propertySectionTitle"><span>نوع التشطيب</span><small>MATERIAL</small></div>' +
-        '<div class="colorRow">' + finishHtml + '</div></div>') : '') +
+        '<div class="propertySection"><div class="propertySectionTitle"><span>لون التشطيب</span></div>' +
+        '<div class="colorRow">' + swatchesHtml + '</div></div>' +
 
-        '<div class="note">القطعة مجسّم ثلاثي الأبعاد حقيقي — اسحبها مباشرة داخل المشهد، أو استخدم الحقول لضبط الموقع والمقاس، وتحكم بعدد الأبواب/الأدراج/الأرفف وافتحها مباشرة من هنا.</div>' +
+        '<div class="note">القطعة مجسّم ثلاثي الأبعاد حقيقي — اسحبها مباشرة داخل المشهد، أو استخدم الحقول لضبط الموقع والمقاس بدقة السنتيمتر.</div>' +
     '</div>';
 }
 
-let propertyHistoryTimer = null;
 function propertyChanged(){
     const obj = objects.find(function(x){ return x.id===selectedId; });
     if(!obj) return;
@@ -1526,9 +1184,8 @@ function propertyChanged(){
     if(Number.isFinite(w) && w>=10 && w!==obj.width){ obj.width=w; needsRebuild=true; }
     if(Number.isFinite(d) && d>=10 && d!==obj.depth){ obj.depth=d; needsRebuild=true; }
     if(Number.isFinite(h) && h>=10 && h!==obj.height){ obj.height=h; needsRebuild=true; }
-    const room = ROOMS[currentRoom];
-    if(Number.isFinite(x)) obj.x=Math.max(-room.width/2+obj.width/200, Math.min(room.width/2-obj.width/200, x));
-    if(Number.isFinite(z)) obj.z=Math.max(-room.depth/2+obj.depth/200, Math.min(room.depth/2-obj.depth/200, z));
+    if(Number.isFinite(x)) obj.x=x;
+    if(Number.isFinite(z)) obj.z=z;
     if(Number.isFinite(r)) obj.rotY=r;
 
     if(needsRebuild){
@@ -1538,8 +1195,6 @@ function propertyChanged(){
         obj.three.group.rotation.y = obj.rotY*Math.PI/180;
         obj.three.helper.update();
     }
-    clearTimeout(propertyHistoryTimer);
-    propertyHistoryTimer = setTimeout(function(){ saveHistory(); }, 450);
 }
 
 function updatePropertyPosition(){
@@ -1579,9 +1234,7 @@ function duplicateSelected(){
     objectCounter++;
     const copy = Object.assign({}, obj, {
         id: "obj_" + Date.now() + "_" + objectCounter,
-        x: obj.x + .25, z: obj.z + .25, locked:false, three:null,
-        doorsOpen: (obj.doorsOpen||[]).slice(),
-        drawersOpen: (obj.drawersOpen||[]).slice()
+        x: obj.x + .25, z: obj.z + .25, locked:false, three:null
     });
     instantiateThree(copy);
     objects.push(copy);
@@ -1606,90 +1259,16 @@ function deleteSelected(){
     renderProperties(); updateCounts(); saveHistory();
     showToast("تم حذف القطعة");
 }
-function changeObjectColor(hex, type){
+function changeObjectColor(hex){
     const obj = objects.find(function(x){ return x.id===selectedId; });
     if(!obj) return;
     obj.colorHex = hex;
-    obj.colorType = type || "wood";
     rebuildObject(obj);
     saveHistory(); renderProperties();
     showToast("تم تغيير لون التشطيب");
 }
 
 function updateCounts(){ objectCountEl.textContent = objects.length; }
-
-/* =========================================================
-   CABINET / DRAWER CONTROLS
-========================================================= */
-function getSelectedObject(){
-    return objects.find(function(x){ return x.id===selectedId; });
-}
-
-function changeDoorCount(delta){
-    const obj = getSelectedObject();
-    if(!obj) return;
-    const item = FURNITURE.find(function(x){ return x.id===obj.itemId; });
-    if(!item || !item.cabinet || item.doorsMax==null) return;
-    const next = Math.max(item.doorsMin||0, Math.min(item.doorsMax, (obj.doorCount||0)+delta));
-    if(next===obj.doorCount) return;
-    obj.doorCount = next;
-    obj.doorsOpen = resizeBoolArray(obj.doorsOpen, next);
-    rebuildObject(obj);
-    saveHistory();
-    renderProperties();
-    showToast("تم تعديل عدد الأبواب إلى " + next);
-}
-
-function changeShelfCount(delta){
-    const obj = getSelectedObject();
-    if(!obj) return;
-    const item = FURNITURE.find(function(x){ return x.id===obj.itemId; });
-    if(!item || item.shelvesMax==null) return;
-    const next = Math.max(item.shelvesMin||0, Math.min(item.shelvesMax, (obj.shelfCount||0)+delta));
-    if(next===obj.shelfCount) return;
-    obj.shelfCount = next;
-    rebuildObject(obj);
-    saveHistory();
-    renderProperties();
-    showToast("تم تعديل عدد الأرفف إلى " + next);
-}
-
-function changeDrawerCount(delta){
-    const obj = getSelectedObject();
-    if(!obj) return;
-    const item = FURNITURE.find(function(x){ return x.id===obj.itemId; });
-    if(!item || item.drawersMax==null) return;
-    const next = Math.max(item.drawersMin||0, Math.min(item.drawersMax, (obj.drawerCount||0)+delta));
-    if(next===obj.drawerCount) return;
-    obj.drawerCount = next;
-    obj.drawersOpen = resizeBoolArray(obj.drawersOpen, next);
-    rebuildObject(obj);
-    saveHistory();
-    renderProperties();
-    showToast("تم تعديل عدد الأدراج إلى " + next);
-}
-
-function toggleDoor(index){
-    const obj = getSelectedObject();
-    if(!obj || !obj.three) return;
-    obj.doorsOpen = resizeBoolArray(obj.doorsOpen, obj.doorCount||0);
-    obj.doorsOpen[index] = !obj.doorsOpen[index];
-    const p = obj.three.doorPivots[index];
-    if(p) p.rotation.y = obj.doorsOpen[index] ? p.userData.openRot : 0;
-    saveHistory();
-    renderProperties();
-}
-
-function toggleDrawer(index){
-    const obj = getSelectedObject();
-    if(!obj || !obj.three) return;
-    obj.drawersOpen = resizeBoolArray(obj.drawersOpen, obj.drawerCount||0);
-    obj.drawersOpen[index] = !obj.drawersOpen[index];
-    const n = obj.three.drawerNodes[index];
-    if(n) n.position.z = obj.drawersOpen[index] ? n.userData.openZ : n.userData.closedZ;
-    saveHistory();
-    renderProperties();
-}
 
 /* =========================================================
    KEYBOARD
@@ -1718,12 +1297,7 @@ document.addEventListener("keydown", function(e){
 ========================================================= */
 function snapshot(){
     return JSON.stringify(objects.map(function(o){
-        return {
-            id:o.id,itemId:o.itemId,name:o.name,x:o.x,z:o.z,rotY:o.rotY,
-            width:o.width,depth:o.depth,height:o.height,colorHex:o.colorHex,colorType:o.colorType,
-            locked:o.locked,doorCount:o.doorCount||0,shelfCount:o.shelfCount||0,drawerCount:o.drawerCount||0,
-            doorsOpen:(o.doorsOpen||[]).slice(),drawersOpen:(o.drawersOpen||[]).slice()
-        };
+        return {id:o.id,itemId:o.itemId,name:o.name,x:o.x,z:o.z,rotY:o.rotY,width:o.width,depth:o.depth,height:o.height,colorHex:o.colorHex,locked:o.locked};
     }));
 }
 function restoreSnapshot(json){
@@ -1772,14 +1346,7 @@ function loadProject(){
             onResize();
             applyRoomUI(); buildRoom();
             objects = data.objects || [];
-            objects.forEach(function(o){
-                o.doorCount = o.doorCount||0;
-                o.shelfCount = o.shelfCount||0;
-                o.drawerCount = o.drawerCount||0;
-                o.doorsOpen = resizeBoolArray(o.doorsOpen, o.doorCount);
-                o.drawersOpen = resizeBoolArray(o.drawersOpen, o.drawerCount);
-                instantiateThree(o);
-            });
+            objects.forEach(function(o){ instantiateThree(o); });
             renderCategories(); renderLibrary(); renderProperties();
             updateCounts(); saveHistory();
             showToast("تم استرجاع التصميم المحفوظ");
