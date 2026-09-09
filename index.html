@@ -2866,6 +2866,17 @@ function renderMobileWizard(){
   const stages=mobileWizardStages(obj,item);
   mobileWizardStage=Math.max(0,Math.min(mobileWizardStage,stages.length-1));
   const st=stages[mobileWizardStage];
+
+  // عند ظهور مرحلة الأرفف للدولاب، افتح كل الأبواب فوراً
+  // حتى يرى العميل التقسيم الداخلي والرفوف بوضوح.
+  if(st.key==='shelves' && item && item.cabinet && (obj.doorCount||0)>0){
+    obj.doorsOpen = resizeBoolArray(obj.doorsOpen, obj.doorCount);
+    for(let i=0;i<obj.doorCount;i++) obj.doorsOpen[i]=true;
+    if(obj.three && obj.three.doorPivots){
+      obj.three.doorPivots.forEach(function(p){ p.rotation.y=p.userData.openRot; });
+    }
+  }
+
   updateMobileGameStep(4,'المرحلة '+(mobileWizardStage+1)+' من '+stages.length+' • '+st.title);
   let body='';
   if(st.kind==='number'){
@@ -2896,7 +2907,19 @@ function renderMobileWizard(){
 function mobileWizardNext(){
   const obj=objects.find(x=>x.id===selectedId); if(!obj)return;
   const item=FURNITURE.find(x=>x.id===obj.itemId)||{}; const stages=mobileWizardStages(obj,item);
-  if(mobileWizardStage<stages.length-1) mobileWizardStage++; renderMobileWizard();
+  if(mobileWizardStage<stages.length-1){
+    mobileWizardStage++;
+    // بمجرد الانتقال إلى مرحلة الأرفف، افتح جميع أبواب الدولاب تلقائياً.
+    const nextStage=stages[mobileWizardStage];
+    if(nextStage && nextStage.key==='shelves' && item.cabinet && (obj.doorCount||0)>0){
+      obj.doorsOpen=resizeBoolArray(obj.doorsOpen,obj.doorCount);
+      for(let i=0;i<obj.doorCount;i++) obj.doorsOpen[i]=true;
+      if(obj.three && obj.three.doorPivots){
+        obj.three.doorPivots.forEach(function(p){p.rotation.y=p.userData.openRot;});
+      }
+    }
+  }
+  renderMobileWizard();
 }
 function mobileWizardBack(){if(mobileWizardStage>0)mobileWizardStage--;renderMobileWizard();}
 function renderProperties(){
