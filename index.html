@@ -110,7 +110,7 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
 
 /* ============ VIEWPORT ============ */
 .workspace{position:relative;overflow:hidden;background:#0b0e10;}
-#three-canvas{position:absolute;inset:0;display:block;touch-action:none;}
+#three-canvas{position:absolute;inset:0;display:block;}
 #three-canvas.orbiting{cursor:grabbing;}
 #three-canvas.dragging-obj{cursor:move;}
 
@@ -163,12 +163,6 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
 .unit:after{content:"cm";position:absolute;left:7px;top:10px;color:var(--muted-dim);font-size:8px;pointer-events:none;font-family:var(--mono);}
 .rotationBox{display:flex;gap:6px;}
 .rotationBox input{flex:1;}
-/* touch-friendly step buttons that wrap number inputs — big tap targets, no keyboard needed */
-.stepRow{display:flex;align-items:center;gap:4px;}
-.stepRow input{flex:1;text-align:center;}
-.stepBtn{flex-shrink:0;width:30px;height:33px;background:var(--panel2);border:1px solid var(--line2);color:var(--text);font-size:16px;line-height:1;font-weight:700;}
-.stepBtn:hover{border-color:var(--brass);color:var(--brass-light);}
-.stepBtn:active{background:var(--panel3);}
 .rotatePreset{width:36px;height:33px;border:1px solid var(--line2);background:var(--panel2);color:var(--muted);font-size:10px;font-family:var(--mono);}
 .rotatePreset:hover{color:var(--text);border-color:var(--brass);}
 .toggleRow{display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--panel2);border:1px solid var(--line);}
@@ -186,31 +180,6 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
 .swatch{width:28px;height:28px;border:2px solid transparent;cursor:pointer;}
 .swatch.active{border-color:var(--brass-light);}
 .note{padding:10px;background:rgba(193,121,60,.05);border:1px solid rgba(193,121,60,.15);color:var(--muted);font-size:9px;line-height:1.7;}
-
-/* ============ COUNT SLIDER (drag) ============ */
-.countSlider{display:flex;align-items:center;gap:10px;}
-.countSlider input[type="range"]{
-    -webkit-appearance:none;appearance:none;
-    flex:1;height:4px;background:var(--line2);outline:none;cursor:grab;
-    border:0;
-}
-.countSlider input[type="range"]:active{cursor:grabbing;}
-.countSlider input[type="range"]::-webkit-slider-thumb{
-    -webkit-appearance:none;appearance:none;
-    width:18px;height:18px;background:var(--brass);border:2px solid var(--brass-light);
-    border-radius:1px;cursor:grab;margin-top:-7px;
-}
-.countSlider input[type="range"]::-webkit-slider-runnable-track{
-    height:4px;background:var(--line2);
-}
-.countSlider input[type="range"]::-moz-range-thumb{
-    width:18px;height:18px;background:var(--brass);border:2px solid var(--brass-light);
-    border-radius:1px;cursor:grab;
-}
-.countSlider input[type="range"]::-moz-range-track{
-    height:4px;background:var(--line2);
-}
-.countValue{min-width:34px;height:26px;display:flex;align-items:center;justify-content:center;background:var(--panel2);border:1px solid var(--line2);color:var(--brass-light);font-size:11px;font-family:var(--mono);font-weight:700;}
 
 /* ============ ROOM MENU ============ */
 .roomMenu{position:fixed;inset:0;z-index:9000;background:rgba(10,8,6,.75);display:none;align-items:center;justify-content:center;}
@@ -235,648 +204,12 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
 @media(max-width:850px){
     #app{grid-template-columns:210px 1fr;}
     .properties{display:none;}
-    .properties.mobileOpen{display:block;position:fixed;inset:58px 0 0 0;z-index:800;width:100%;padding-bottom:60px;}
     .topbar{grid-column:1/3;}
     .roomCards{grid-template-columns:1fr;}
     .roomCard{height:220px;}
-    .library{display:none;}
-    .library.mobileOpen{display:flex;position:fixed;inset:58px 0 0 0;z-index:800;width:100%;}
-    .workspace{grid-column:1/3;}
-    #app{grid-template-columns:1fr;}
-    .mobileNav{display:flex;}
-    .zoomControl,.statusBar{bottom:70px;}
 }
-/* touch devices (Android phones/tablets) get bigger, simpler tap targets */
-@media(pointer:coarse){
-    .toolBtn{height:42px;min-width:42px;padding:0 14px;font-size:12px;}
-    .canvasTool{width:44px;height:44px;font-size:16px;}
-    .viewToggle button{padding:11px 16px;font-size:11.5px;}
-    .zoomControl button{width:42px;height:42px;font-size:18px;}
-    .category{padding:9px 13px;font-size:11px;}
-    .action,.rotatePreset,.stepBtn{height:40px;font-size:11px;}
-    .stepBtn{width:38px;font-size:19px;}
-    .swatch{width:34px;height:34px;}
-    .switch{width:42px;height:24px;}
-    .switch i{width:16px;height:16px;}
-    .switch.active i{transform:translateX(18px);}
-    .field input,.rotationBox input{height:40px;font-size:12px;}
-    .furnitureItem{padding:12px;}
-}
-/* simple bottom navigation shown only on touch/small screens to reach the library and properties panels */
-.mobileNav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:900;background:var(--panel);border-top:1px solid var(--line2);}
-.mobileNav button{flex:1;height:56px;color:var(--muted);font-size:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-left:1px solid var(--line);}
-.mobileNav button:first-child{border-left:0;}
-.mobileNav button.active{color:var(--brass-light);}
-.mobileNav button span{font-size:16px;}
-
-/* =========================================================
-   MOBILE PRO UI — all existing controls remain available
-   without squeezing the desktop interface on phones.
-========================================================= */
-@media (max-width:850px){
-    html,body{width:100%;height:100%;overflow:hidden;overscroll-behavior:none;}
-    #app{position:fixed;inset:0;width:100%;height:100dvh;display:none;grid-template-columns:1fr;grid-template-rows:56px minmax(0,1fr);}
-    #app.active{display:grid;}
-
-    .topbar{
-        grid-column:1;
-        grid-row:1;
-        height:56px;
-        min-width:0;
-        padding:0 8px;
-        gap:7px;
-        overflow:hidden;
-    }
-    .topBrand{min-width:auto;flex:0 0 auto;gap:7px;}
-    .topBrand strong,.topBrand small{display:none;}
-    .topLogo{width:32px;height:32px;flex:0 0 32px;}
-    .roomPill{
-        min-width:0;
-        flex:1 1 auto;
-        max-width:none;
-        height:36px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding:0 9px;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
-        font-size:11px;
-    }
-    .toolGroup{
-        flex:0 0 auto;
-        max-width:46vw;
-        min-width:0;
-        overflow-x:auto;
-        overflow-y:hidden;
-        scrollbar-width:none;
-        -webkit-overflow-scrolling:touch;
-        gap:5px;
-    }
-    .toolGroup::-webkit-scrollbar{display:none;}
-    .toolBtn{
-        flex:0 0 auto;
-        height:38px;
-        min-width:38px;
-        padding:0 10px;
-        white-space:nowrap;
-        font-size:10px;
-    }
-    .toolGroup .sep{display:none;}
-
-    .workspace{grid-column:1;grid-row:2;width:100%;height:100%;min-width:0;min-height:0;}
-    #three-canvas{width:100%;height:100%;touch-action:none;}
-
-    .canvasTools{top:10px;left:10px;gap:6px;}
-    .canvasTool{width:42px;height:42px;border-radius:10px;background:rgba(20,17,13,.92);backdrop-filter:blur(8px);}
-    .viewToggle{top:10px;right:10px;border-radius:10px;overflow:hidden;backdrop-filter:blur(8px);}
-    .viewToggle button{height:40px;padding:0 11px;font-size:10px;}
-
-    .hint{
-        top:60px;
-        width:calc(100% - 92px);
-        max-width:360px;
-        text-align:center;
-        padding:7px 9px;
-        border-radius:9px;
-        font-size:9.5px;
-        line-height:1.5;
-    }
-
-    .zoomControl{
-        left:10px;
-        bottom:calc(68px + env(safe-area-inset-bottom));
-        border-radius:11px;
-        overflow:hidden;
-        backdrop-filter:blur(8px);
-    }
-    .zoomControl button{width:42px;height:42px;}
-    .zoomValue{min-width:54px;}
-    .statusBar{
-        right:10px;
-        bottom:calc(68px + env(safe-area-inset-bottom));
-        gap:5px;
-        max-width:58%;
-        overflow:hidden;
-    }
-    .statusChip{padding:6px 8px;font-size:8px;white-space:nowrap;}
-    .statusChip:first-child{display:none;}
-
-    /* Library and properties become real bottom sheets. */
-    .library,.properties{
-        display:none;
-        position:fixed!important;
-        left:0!important;
-        right:0!important;
-        top:auto!important;
-        bottom:calc(56px + env(safe-area-inset-bottom))!important;
-        width:100%!important;
-        height:min(76dvh,620px)!important;
-        max-height:calc(100dvh - 68px);
-        z-index:800!important;
-        border:1px solid var(--line2)!important;
-        border-bottom:0!important;
-        border-radius:20px 20px 0 0;
-        box-shadow:0 -18px 50px rgba(0,0,0,.42);
-        background:rgba(27,23,18,.98);
-        overflow:hidden!important;
-    }
-    .library.mobileOpen,.properties.mobileOpen{display:flex;}
-    .properties.mobileOpen{flex-direction:column;}
-
-    .library:before,.properties:before{
-        content:"";
-        position:absolute;
-        top:8px;
-        left:50%;
-        transform:translateX(-50%);
-        width:42px;
-        height:4px;
-        border-radius:99px;
-        background:var(--line2);
-        z-index:10;
-    }
-    .libraryHeader,.propertiesHeader{padding:25px 16px 12px;flex:0 0 auto;}
-    .libraryTitle h3,.propertiesHeader h3{font-size:14px;}
-    .libraryTitle span{font-size:8px;}
-    .searchBox{margin-top:10px;}
-    .searchBox input{height:44px;border-radius:10px;font-size:12px;}
-    .categoryBar{
-        flex-wrap:nowrap;
-        overflow-x:auto;
-        scrollbar-width:none;
-        padding:8px 12px;
-        -webkit-overflow-scrolling:touch;
-    }
-    .categoryBar::-webkit-scrollbar{display:none;}
-    .category{flex:0 0 auto;height:38px;padding:0 13px;border-radius:9px;font-size:10.5px;}
-    .furnitureList{padding:9px 10px 18px;overscroll-behavior:contain;}
-    .furnitureItem{
-        grid-template-columns:72px 1fr;
-        gap:12px;
-        min-height:82px;
-        padding:10px;
-        margin-bottom:7px;
-        border-color:var(--line);
-        border-radius:12px;
-        background:rgba(34,28,21,.72);
-    }
-    .furnitureItem:active{background:var(--panel3);transform:scale(.995);}
-    .blueIcon{height:68px;border-radius:9px;}
-    .itemName{font-size:12px;margin-top:3px;}
-    .itemDesc{font-size:9px;line-height:1.55;}
-    .itemPlus{left:9px;top:9px;width:25px;height:25px;border-radius:7px;opacity:1;font-size:16px;}
-
-    .properties{overflow-y:auto!important;overscroll-behavior:contain;}
-    .propertyBody{padding:12px 13px 22px;}
-    .selectedInfo{border-radius:12px;padding:11px;margin-bottom:12px;}
-    .propertySection{margin-bottom:14px;}
-    .propertySectionTitle span{font-size:11px;}
-    .fields,.fields.three{grid-template-columns:1fr 1fr;gap:8px;}
-    .field label{font-size:9px;}
-    .field input{height:44px;border-radius:9px;font-size:12px;}
-    .stepBtn{width:42px;height:44px;border-radius:9px;font-size:19px;}
-    .rotationBox{gap:5px;}
-    .rotatePreset{height:44px;min-width:42px;border-radius:9px;}
-    .actionGrid{grid-template-columns:1fr 1fr;gap:8px;}
-    .action{height:44px;border-radius:9px;font-size:10px;}
-    .swatch{width:38px;height:38px;border-radius:8px;}
-    .toggleRow{padding:12px;border-radius:10px;}
-    .switch{width:44px;height:25px;border-radius:99px;}
-    .switch i{width:17px;height:17px;border-radius:50%;}
-    .switch.active i{transform:translateX(17px);}
-
-    .mobileNav{
-        display:flex;
-        height:calc(56px + env(safe-area-inset-bottom));
-        padding-bottom:env(safe-area-inset-bottom);
-        background:rgba(27,23,18,.98);
-        backdrop-filter:blur(14px);
-        box-shadow:0 -8px 30px rgba(0,0,0,.28);
-    }
-    .mobileNav button{
-        height:56px;
-        border-left:1px solid var(--line);
-        font-size:10px;
-        gap:2px;
-        transition:.15s;
-    }
-    .mobileNav button:active{background:var(--panel3);}
-    .mobileNav button span{font-size:18px;line-height:18px;}
-
-    .roomMenu{align-items:flex-end;padding:0;}
-    .roomMenuBox{
-        width:100%;
-        max-height:86dvh;
-        overflow:auto;
-        border-radius:20px 20px 0 0;
-        border-left:0;border-right:0;border-bottom:0;
-        padding:25px 14px calc(18px + env(safe-area-inset-bottom));
-    }
-    .roomMenuHeader{margin-bottom:12px;padding-bottom:12px;}
-    .roomMenuChoices{grid-template-columns:1fr;gap:8px;}
-    .roomMenuChoice{min-height:62px;padding:10px 14px;display:flex;align-items:center;gap:12px;text-align:right;border-radius:10px;}
-    .roomMenuChoice b{margin:0;font-size:12px;}
-    .roomMenuChoice span{margin:0;font-size:8px;}
-    .closeMenu{width:40px;height:40px;border-radius:9px;}
-
-    .toast{
-        bottom:calc(66px + env(safe-area-inset-bottom));
-        max-width:calc(100vw - 30px);
-        text-align:center;
-        border-radius:10px;
-        padding:9px 13px;
-    }
-}
-
-@media (max-width:430px){
-    .toolGroup{max-width:42vw;}
-    .topLogo{width:30px;height:30px;flex-basis:30px;}
-    .roomPill{font-size:10px;}
-    .canvasTools{top:8px;left:8px;}
-    .canvasTool{width:40px;height:40px;}
-    .viewToggle{top:8px;right:8px;}
-    .viewToggle button{padding:0 9px;font-size:9px;}
-    .hint{top:55px;width:calc(100% - 82px);font-size:9px;}
-}
-
-@media (max-height:620px) and (max-width:850px){
-    .library,.properties{height:54dvh!important;}
-    .roomMenuBox{max-height:94dvh;}
-}
-
-
-/* =========================================================
-   ANDROID / MOBILE GAME UX LAYER
-========================================================= */
-.mobileGameHUD{display:none}
-@media(max-width:850px){
-  body{background:#0b0e10;overscroll-behavior:none}
-  #startScreen{overflow-y:auto;-webkit-overflow-scrolling:touch}
-  .startShell{padding:24px 16px 92px;min-height:100dvh}
-  .startTop{margin-bottom:28px}.brandBig strong{font-size:18px}.buildTag{display:none}
-  .heroTitle{margin-bottom:24px}.heroTitle h1{font-size:28px}.heroTitle p{font-size:12px;line-height:1.8}
-  .roomCards{display:grid;grid-template-columns:1fr;gap:10px;background:none;border:0}
-  .roomCard{height:150px;border:1px solid var(--line2);border-radius:18px;background:linear-gradient(145deg,#201a14,#15120f);box-shadow:0 10px 30px rgba(0,0,0,.22)}
-  .roomStage{justify-content:flex-start;opacity:.55;padding-right:25%;}.roomStage svg{width:55%;max-height:110px}
-  .roomCardFooter{right:16px;bottom:14px;left:16px}.roomCardFooter h2{font-size:19px}.roomCardFooter p{font-size:9px;max-width:75%}.roomGo{opacity:1;transform:none;margin-top:5px;font-size:10px}
-  .startFooter{display:none}
-
-  #app{grid-template-columns:1fr;grid-template-rows:54px 1fr;}
-  .topbar{grid-column:1;min-height:54px;padding:0 10px;backdrop-filter:blur(14px)}
-  .topBrand{min-width:0}.topBrand strong{font-size:11px}.topBrand small{font-size:7px}.topLogo{width:30px;height:30px}
-  .roomPill{min-width:0;padding:6px 10px;font-size:10px;border-radius:20px}
-  .toolGroup{gap:4px}.toolGroup .toolBtn{height:38px;min-width:38px;padding:0;border-radius:10px;font-size:0}.toolGroup .toolBtn:first-child{font-size:15px}.toolGroup .toolBtn.primary{font-size:0}
-  .toolGroup .toolBtn.primary:after{content:'✓';font-size:15px}
-  .workspace{grid-column:1;grid-row:2;height:calc(100dvh - 54px);min-height:0}
-  .canvasTools{top:12px;left:10px;gap:7px}.canvasTool{width:42px;height:42px;border-radius:13px;box-shadow:0 6px 18px rgba(0,0,0,.3)}
-  .viewToggle{top:auto;right:50%;transform:translateX(50%);bottom:72px;border-radius:25px;overflow:hidden;background:rgba(18,15,12,.94);box-shadow:0 8px 24px rgba(0,0,0,.35)}
-  .viewToggle button{height:42px;padding:0 18px;font-size:10px}
-  .zoomControl{left:10px;bottom:72px;border-radius:24px;overflow:hidden}.zoomControl button{width:42px;height:42px}.zoomValue{min-width:48px}
-  .statusBar{right:10px;bottom:72px}.statusChip{padding:7px 9px;border-radius:18px}.statusChip:not(:last-child){display:none}
-  .hint{top:65px;max-width:92%;text-align:center;border-radius:12px;font-size:9px;padding:7px 12px}
-
-  /* Bottom-sheet behavior */
-  .library,.properties{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:100%!important;height:min(48dvh,520px)!important;z-index:850!important;border:1px solid var(--line2)!important;border-radius:24px 24px 0 0!important;background:rgba(27,23,18,.98)!important;box-shadow:0 -18px 50px rgba(0,0,0,.55)!important;overflow:hidden!important;transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1)!important;display:flex!important;visibility:hidden}
-  .library.mobileOpen,.properties.mobileOpen{transform:translateY(0);visibility:visible}
-  .library:before,.properties:before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:42px;height:4px;border-radius:10px;background:#5b4a35;z-index:3}
-  .libraryHeader,.propertiesHeader{padding:22px 16px 10px}.searchBox input{height:43px;border-radius:12px}.categoryBar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:8px 12px}.category{white-space:nowrap;padding:9px 13px;border-radius:20px;font-size:10px}
-  .furnitureList{padding:8px 12px}.furnitureItem{grid-template-columns:72px 1fr 30px;align-items:center;min-height:82px;padding:8px;border-radius:14px;border:1px solid var(--line);background:rgba(34,28,21,.6);margin-bottom:7px}.blueIcon{height:66px;border-radius:10px}.itemName{font-size:12px}.itemDesc{font-size:8px}.itemPlus{position:static;opacity:1;width:32px;height:32px;border-radius:10px;font-size:19px}
-  .properties{overflow:hidden!important;-webkit-overflow-scrolling:touch}
-  .propertiesHeader{border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:5;background:rgba(27,23,18,.98)}
-  .propertiesHeaderText{min-width:0}
-  .mobileSheetClose{display:flex;width:38px;height:34px;flex:0 0 38px;align-items:center;justify-content:center;border:1px solid var(--line2);border-radius:10px;background:var(--panel2);color:var(--brass-light);font-size:18px}
-  #propertyContent{min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:86px}
-  .propertyBody{padding:12px 14px 92px}.selectedInfo{border-radius:14px;padding:10px}.selectedIcon{width:50px;height:50px;border-radius:10px}.propertySection{background:var(--panel2);border:1px solid var(--line);border-radius:14px;margin-bottom:9px;overflow:hidden;padding:0}.propertySectionTitle{margin:0;padding:13px 12px;cursor:pointer}.propertySectionTitle span{font-size:11px}.propertySectionTitle small{font-size:7px}.propertySection > :not(.propertySectionTitle){padding-left:12px;padding-right:12px}.fields,.fields.three{padding-bottom:12px}.field input,.rotationBox input{height:42px;border-radius:10px}.stepBtn{width:40px;height:40px;border-radius:10px}.action,.rotatePreset{height:42px;border-radius:10px}.swatch{width:38px;height:38px;border-radius:10px}.toggleRow{padding:9px 0}.switch{width:44px;height:26px}
-
-  .mobileGameHUD{display:flex;position:fixed;left:10px;right:10px;top:64px;z-index:310;justify-content:center;pointer-events:none}.gameStep{background:rgba(20,17,13,.88);border:1px solid var(--line2);backdrop-filter:blur(12px);border-radius:22px;padding:7px 11px;display:flex;gap:8px;align-items:center;font-size:8px;color:var(--muted);box-shadow:0 8px 24px rgba(0,0,0,.25)}.gameStep b{color:var(--brass-light);font-size:9px}.gameStep i{width:4px;height:4px;background:var(--line2);border-radius:50%}
-  /* ANDROID STEP-BY-STEP DESIGNER: one decision at a time, scene stays dominant */
-  .properties.mobileOpen{background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important;pointer-events:none!important;width:100vw!important;right:0!important;left:0!important;top:54px!important;bottom:64px!important;transform:none!important;visibility:visible!important;display:block!important}
-  .properties.mobileOpen .propertiesHeader{display:none!important}
-  .properties.mobileOpen #propertyContent{height:100%!important;overflow:visible!important;padding:0!important;pointer-events:none!important}
-  .mobileWizard{position:absolute;right:10px;bottom:10px;width:min(86vw,340px);pointer-events:auto;direction:rtl}
-  .mobileWizardCard{background:rgba(22,19,15,.96);border:1px solid rgba(193,121,60,.30);border-radius:20px;padding:10px;box-shadow:0 16px 45px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.025);backdrop-filter:blur(16px)}
-  .wizardTop{display:flex;align-items:center;gap:9px;margin-bottom:8px}.wizardStepNo{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:rgba(193,121,60,.13);border:1px solid rgba(193,121,60,.35);color:var(--brass-light);font:700 10px var(--mono);flex:none}.wizardTopText{min-width:0;flex:1}.wizardTopText strong{display:block;font-size:11px;color:#f1e7d9}.wizardTopText span{display:block;font-size:7px;color:var(--muted-dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wizardProgress{display:flex;gap:4px;margin:0 2px 8px}.wizardDot{height:3px;flex:1;border-radius:4px;background:#3a3027}.wizardDot.active{background:var(--brass)}.wizardValue{display:flex;align-items:center;gap:7px}.wizardValue .bigInput{flex:1;min-width:0;height:45px;background:#0e0c0a;border:1px solid var(--line2);border-radius:12px;color:#fff;text-align:center;font:700 16px var(--mono);outline:none}.wizardValue .bigInput:focus{border-color:var(--brass);box-shadow:0 0 0 2px rgba(193,121,60,.08)}.wizardValue .unit{font-size:8px;color:var(--muted-dim);width:28px;text-align:center}.wizardValue .stepBtn{width:44px;height:45px;border-radius:12px;background:#17130f;border:1px solid var(--line2);color:#fff;font-size:20px}.wizardHint{font-size:7px;color:var(--muted-dim);text-align:center;margin:6px 0 7px}.wizardChoices{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.wizardChoice{height:38px;border:1px solid var(--line);border-radius:10px;background:#17130f;color:#d8cbb9;font-size:9px}.wizardChoice.active{border-color:var(--brass);background:rgba(193,121,60,.12);color:var(--brass-light)}.wizardActions{display:grid;grid-template-columns:1fr 1.35fr;gap:6px;margin-top:8px}.wizardActions button{height:39px;border-radius:11px;border:1px solid var(--line2);background:#17130f;color:#ddd;font-size:9px;font-weight:700}.wizardActions .next{background:var(--brass);border-color:var(--brass);color:#1b140b}.wizardActions .finish{grid-column:1/3}.wizardCount{display:flex;align-items:center;gap:8px}.wizardCount .countBox{flex:1;text-align:center;font:800 20px var(--mono);color:#fff}.wizardRange{width:100%;accent-color:var(--brass);height:32px}.wizardMiniRow{display:grid;grid-template-columns:1fr 1fr;gap:6px}.wizardMiniBtn{height:40px;border-radius:11px;border:1px solid var(--line2);background:#17130f;color:#ddd;font-size:9px}.wizardClose{position:absolute;left:0;top:-42px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);background:rgba(22,19,15,.94);color:#ddd;font-size:18px;box-shadow:0 8px 22px rgba(0,0,0,.3)}
-  @media(max-width:380px){.mobileWizard{right:7px;bottom:7px;width:calc(100vw - 14px)}.mobileWizardCard{padding:8px;border-radius:17px}.wizardTop{margin-bottom:6px}.wizardValue .bigInput{height:40px;font-size:14px}.wizardValue .stepBtn{height:40px;width:40px}.wizardActions button{height:36px}.wizardChoice{height:34px;font-size:8px}}
-  .mobileObjectPreview{position:fixed;inset:0;z-index:1200;display:none;align-items:flex-end;background:rgba(0,0,0,.55);backdrop-filter:blur(5px)}.mobileObjectPreview.open{display:flex}.previewSheet{width:100%;background:var(--panel);border:1px solid var(--line2);border-bottom:0;border-radius:26px 26px 0 0;padding:14px 14px 28px;box-shadow:0 -20px 60px rgba(0,0,0,.55)}.previewHandle{width:42px;height:4px;border-radius:10px;background:#5b4a35;margin:0 auto 12px}.previewHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.previewHead strong{font-size:15px}.previewHead span{font-size:8px;color:var(--muted-dim)}.previewTabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}.previewTabs button{height:42px;border:1px solid var(--line);background:var(--panel2);border-radius:12px;color:var(--muted);font-size:10px}.previewTabs button.active{border-color:var(--brass);background:rgba(193,121,60,.12);color:var(--brass-light)}.previewCanvas{height:180px;border:1px solid var(--line);border-radius:16px;background:#0b0e10;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px}.previewCanvas svg{width:75%;height:75%;stroke:var(--brass-light);fill:none}.previewInfo{display:flex;gap:7px;margin-bottom:10px}.previewChip{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}.previewChip b{display:block;font-family:var(--mono);font-size:10px}.previewChip span{font-size:7px;color:var(--muted-dim)}.previewActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.previewActions button{height:46px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);font-size:10px}.previewActions .go3d{background:var(--brass);color:#1b140b;border-color:var(--brass);font-weight:800}
-  .mobileNav{height:64px!important;background:rgba(27,23,18,.97)!important;backdrop-filter:blur(14px);padding-bottom:env(safe-area-inset-bottom);}.mobileNav button{height:64px!important;border-left:0!important}.mobileNav button.active{background:rgba(193,121,60,.08)}
-}
-@media(max-width:380px){.roomCard{height:138px}.roomStage{padding-right:30%}.previewCanvas{height:150px}.previewInfo{display:none}.library,.properties{height:50dvh!important}}
-@media (orientation:landscape) and (max-width:850px){
-  .library,.properties{height:58dvh!important}
-  .workspace{height:calc(100dvh - 54px)}
-}
-
-/* =========================================================
-   FREE 3D CAMERA CONTROL — center of the phone remains the scene
-========================================================= */
-.cameraModeDock{
-  position:absolute;left:14px;bottom:74px;z-index:360;display:flex;gap:6px;
-  padding:5px;border:1px solid var(--line2);border-radius:14px;
-  background:rgba(8,12,16,.86);backdrop-filter:blur(12px);box-shadow:0 10px 28px rgba(0,0,0,.28)
-}
-.cameraModeBtn{height:38px;min-width:62px;padding:0 10px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--muted);font-size:10px;display:flex;align-items:center;justify-content:center;gap:5px}
-.cameraModeBtn.active{color:var(--teal-light);border-color:rgba(0,164,142,.45);background:rgba(0,164,142,.10)}
-@media(max-width:850px){
-  .cameraModeDock{left:8px;bottom:78px;flex-direction:column;gap:4px;padding:4px;border-radius:13px}
-  .cameraModeBtn{width:48px;min-width:48px;height:42px;padding:0;flex-direction:column;gap:1px;font-size:9px}
-  .cameraModeBtn span{font-size:7px}
-  /* Properties are a compact edge dock; the middle of the phone belongs to the 3D scene. */
-  .mobileWizard{position:fixed!important;right:8px!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;width:min(42vw,285px)!important;max-height:72dvh;overflow:visible}
-  .mobileWizardCard{max-height:72dvh;overflow-y:auto;-webkit-overflow-scrolling:touch}
-  .wizardClose{top:0;left:auto;right:calc(100% + 6px);width:32px;height:32px}
-}
-@media(max-width:480px){
-  .mobileWizard{width:min(58vw,255px)!important}
-  .wizardTopText strong{font-size:10px}
-  .wizardValue .bigInput{height:42px;font-size:15px}
-  .wizardChoice{height:36px}
-}
-
-/* =========================================================
-   ANDROID EDGE DOCK — properties stay on the edge, scene stays visible
-========================================================= */
-@media(max-width:850px){
-  .properties{
-    top:54px!important;
-    bottom:64px!important;
-    right:0!important;
-    left:auto!important;
-    width:min(78vw,360px)!important;
-    height:auto!important;
-    max-height:none!important;
-    border-radius:24px 0 0 24px!important;
-    border-right:0!important;
-    border-bottom:0!important;
-    transform:translateX(105%)!important;
-    overflow:hidden!important;
-  }
-  .properties.mobileOpen{
-    transform:translateX(0)!important;
-  }
-  .properties:before{
-    top:14px!important;
-    left:50%!important;
-    width:34px!important;
-    height:3px!important;
-  }
-  .propertiesHeader{
-    min-height:68px!important;
-    padding:18px 14px 10px!important;
-  }
-  .propertiesHeaderText h3{font-size:13px!important}
-  .propertiesHeaderText p{font-size:8px!important;line-height:1.6!important}
-  #propertyContent{
-    height:calc(100% - 68px)!important;
-    max-height:none!important;
-    overflow-y:auto!important;
-    overscroll-behavior:contain!important;
-    padding-bottom:20px!important;
-  }
-  .propertyBody{
-    padding:10px 11px 24px!important;
-  }
-  .selectedInfo{
-    position:sticky!important;
-    top:0!important;
-    z-index:4!important;
-    margin-bottom:9px!important;
-    background:rgba(34,28,21,.97)!important;
-    backdrop-filter:blur(12px)!important;
-  }
-  .propertySection{
-    margin-bottom:7px!important;
-    border-radius:12px!important;
-  }
-  .propertySectionTitle{
-    min-height:48px!important;
-    display:flex!important;
-    align-items:center!important;
-    justify-content:space-between!important;
-    padding:10px 11px!important;
-  }
-  .propertySectionTitle span{font-size:10px!important}
-  .propertySectionTitle small{font-size:6px!important}
-  .fields,.fields.three{gap:6px!important}
-  .field input,.rotationBox input{height:38px!important;font-size:11px!important}
-  .stepBtn{width:36px!important;height:38px!important;font-size:17px!important}
-  .action,.rotatePreset{height:38px!important;font-size:9px!important}
-  .toggleRow{min-height:42px!important;padding:7px 0!important}
-  .mobileSheetClose{width:36px!important;height:32px!important}
-
-  /* The two utility groups live on opposite edges of the phone. */
-  .canvasTools{left:8px!important;right:auto!important}
-  .zoomControl{left:8px!important;right:auto!important}
-  .statusBar{right:8px!important;left:auto!important}
-
-  /* The library opens from the opposite edge, so controls never stack over one another. */
-  .library{
-    top:54px!important;
-    bottom:64px!important;
-    left:0!important;
-    right:auto!important;
-    width:min(78vw,360px)!important;
-    height:auto!important;
-    max-height:none!important;
-    border-radius:0 24px 24px 0!important;
-    border-left:0!important;
-    border-bottom:0!important;
-    transform:translateX(-105%)!important;
-  }
-  .library.mobileOpen{transform:translateX(0)!important}
-}
-
-/* =========================================================
-   D-STYLE DARK / TEAL THEME
-   Inspired by the supplied black + deep teal reference mark.
-   Keeps the existing furniture/3D functionality intact.
-========================================================= */
-:root{
-  --bg:#07090d;
-  --panel:#0c1015;
-  --panel2:#11171c;
-  --panel3:#151d22;
-  --line:#1b252c;
-  --line2:#2a3740;
-  --text:#f4f8f8;
-  --muted:#8b999e;
-  --muted-dim:#5d6b70;
-  --brass:#00a48e;
-  --brass-light:#19c4aa;
-  --teal:#00a48e;
-  --danger:#d85e67;
-}
-html,body{background:radial-gradient(circle at 50% 0%,#111920 0%,#07090d 48%,#05070a 100%);color:var(--text)}
-button,input{font-family:'Cairo',sans-serif}
-
-/* brand / logo language */
-.brandLogo,.topLogo{
-  background:#000;
-  border:1px solid #172126!important;
-  border-radius:50%!important;
-  box-shadow:0 0 0 1px rgba(0,164,142,.04),0 10px 30px rgba(0,0,0,.35);
-}
-.brandLogo:before{inset:7px!important;border:0!important;border-left:3px solid var(--teal)!important;border-right:3px solid var(--teal)!important;border-radius:50%!important;opacity:.9}
-.brandLogo svg,.topLogo svg{stroke:var(--teal)!important;filter:drop-shadow(0 0 5px rgba(0,164,142,.2))}
-.brandBig strong,.topBrand strong{color:#fff}
-.brandBig span,.topBrand small{color:#64757b}
-
-/* start screen */
-#startScreen{background:
-  radial-gradient(circle at 50% 10%,rgba(0,164,142,.10),transparent 32%),
-  radial-gradient(circle at 15% 90%,rgba(0,164,142,.045),transparent 35%),
-  #07090d!important}
-.startTop{border-color:var(--line)}
-.roomCards{background:var(--line);border-color:var(--line)}
-.roomCard{background:linear-gradient(145deg,#0d1217,#090c10)}
-.roomCard:hover{background:#11181d;box-shadow:inset 0 0 0 1px rgba(0,164,142,.22)}
-.roomIndex,.roomGo,.resumeBtn{color:var(--brass-light)!important}
-.roomCardFooter h2{color:#f4f8f8}
-
-/* app shell */
-.topbar{background:rgba(9,12,16,.96);border-color:var(--line);box-shadow:0 6px 25px rgba(0,0,0,.2)}
-.roomPill{background:#0d1318;border-color:var(--line2);border-radius:999px}
-.toolBtn{background:#0e1419;border-color:var(--line);border-radius:9px}
-.toolBtn:hover{border-color:rgba(0,164,142,.45)}
-.toolBtn.primary{background:var(--teal);border-color:var(--teal);color:#00120f;box-shadow:0 5px 18px rgba(0,164,142,.14)}
-.toolBtn.active{color:var(--brass-light);border-color:var(--teal)}
-
-/* side libraries */
-.library,.properties{background:rgba(10,14,18,.97);border-color:var(--line)}
-.libraryHeader,.categoryBar,.propertiesHeader{border-color:var(--line)}
-.searchBox input,.field input{background:#080c10;border-color:var(--line2);border-radius:10px}
-.searchBox input:focus,.field input:focus{border-color:var(--teal);box-shadow:0 0 0 2px rgba(0,164,142,.08)}
-.category{background:#0e1419;border-color:var(--line);border-radius:999px}
-.category.active{color:var(--brass-light);border-color:var(--teal);background:rgba(0,164,142,.10)}
-.furnitureItem{border-radius:13px}
-.furnitureItem:hover{background:#10171c;border-color:#1d2a31}
-.blueIcon,.selectedIcon{background:#070b0f;border-color:var(--line2);border-radius:12px}
-.blueIcon svg,.selectedIcon svg{stroke:var(--teal)!important}
-.itemPlus{background:var(--teal);color:#00120f;border-radius:7px}
-
-/* viewport */
-.workspace{background:
-  radial-gradient(circle at 50% 42%,rgba(0,164,142,.035),transparent 34%),
-  #070a0e}
-.canvasTools{background:rgba(9,13,17,.88)!important;border-color:var(--line2)!important;border-radius:13px!important;backdrop-filter:blur(12px)}
-.canvasTool{border-color:var(--line)!important;border-radius:9px!important}
-.canvasTool:hover,.canvasTool.active{color:var(--brass-light)!important;border-color:var(--teal)!important;background:rgba(0,164,142,.07)!important}
-.viewToggle{background:rgba(9,13,17,.9)!important;border-color:var(--line2)!important;border-radius:999px!important;overflow:hidden}
-.viewToggle button.active{background:var(--teal)!important;color:#00120f!important}
-.zoomControl{background:rgba(9,13,17,.9)!important;border-color:var(--line2)!important;border-radius:12px!important}
-.statusChip{background:rgba(9,13,17,.85)!important;border-color:var(--line)!important;border-radius:999px!important}
-.statusChip b{color:var(--brass-light)!important}
-
-/* properties cards */
-.propertySection{background:linear-gradient(145deg,#10161b,#0b1014)!important;border-color:#1d2930!important;border-radius:16px!important;box-shadow:0 10px 25px rgba(0,0,0,.14)}
-.propertySectionTitle{color:#eaf1f1!important}
-.stepBtn,.rotatePreset,.action{background:#0b1115!important;border-color:var(--line2)!important;border-radius:10px!important}
-.stepBtn:hover,.rotatePreset:hover,.action:hover{border-color:var(--teal)!important;color:var(--brass-light)!important;background:rgba(0,164,142,.06)!important}
-.rotatePreset{color:var(--muted)!important}
-.switch.active{background:rgba(0,164,142,.18)!important;border-color:var(--teal)!important}
-.switch.active i{background:var(--brass-light)!important}
-.action.delete{border-color:rgba(216,94,103,.3)!important;color:#e77a82!important}
-
-/* mobile */
-.mobileNav{background:rgba(7,10,13,.97)!important;border-top:1px solid var(--line2)!important;backdrop-filter:blur(18px)}
-.mobileNav button{color:#718087!important}
-.mobileNav button.active{color:var(--brass-light)!important;background:rgba(0,164,142,.08)!important}
-.mobileNav button:active{background:rgba(0,164,142,.12)!important}
-.mobileGameHUD .gameStep{background:rgba(7,11,14,.90)!important;border-color:#25333a!important;box-shadow:0 10px 30px rgba(0,0,0,.45)!important}
-.mobileGameHUD .gameStep b{color:var(--brass-light)!important}
-.mobileWizard,.previewSheet{background:linear-gradient(160deg,#10171b,#090d11)!important;border-color:#27353d!important;box-shadow:0 -20px 60px rgba(0,0,0,.7)!important}
-.wizardStepNo{background:rgba(0,164,142,.10)!important;border-color:rgba(0,164,142,.38)!important;color:var(--brass-light)!important}
-.wizardDot.active{background:var(--teal)!important}
-.wizardValue .bigInput{background:#070b0e!important;border-color:#27353d!important}
-.wizardValue .bigInput:focus{border-color:var(--teal)!important;box-shadow:0 0 0 2px rgba(0,164,142,.10)!important}
-.wizardValue .stepBtn,.wizardActions button,.wizardChoice{background:#0b1115!important;border-color:#25323a!important}
-.wizardChoice.active{border-color:var(--teal)!important;background:rgba(0,164,142,.10)!important;color:var(--brass-light)!important}
-.wizardActions .next,.previewActions .go3d{background:var(--teal)!important;border-color:var(--teal)!important;color:#00120f!important}
-.previewTabs button.active{border-color:var(--teal)!important;background:rgba(0,164,142,.10)!important;color:var(--brass-light)!important}
-.previewCanvas{background:#05080b!important;border-color:#1e2a31!important}
-.previewCanvas svg{stroke:var(--teal)!important}
-.previewChip{background:#0b1115!important;border-color:#1f2c33!important}
-
-/* use teal instead of the old brass on common labels / sliders */
-input[type=range]{accent-color:var(--teal)!important}
-.roomMenu{background:rgba(0,0,0,.72)!important;backdrop-filter:blur(10px)}
-.roomMenuBox{background:#0c1115!important;border-color:#27343b!important;box-shadow:0 25px 80px rgba(0,0,0,.65)!important;border-radius:20px!important}
-.roomMenuChoice{background:#10171b!important;border-color:#223039!important;border-radius:14px!important}
-.roomMenuChoice:hover{border-color:var(--teal)!important;color:var(--brass-light)!important}
-.toast{background:#0b1115!important;border-color:#27343b!important;border-radius:12px!important}
-
-/* compact Android touch targets */
-@media(max-width:850px){
-  .topbar{background:rgba(7,10,13,.96)!important}
-  .topBrand small{letter-spacing:1px}
-  .library,.properties{background:rgba(9,13,17,.985)!important}
-  .libraryHeader{background:linear-gradient(#0c1217,#0b1014)!important}
-  .propertiesHeader{background:linear-gradient(#0c1217,#0b1014)!important}
-  .mobileSheetClose,.wizardClose{background:#0b1115!important;border-color:#2a3740!important;color:var(--brass-light)!important}
-}
-
 </style>
-<style>
-/* =========================================================
-   FINAL ANDROID FIX — selected object properties + free 3D canvas
-   The scene stays interactive; only the right edge becomes the settings dock.
-========================================================= */
-@media (max-width:850px){
-  .properties.mobileOpen{
-    display:block!important;
-    visibility:visible!important;
-    pointer-events:auto!important;
-    position:fixed!important;
-    z-index:1200!important;
-    top:58px!important;
-    right:0!important;
-    left:auto!important;
-    bottom:calc(64px + env(safe-area-inset-bottom))!important;
-    width:min(38vw,255px)!important;
-    max-width:38vw!important;
-    height:auto!important;
-    transform:translateX(0)!important;
-    overflow:hidden!important;
-    border-radius:20px 0 0 20px!important;
-    background:rgba(18,16,13,.97)!important;
-    border:1px solid var(--line2)!important;
-    border-right:0!important;
-    box-shadow:-16px 0 42px rgba(0,0,0,.42)!important;
-  }
-  .properties.mobileOpen .propertiesHeader{display:flex!important;pointer-events:auto!important;}
-  .properties.mobileOpen #propertyContent{
-    display:block!important;
-    height:calc(100% - 68px)!important;
-    overflow-y:auto!important;
-    -webkit-overflow-scrolling:touch!important;
-    pointer-events:auto!important;
-    padding:0!important;
-  }
-  .properties.mobileOpen .mobileWizard{
-    position:relative!important;
-    right:auto!important;bottom:auto!important;
-    width:100%!important;
-    pointer-events:auto!important;
-    padding:8px!important;
-    transform:none!important;
-  }
-  .properties.mobileOpen .mobileWizardCard{
-    width:100%!important;
-    max-height:none!important;
-    overflow:visible!important;
-    border-radius:16px!important;
-  }
-  .properties.mobileOpen .wizardActions button,
-  .properties.mobileOpen .stepBtn,
-  .properties.mobileOpen .wizardChoice,
-  .properties.mobileOpen .wizardMiniBtn{touch-action:manipulation!important;}
-  #three-canvas{touch-action:none!important;user-select:none;-webkit-user-select:none;}
-}
-@media(max-width:480px){
-  .properties.mobileOpen{width:min(40vw,235px)!important;max-width:40vw!important;}
-}
-</style></head>
+</head>
 <body>
 
 <!-- ================= START SCREEN ================= -->
@@ -973,11 +306,6 @@ input[type=range]{accent-color:var(--teal)!important}
             <button class="canvasTool" onclick="resetView()" title="إعادة ضبط الكاميرا">⌂</button>
         </div>
 
-        <div class="cameraModeDock" id="cameraModeDock" aria-label="تحكم المشهد">
-            <button class="cameraModeBtn active" id="cameraFreeBtn" onclick="setInteractionMode('orbit')">◉ <span>حر</span></button>
-            <button class="cameraModeBtn" id="cameraMoveBtn" onclick="setInteractionMode('select')">↖ <span>تحريك</span></button>
-        </div>
-
         <div class="viewToggle">
             <button id="viewPersp" class="active" onclick="setCameraMode('persp')">منظور حر</button>
             <button id="viewTop" onclick="setCameraMode('top')">مخطط علوي</button>
@@ -995,11 +323,8 @@ input[type=range]{accent-color:var(--teal)!important}
         </div>
     </section>
 
-    <aside class="properties" id="propertiesPanel">
-        <div class="propertiesHeader">
-            <div class="propertiesHeaderText"><h3>خصائص العنصر</h3><p>التحكم الدقيق في القطعة المحددة</p></div>
-            <button class="mobileSheetClose" onclick="closeMobilePanels()" aria-label="إغلاق الخصائص">⌄</button>
-        </div>
+    <aside class="properties">
+        <div class="propertiesHeader"><h3>خصائص العنصر</h3><p>التحكم الدقيق في القطعة المحددة</p></div>
         <div id="propertyContent">
             <div class="emptyProperty">
                 <div class="emptyPropertyIcon">⊙</div>
@@ -1009,12 +334,6 @@ input[type=range]{accent-color:var(--teal)!important}
         </div>
     </aside>
 </main>
-
-<nav class="mobileNav" id="mobileNav">
-    <button id="navLibraryBtn" onclick="toggleMobilePanel('library')"><span>▤</span>المكتبة</button>
-    <button id="navSceneBtn" class="active" onclick="closeMobilePanels()"><span>⬡</span>المشهد</button>
-    <button id="navPropsBtn" onclick="toggleMobilePanel('properties')"><span>⚙</span>الخصائص</button>
-</nav>
 
 <div class="roomMenu" id="roomMenu">
     <div class="roomMenuBox">
@@ -1247,80 +566,10 @@ function cyl(rt,rb,h,desc,x,y,z,segs){
     mo.castShadow = true; mo.receiveShadow = true;
     return mo;
 }
-function edged(meshObj, color){
-    const eg = new THREE.EdgesGeometry(meshObj.geometry, 20);
-    const line = new THREE.LineSegments(eg, new THREE.LineBasicMaterial({color:color||0x1a1410, transparent:true, opacity:.35}));
-    line.position.copy(meshObj.position);
-    line.rotation.copy(meshObj.rotation);
-    return line;
-}
-
-/* =========================================================
-   HANDLE STYLES
-   'bar'   — classic long pull with two ball finials (image 1)
-   'knob'  — single round ball knob (image 2)
-   'notch' — modern integrated cutout pull (image 3)
-   opts: {x,y,z (mounting surface z), orientation:'vertical'|'horizontal', length}
-========================================================= */
-const HANDLE_STYLES = [
-    {id:"bar", label:"مقبض عمودي"},
-    {id:"knob", label:"مقبض كروي"},
-    {id:"notch", label:"مقبض غاطس"}
-];
-function buildHandleGroup(style, handleMat, opts){
-    const grp = new THREE.Group();
-    const surfaceZ = opts.z;
-    const vertical = opts.orientation === "vertical";
-    if(style === "knob"){
-        const stemLen = 0.012, sphereR = 0.017;
-        const stem = cyl(0.006,0.006,stemLen,handleMat,opts.x,opts.y,surfaceZ+stemLen/2);
-        stem.rotation.x = Math.PI/2;
-        const knob = new THREE.Mesh(new THREE.SphereGeometry(sphereR,16,16), makeMaterial(handleMat,0.04,0.04,0.04));
-        knob.position.set(opts.x,opts.y,surfaceZ+stemLen+sphereR*0.55);
-        knob.castShadow = true;
-        grp.add(stem,knob);
-    } else if(style === "notch"){
-        const notchW = vertical ? 0.05 : opts.length*0.62;
-        const notchH = vertical ? opts.length*0.62 : 0.05;
-        const notch = mesh(notchW,notchH,0.014,{hex:0x0d0a07,type:"wood"},opts.x,opts.y,surfaceZ-0.005);
-        notch.castShadow = false;
-        const barLen = (vertical ? notchH : notchW) * 0.72;
-        const bar = cyl(0.007,0.007,barLen,handleMat,opts.x,opts.y,surfaceZ+0.008);
-        if(!vertical) bar.rotation.z = Math.PI/2;
-        grp.add(notch,bar);
-    } else { // bar
-        const len = opts.length, sphereR = 0.013, stemLen = 0.012, rodZ = surfaceZ+stemLen;
-        if(vertical){
-            const rod = cyl(0.0065,0.0065,len,handleMat,opts.x,opts.y,rodZ);
-            const s1 = new THREE.Mesh(new THREE.SphereGeometry(sphereR,14,14), makeMaterial(handleMat,0.03,0.03,0.03));
-            s1.position.set(opts.x,opts.y+len/2,rodZ);
-            const s2 = s1.clone(); s2.position.y = opts.y-len/2;
-            const st1 = cyl(0.005,0.005,stemLen,handleMat,opts.x,opts.y+len/2,surfaceZ+stemLen/2);
-            st1.rotation.x = Math.PI/2;
-            const st2 = st1.clone(); st2.position.y = opts.y-len/2;
-            grp.add(rod,s1,s2,st1,st2);
-        } else {
-            const rod = cyl(0.0065,0.0065,len,handleMat,opts.x,opts.y,rodZ);
-            rod.rotation.z = Math.PI/2;
-            const s1 = new THREE.Mesh(new THREE.SphereGeometry(sphereR,14,14), makeMaterial(handleMat,0.03,0.03,0.03));
-            s1.position.set(opts.x-len/2,opts.y,rodZ);
-            const s2 = s1.clone(); s2.position.x = opts.x+len/2;
-            const st1 = cyl(0.005,0.005,stemLen,handleMat,opts.x-len/2,opts.y,surfaceZ+stemLen/2);
-            st1.rotation.x = Math.PI/2;
-            const st2 = st1.clone(); st2.position.x = opts.x+len/2;
-            grp.add(rod,s1,s2,st1,st2);
-        }
-    }
-    grp.traverse(function(o){ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; } });
-    return grp;
-}
 
 /* =========================================================
    CONFIGURABLE CABINET / WARDROBE BUILDER
-   w,d,h in meters. cfg = {doors, shelves, drawers, rod}
-   Drawers (if any) occupy a bottom band; doors+shelves (if any)
-   occupy the remaining band above — so a wardrobe can combine
-   drawers at the bottom with hanging doors above, like real furniture.
+   w,d,h in meters. cfg = {doors, shelves, drawers}
    Returns a THREE.Group whose userData holds doorPivots / drawerNodes
    so they can be opened, closed and animated live.
 ========================================================= */
@@ -1329,46 +578,27 @@ function buildCabinetBody(w,d,h,mat,cfg){
     const grp = new THREE.Group();
     const t = 0.018;
     const handleMat = {hex:0x2b2b2b, type:"metal"};
-    const plinthMat = {hex:0x1c1710, type:"wood"};
 
-    // slightly raised plinth (kick base) for a grounded, realistic look
-    const plinthH = Math.min(0.07, h*0.06);
-    grp.add(mesh(w-0.01, plinthH, d-0.03, plinthMat, 0, plinthH/2, 0.012));
-
-    const bodyY0 = plinthH;
-    const bodyH = h - plinthH;
-
-    grp.add(mesh(w,t,d,mat,0,bodyY0+t/2,0));            // bottom
-    grp.add(mesh(w,t,d,mat,0,bodyY0+bodyH-t/2,0));      // top
-    grp.add(mesh(t,bodyH,d,mat,-w/2+t/2,bodyY0+bodyH/2,0));     // left side
-    grp.add(mesh(t,bodyH,d,mat,w/2-t/2,bodyY0+bodyH/2,0));      // right side
-    grp.add(mesh(w,bodyH,t,mat,0,bodyY0+bodyH/2,-d/2+t/2));     // back
+    grp.add(mesh(w,t,d,mat,0,t/2,0));            // bottom
+    grp.add(mesh(w,t,d,mat,0,h-t/2,0));          // top
+    grp.add(mesh(t,h,d,mat,-w/2+t/2,h/2,0));     // left side
+    grp.add(mesh(t,h,d,mat,w/2-t/2,h/2,0));      // right side
+    grp.add(mesh(w,h,t,mat,0,h/2,-d/2+t/2));     // back
 
     const doorPivots = [];
     const drawerNodes = [];
     const drawers = cfg.drawers||0;
-    const doors = cfg.doors||0;
-    const shelves = cfg.shelves||0;
 
-    const innerBottom = bodyY0 + t;
-    const innerTop = bodyY0 + bodyH - t;
-    const innerH = innerTop - innerBottom;
-
-    // drawers occupy a bottom band with a realistic fixed row height,
-    // doors/shelves (if present) occupy whatever remains above them
-    const idealRowH = 0.20;
-    let drawerBandH = 0;
     if(drawers>0){
-        drawerBandH = Math.min(idealRowH*drawers, innerH * (doors>0||shelves>0 ? 0.62 : 0.98));
-        const rowH = drawerBandH/drawers;
+        const rowH = (h-2*t)/drawers;
         for(let i=0;i<drawers;i++){
-            const y = innerBottom + rowH*(i+0.5);
+            const y = t + rowH*(i+0.5);
             const node = new THREE.Group();
             const front = mesh(w-t*1.8, rowH-0.012, 0.022, mat, 0,0,0);
             node.add(front);
-            node.add(edged(front, 0x140f0a));
-            const drawerHandleLen = Math.min(0.18,w*0.35);
-            node.add(buildHandleGroup(cfg.handleStyle||"bar", handleMat, {x:0,y:0,z:0.011, orientation:"horizontal", length:drawerHandleLen}));
+            const handle = cyl(0.006,0.006, Math.min(0.18,w*0.35), handleMat, 0,0,0.03);
+            handle.rotation.z = Math.PI/2;
+            node.add(handle);
             const closedZ = d/2-0.02;
             node.position.set(0,y,closedZ);
             node.userData.closedZ = closedZ;
@@ -1376,26 +606,17 @@ function buildCabinetBody(w,d,h,mat,cfg){
             grp.add(node);
             drawerNodes.push(node);
         }
-    }
-
-    const upperBottom = innerBottom + drawerBandH;
-    const upperH = innerTop - upperBottom;
-
-    if(upperH > 0.05 && (doors>0 || shelves>0)){
+    } else {
+        const shelves = cfg.shelves||0;
         for(let i=1;i<=shelves;i++){
-            const y = upperBottom + upperH * (i/(shelves+1));
+            const y = t + (h-2*t) * (i/(shelves+1));
             grp.add(mesh(w-2*t, 0.016, d-t*1.8, mat, 0,y,t*0.1));
         }
+        const doors = cfg.doors||0;
         if(doors>0){
             const colW = w/doors;
-            const doorH = upperH - 0.01;
-            const doorY = upperBottom + doorH/2 + 0.005;
-            // hanging rail for tall wardrobe-style cabinets with few/no shelves
-            if(cfg.rod!==false && doorH > 1.0 && shelves<=1){
-                const rod = cyl(0.012,0.012, w-2*t-0.05, handleMat, 0, doorY+doorH*0.34, -d*0.12);
-                rod.rotation.z = Math.PI/2;
-                grp.add(rod);
-            }
+            const doorH = h - t*2;
+            const doorY = t + doorH/2;
             for(let i=0;i<doors;i++){
                 const isLeftHalf = i < doors/2;
                 const colLeftX = -w/2 + i*colW;
@@ -1406,18 +627,11 @@ function buildCabinetBody(w,d,h,mat,cfg){
                 pivot.position.set(hingeX, doorY, d/2 - t/2);
                 const localX = isLeftHalf ? doorW/2 : -doorW/2;
                 const doorMesh = mesh(doorW, doorH, 0.02, mat, localX,0,0);
-                pivot.add(doorMesh);
-                pivot.add(edged(doorMesh, 0x140f0a));
-                // recessed inset panel for a paneled-door look
-                const insetW = doorW*0.72, insetH = doorH*0.82;
-                const inset = mesh(insetW, insetH, 0.006, {hex:0x000000, type:"wood"}, localX,0,0.011);
-                inset.material.transparent = true;
-                inset.material.opacity = 0.12;
-                pivot.add(inset);
-                pivot.add(edged(inset, 0x140f0a));
                 const handleX = isLeftHalf ? doorW-0.055 : -(doorW-0.055);
-                const doorHandleLen = Math.min(0.22, doorH*0.22);
-                pivot.add(buildHandleGroup(cfg.handleStyle||"bar", handleMat, {x:handleX,y:0,z:0.01, orientation:"vertical", length:doorHandleLen}));
+                const handle = cyl(0.007,0.007,0.16,handleMat, handleX,0,0.022);
+                handle.rotation.x = Math.PI/2;
+                pivot.add(doorMesh);
+                pivot.add(handle);
                 pivot.userData.openRot = isLeftHalf ? -Math.PI*0.52 : Math.PI*0.52;
                 grp.add(pivot);
                 doorPivots.push(pivot);
@@ -1452,19 +666,16 @@ const FURNITURE = [
 {id:"nightstand", room:"bedroom", category:"التخزين", name:"كومود", desc:"45×40×55 سم", width:45, depth:40, height:55, iconAspect:[45,40],
  hasDrawers:true, drawersMin:1, drawersMax:3, defaultDrawers:2, finishGroup:"wood",
  build:function(w,d,h,c,obj){
-    const cfg = {doors:0, shelves:0, drawers:(obj&&obj.drawerCount!=null)?obj.drawerCount:2, handleStyle:(obj&&obj.handleStyle)||"bar"};
+    const cfg = {doors:0, shelves:0, drawers:(obj&&obj.drawerCount!=null)?obj.drawerCount:2};
     return buildCabinetBody(w,d,h,c.body,cfg);
  }},
 {id:"wardrobe", room:"bedroom", category:"التخزين", name:"دولاب ملابس", desc:"200×60×220 سم", width:200, depth:60, height:220, iconAspect:[200,60],
- cabinet:true, doorsMin:1, doorsMax:6, defaultDoors:3, shelvesMin:0, shelvesMax:6, defaultShelves:1,
- hasDrawers:true, drawersMin:0, drawersMax:4, defaultDrawers:2, finishGroup:"wood",
+ cabinet:true, doorsMin:1, doorsMax:4, defaultDoors:3, shelvesMin:0, shelvesMax:6, defaultShelves:3, finishGroup:"wood",
  build:function(w,d,h,c,obj){
     const cfg = {
         doors:(obj&&obj.doorCount!=null)?obj.doorCount:3,
-        shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:1,
-        drawers:(obj&&obj.drawerCount!=null)?obj.drawerCount:2,
-        rod:true,
-        handleStyle:(obj&&obj.handleStyle)||"bar"
+        shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:3,
+        drawers:0
     };
     return buildCabinetBody(w,d,h,c.body,cfg);
  }},
@@ -1473,7 +684,7 @@ const FURNITURE = [
  build:function(w,d,h,c,obj){
     const grp = new THREE.Group();
     const baseH = h*.42;
-    const cfg = {doors:0, shelves:0, drawers:(obj&&obj.drawerCount!=null)?obj.drawerCount:3, handleStyle:(obj&&obj.handleStyle)||"bar"};
+    const cfg = {doors:0, shelves:0, drawers:(obj&&obj.drawerCount!=null)?obj.drawerCount:3};
     const base = buildCabinetBody(w, d, baseH, c.body, cfg);
     grp.add(base);
     grp.add(mesh(w*.35,h-baseH,.03,c.mirrorFrame,0,baseH+(h-baseH)/2,-d/2+.02));
@@ -1506,12 +717,6 @@ const FURNITURE = [
     grp.add(mesh(w,h-seatH,d*.22,c.body,0,seatH+(h-seatH)/2,-d/2+d*.1));
     grp.add(mesh(w*.09,h*.75,d,c.accent,-w/2+w*.045,h*.375,0));
     grp.add(mesh(w*.09,h*.75,d,c.accent,w/2-w*.045,h*.375,0));
-    const cushionCount = 3;
-    const cushionW = (w*.86)/cushionCount;
-    for(let i=0;i<cushionCount;i++){
-        const cx = -w*.43 + cushionW*(i+0.5);
-        grp.add(mesh(cushionW-0.03, seatH*.28, d*.72, c.accent, cx, seatH+seatH*.14, d*.02));
-    }
     return grp;
  }},
 {id:"sofa2", room:"living", category:"الكنب", name:"كنبة ثنائية", desc:"160×90×80 سم", width:160, depth:90, height:80, iconAspect:[160,90],
@@ -1523,12 +728,6 @@ const FURNITURE = [
     grp.add(mesh(w,h-seatH,d*.22,c.body,0,seatH+(h-seatH)/2,-d/2+d*.1));
     grp.add(mesh(w*.1,h*.75,d,c.accent,-w/2+w*.05,h*.375,0));
     grp.add(mesh(w*.1,h*.75,d,c.accent,w/2-w*.05,h*.375,0));
-    const cushionCount = 2;
-    const cushionW = (w*.84)/cushionCount;
-    for(let i=0;i<cushionCount;i++){
-        const cx = -w*.42 + cushionW*(i+0.5);
-        grp.add(mesh(cushionW-0.03, seatH*.28, d*.72, c.accent, cx, seatH+seatH*.14, d*.02));
-    }
     return grp;
  }},
 {id:"armchair", room:"living", category:"الجلوس", name:"كرسي استقبال", desc:"80×80×80 سم", width:80, depth:80, height:80, iconAspect:[80,80],
@@ -1565,7 +764,7 @@ const FURNITURE = [
 {id:"livingCabinet", room:"living", category:"التخزين", name:"مكتبة", desc:"110×40×180 سم", width:110, depth:40, height:180, iconAspect:[110,40],
  cabinet:true, shelvesMin:1, shelvesMax:6, defaultShelves:3, finishGroup:"wood",
  build:function(w,d,h,c,obj){
-    const cfg = {doors:0, shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:3, drawers:0, handleStyle:(obj&&obj.handleStyle)||"bar"};
+    const cfg = {doors:0, shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:3, drawers:0};
     return buildCabinetBody(w,d,h,c.body,cfg);
  }},
 
@@ -1574,7 +773,7 @@ const FURNITURE = [
  cabinet:true, doorsMin:1, doorsMax:2, defaultDoors:1, shelvesMin:0, shelvesMax:2, defaultShelves:1, finishGroup:"wood",
  build:function(w,d,h,c,obj){
     const grp = new THREE.Group();
-    const cfg = {doors:(obj&&obj.doorCount!=null)?obj.doorCount:1, shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:1, drawers:0, handleStyle:(obj&&obj.handleStyle)||"bar"};
+    const cfg = {doors:(obj&&obj.doorCount!=null)?obj.doorCount:1, shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:1, drawers:0};
     const body = buildCabinetBody(w, d, h*.94, c.body, cfg);
     grp.add(body);
     grp.add(mesh(w*1.03,h*.06,d*1.05,c.top,0,h*.97,0));
@@ -1585,7 +784,7 @@ const FURNITURE = [
 {id:"wallCabinet", room:"kitchen", category:"الخزائن", name:"خزانة علوية", desc:"60×35×60 سم — معلّقة", width:60, depth:35, height:60, iconAspect:[60,35],
  cabinet:true, doorsMin:1, doorsMax:2, defaultDoors:2, shelvesMin:0, shelvesMax:2, defaultShelves:1, finishGroup:"wood",
  build:function(w,d,h,c,obj){
-    const cfg = {doors:(obj&&obj.doorCount!=null)?obj.doorCount:2, shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:1, drawers:0, handleStyle:(obj&&obj.handleStyle)||"bar"};
+    const cfg = {doors:(obj&&obj.doorCount!=null)?obj.doorCount:2, shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:1, drawers:0};
     const body = buildCabinetBody(w,d,h,c.body,cfg);
     const outer = new THREE.Group();
     body.position.set(0,1.5,0);
@@ -1597,7 +796,7 @@ const FURNITURE = [
 {id:"tallKitchen", room:"kitchen", category:"الخزائن", name:"خزانة طويلة", desc:"60×60×200 سم", width:60, depth:60, height:200, iconAspect:[60,60],
  cabinet:true, doorsMin:1, doorsMax:2, defaultDoors:2, shelvesMin:0, shelvesMax:5, defaultShelves:3, finishGroup:"wood",
  build:function(w,d,h,c,obj){
-    const cfg = {doors:(obj&&obj.doorCount!=null)?obj.doorCount:2, shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:3, drawers:0, handleStyle:(obj&&obj.handleStyle)||"bar"};
+    const cfg = {doors:(obj&&obj.doorCount!=null)?obj.doorCount:2, shelves:(obj&&obj.shelfCount!=null)?obj.shelfCount:3, drawers:0};
     return buildCabinetBody(w,d,h,c.body,cfg);
  }},
 {id:"sink", room:"kitchen", category:"الأجهزة", name:"حوض مطبخ", desc:"60×60×90 سم", width:60, depth:60, height:90, iconAspect:[60,60],
@@ -1631,7 +830,7 @@ const FURNITURE = [
  cabinet:true, doorsMin:0, doorsMax:3, defaultDoors:2, finishGroup:"wood",
  build:function(w,d,h,c,obj){
     const grp = new THREE.Group();
-    const cfg = {doors:(obj&&obj.doorCount!=null)?obj.doorCount:2, shelves:0, drawers:0, handleStyle:(obj&&obj.handleStyle)||"bar"};
+    const cfg = {doors:(obj&&obj.doorCount!=null)?obj.doorCount:2, shelves:0, drawers:0};
     const body = buildCabinetBody(w,d,h*.94,c.body,cfg);
     grp.add(body);
     grp.add(mesh(w*1.04,h*.06,d*1.08,c.top,0,h*.97,0));
@@ -1691,9 +890,6 @@ let orbit = { theta: Math.PI*0.28, phi: 1.0, radius: 6, target: new THREE.Vector
 let orthoZoom = 1;
 let dragState = null; // {objId, offset}
 let orbitDrag = null;
-let activePointers = new Map(); // pointerId -> {x,y} — used to detect two-finger pinch on touch/Android
-let pinchState = null; // {startDist, startRadius, startOrthoZoom}
-function isMobileLayout(){ return window.matchMedia("(max-width:850px)").matches; }
 
 /* =========================================================
    DOM refs
@@ -1748,14 +944,11 @@ function initThree(){
     scene.add(roomGroup);
 
     window.addEventListener("resize", onResize);
-    canvasEl.addEventListener("pointerdown", function(e){ rememberCanvasPointer(e); androidTapDown(e); onPointerDown(e); });
+    canvasEl.addEventListener("pointerdown", onPointerDown);
     canvasEl.addEventListener("pointermove", onPointerMove);
-    canvasEl.addEventListener("click", selectObjectFromCanvasTap);
-    window.addEventListener("pointerup", function(e){ androidTapUp(e); onPointerUp(e); });
-    window.addEventListener("pointercancel", function(e){ androidTapStart=null; onPointerUp(e); });
+    window.addEventListener("pointerup", onPointerUp);
     canvasEl.addEventListener("wheel", onWheel, {passive:false});
 
-    if(isMobileLayout()) setInteractionMode('orbit');
     animate();
 }
 
@@ -1881,7 +1074,6 @@ function openRoom(id){
     objects = []; selectedId = null; history=[]; historyIndex=-1;
     startScreen.classList.add("hidden");
     app.classList.add("active");
-    closeMobilePanels();
     requestAnimationFrame(function(){
         onResize();
         applyRoomUI();
@@ -1893,73 +1085,11 @@ function openRoom(id){
 }
 function applyRoomUI(){
     roomPill.textContent = ROOMS[currentRoom].name;
-    updateHintForDevice();
-}
-function updateHintForDevice(){
-    const touch = window.matchMedia("(pointer:coarse)").matches;
-    if(hintEl){
-        hintEl.textContent = touch
-            ? "وضع 3D حر: اسحب وسط الشاشة للدوران · إصبعان للتكبير · استخدم تحريك لنقل القطعة"
-            : "اسحب القطعة بالماوس لتحريكها · اسحب الفراغ لتدوير الكاميرا · عجلة الماوس للتكبير";
-        hintEl.classList.remove("hide");
-    }
 }
 function openRoomMenu(){ document.getElementById("roomMenu").classList.add("open"); }
 function closeRoomMenu(){ document.getElementById("roomMenu").classList.remove("open"); }
-
-/* =========================================================
-   MOBILE PANELS (phones/small screens) — the library and
-   properties side panels are hidden by default on narrow
-   screens; the bottom nav bar and taps on furniture open them.
-========================================================= */
-function setMobileNavState(which){
-    const navLib = document.getElementById("navLibraryBtn");
-    const navProps = document.getElementById("navPropsBtn");
-    const navScene = document.getElementById("navSceneBtn");
-    if(navLib) navLib.classList.toggle("active", which==="library");
-    if(navProps) navProps.classList.toggle("active", which==="properties");
-    if(navScene) navScene.classList.toggle("active", which==="scene");
-}
-function toggleMobilePanel(name){
-    const libEl = document.querySelector(".library");
-    const propEl = document.getElementById("propertiesPanel");
-    if(!libEl || !propEl) return;
-    if(name==="library"){
-        const opening = !libEl.classList.contains("mobileOpen");
-        libEl.classList.toggle("mobileOpen", opening);
-        propEl.classList.remove("mobileOpen");
-        setMobileNavState(opening ? "library" : "scene");
-    } else if(name==="properties"){
-        const opening = !propEl.classList.contains("mobileOpen");
-        propEl.classList.toggle("mobileOpen", opening);
-        libEl.classList.remove("mobileOpen");
-        setMobileNavState(opening ? "properties" : "scene");
-    }
-}
-function showMobileProperties(){
-    const libEl = document.querySelector(".library");
-    const propEl = document.getElementById("propertiesPanel");
-    if(!propEl || !isMobileLayout()) return;
-    if(libEl) libEl.classList.remove("mobileOpen");
-    propEl.classList.add("mobileOpen");
-    propEl.style.visibility = "visible";
-    propEl.style.display = "block";
-    propEl.style.pointerEvents = "auto";
-    const pc=document.getElementById("propertyContent");
-    if(pc){ pc.style.pointerEvents="auto"; pc.style.overflowY="auto"; }
-    setMobileNavState("properties");
-    if(selectedId){ renderMobileWizard(); }
-}
-function closeMobilePanels(){
-    const libEl = document.querySelector(".library");
-    const propEl = document.getElementById("propertiesPanel");
-    if(libEl) libEl.classList.remove("mobileOpen");
-    if(propEl) propEl.classList.remove("mobileOpen");
-    setMobileNavState("scene");
-}
 function switchRoom(id){
     closeRoomMenu();
-    closeMobilePanels();
     currentRoom = id;
     clearAllObjects();
     objects=[]; selectedId=null; history=[]; historyIndex=-1;
@@ -2101,9 +1231,10 @@ function addFurniture(item){
         rotY:0, width:item.width, depth:item.depth, height:item.height,
         colorHex:null, colorType:null, locked:false,
         doorCount:doorCount, shelfCount:shelfCount, drawerCount:drawerCount,
-        doorsOpen:new Array(doorCount).fill(false),
-        drawersOpen:new Array(drawerCount).fill(false),
-        handleStyle: (item.cabinet || item.hasDrawers) ? "bar" : null
+        // عند ظهور أي خزانة/دولاب لأول مرة: الأبواب تفتح تلقائياً
+        // حتى تظهر الرفوف والمساحة الداخلية للمستخدم مباشرة.
+        doorsOpen:item.cabinet ? new Array(doorCount).fill(true) : new Array(doorCount).fill(false),
+        drawersOpen:new Array(drawerCount).fill(false)
     };
     instantiateThree(obj);
     objects.push(obj);
@@ -2113,7 +1244,6 @@ function addFurniture(item){
     updateCounts();
     saveHistory();
     showToast("تمت إضافة " + item.name);
-    if(isMobileLayout()) showMobileProperties();
 }
 
 /* =========================================================
@@ -2174,77 +1304,29 @@ function updateSelectionVisuals(){
 /* =========================================================
    POINTER INTERACTION (orbit camera / drag furniture)
 ========================================================= */
-function pinchDistance(){
-    const pts = Array.from(activePointers.values()).slice(0,2);
-    if(pts.length<2) return 0;
-    return Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y);
-}
-
 function onPointerDown(e){
-    activePointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
-
-    // second finger touching the canvas (Android/touch pinch) — switch to two-finger zoom
-    // and cancel any single-finger drag/orbit that may have just started
-    if(activePointers.size===2){
-        dragState = null;
-        orbitDrag = null;
-        canvasEl.classList.remove("dragging-obj","orbiting");
-        pinchState = { startDist: pinchDistance(), startRadius: orbit.radius, startOrthoZoom: orthoZoom };
-        return;
-    }
-    if(activePointers.size>2) return; // ignore a third finger
-
     if(e.button!==0) return;
     const hitObj = pickObjectAt(e.clientX, e.clientY);
     if(hitObj){
         selectedId = hitObj.id;
         updateSelectionVisuals();
         renderProperties();
-        if(isMobileLayout()) showMobileProperties();
-
-        // FREE mode: selecting an object never steals the drag from the camera.
-        // SELECT mode: dragging the object moves it as before.
-        if(interactionMode==='select' && !hitObj.locked){
+        if(!hitObj.locked){
             const gp = groundPointAt(e.clientX, e.clientY);
             dragState = { id:hitObj.id, offX: gp.x-hitObj.x, offZ: gp.z-hitObj.z };
             canvasEl.classList.add("dragging-obj");
-        } else if(cameraMode==='persp'){
-            orbitDrag = { x:e.clientX, y:e.clientY, theta:orbit.theta, phi:orbit.phi };
-            canvasEl.classList.add("orbiting");
-            hintEl.classList.add("hide");
         }
     } else {
-        // Empty scene is always an orbit surface in perspective mode.
         selectedId = null;
         updateSelectionVisuals();
         renderProperties();
-        if(cameraMode==='persp'){
-            orbitDrag = { x:e.clientX, y:e.clientY, theta:orbit.theta, phi:orbit.phi };
-            canvasEl.classList.add("orbiting");
-            hintEl.classList.add("hide");
-        }
+        orbitDrag = { x:e.clientX, y:e.clientY, theta:orbit.theta, phi:orbit.phi };
+        canvasEl.classList.add("orbiting");
+        hintEl.classList.add("hide");
     }
 }
 
 function onPointerMove(e){
-    if(activePointers.has(e.pointerId)) activePointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
-
-    if(pinchState && activePointers.size>=2){
-        const dist = pinchDistance();
-        if(dist>0 && pinchState.startDist>0){
-            const ratio = dist / pinchState.startDist;
-            if(cameraMode==="persp"){
-                orbit.radius = Math.max(1.5, Math.min(14, pinchState.startRadius / ratio));
-                zoomValue.textContent = Math.round((6/orbit.radius)*100) + "%";
-            } else {
-                orthoZoom = Math.max(.5, Math.min(3, pinchState.startOrthoZoom * ratio));
-                updateOrthoFrustum();
-                zoomValue.textContent = Math.round(orthoZoom*100) + "%";
-            }
-        }
-        return;
-    }
-
     if(dragState){
         const gp = groundPointAt(e.clientX, e.clientY);
         const obj = objects.find(function(x){ return x.id===dragState.id; });
@@ -2270,58 +1352,12 @@ function onPointerMove(e){
     }
 }
 
-function onPointerUp(e){
-    if(e && e.pointerId!=null) activePointers.delete(e.pointerId);
-    if(activePointers.size<2) pinchState = null;
+function onPointerUp(){
     if(dragState){ saveHistory(); }
     dragState = null;
     orbitDrag = null;
     canvasEl.classList.remove("dragging-obj");
     canvasEl.classList.remove("orbiting");
-}
-
-// Android-safe tap: pointerup selects the object only when the finger did not move.
-let androidTapStart=null;
-function androidTapDown(e){
-  if(!isMobileLayout() || activePointers.size>1) return;
-  androidTapStart={x:e.clientX,y:e.clientY,id:e.pointerId};
-}
-function androidTapUp(e){
-  if(!isMobileLayout() || !androidTapStart || androidTapStart.id!==e.pointerId) return;
-  const dx=e.clientX-androidTapStart.x, dy=e.clientY-androidTapStart.y;
-  const moved=Math.hypot(dx,dy)>12; androidTapStart=null;
-  if(moved) return;
-  const hit=pickObjectAt(e.clientX,e.clientY);
-  if(!hit) return;
-  selectedId=hit.id;
-  updateSelectionVisuals();
-  renderProperties();
-  showMobileProperties();
-  updateMobileGameStep(4,'إعدادات المجسم • '+hit.name);
-}
-
-// Robust Android tap selection: some mobile browsers deliver a click after
-// pointer events even when the 3D canvas is under other touch UI layers.
-let lastCanvasPointer = null;
-function selectObjectFromCanvasTap(e){
-    if(!canvasEl || !isMobileLayout()) return;
-    const p = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0] : e;
-    const x = p.clientX, y = p.clientY;
-    if(lastCanvasPointer){
-        const dx=x-lastCanvasPointer.x, dy=y-lastCanvasPointer.y;
-        if(Math.hypot(dx,dy)>14) return; // it was a drag, not a tap
-    }
-    const hit = pickObjectAt(x,y);
-    if(!hit) return;
-    selectedId = hit.id;
-    updateSelectionVisuals();
-    renderProperties();
-    showMobileProperties();
-    updateMobileGameStep(4,'إعدادات المجسم • '+hit.name);
-}
-
-function rememberCanvasPointer(e){
-    lastCanvasPointer={x:e.clientX,y:e.clientY};
 }
 
 function onWheel(e){
@@ -2360,27 +1396,12 @@ function toggleGrid(){
     const g = roomGroup.getObjectByName("grid");
     if(g) g.visible = gridVisible;
 }
-function setInteractionMode(m){
-    interactionMode = m;
-    const free = document.getElementById('cameraFreeBtn');
-    const move = document.getElementById('cameraMoveBtn');
-    if(free) free.classList.toggle('active', m==='orbit');
-    if(move) move.classList.toggle('active', m==='select');
-    if(canvasEl){
-        canvasEl.classList.toggle('cameraFree', m==='orbit');
-        canvasEl.classList.toggle('moveObjects', m==='select');
-    }
-    if(hintEl && isMobileLayout()){
-        hintEl.textContent = m==='orbit'
-          ? 'وضع 3D حر: اسحب في وسط الشاشة لتدوير المشهد · إصبعان للتكبير'
-          : 'وضع التحريك: اسحب المجسم لتحريكه · اسحب الفراغ لتدوير المشهد';
-    }
-}
+function setInteractionMode(m){ interactionMode = m; }
 
 /* =========================================================
    PROPERTIES PANEL
 ========================================================= */
-function renderPropertiesDesktop(){
+function renderProperties(){
     const obj = objects.find(function(x){ return x.id===selectedId; });
     if(!obj){
         propertyContent.innerHTML =
@@ -2400,22 +1421,13 @@ function renderPropertiesDesktop(){
     }
 
     let configHtml = "";
-    if(item.cabinet || item.hasDrawers){
-        let handleHtml = "";
-        HANDLE_STYLES.forEach(function(hs){
-            const active = (obj.handleStyle||"bar") === hs.id;
-            handleHtml += '<button class="action ' + (active?"handleActive":"") + '" style="' + (active?"color:var(--brass-light);border-color:var(--brass);background:rgba(193,121,60,.12);":"") + '" onclick="setHandleStyle(\'' + hs.id + '\')">' + hs.label + '</button>';
-        });
-        configHtml +=
-        '<div class="propertySection"><div class="propertySectionTitle"><span>نوع المقبض</span><small>HANDLE STYLE</small></div>' +
-        '<div class="actionGrid" style="grid-template-columns:1fr 1fr 1fr;">' + handleHtml + '</div></div>';
-    }
     if(item.cabinet && item.doorsMax){
         configHtml +=
-        '<div class="propertySection"><div class="propertySectionTitle"><span>عدد الأبواب</span><small>DOORS — اسحب للتعديل</small></div>' +
-        '<div class="countSlider">' +
-            '<input type="range" min="' + (item.doorsMin||0) + '" max="' + item.doorsMax + '" step="1" value="' + obj.doorCount + '" oninput="setDoorCount(this.value)">' +
-            '<div class="countValue">' + obj.doorCount + '</div>' +
+        '<div class="propertySection"><div class="propertySectionTitle"><span>عدد الأبواب</span><small>DOORS</small></div>' +
+        '<div class="rotationBox">' +
+            '<button class="rotatePreset" onclick="changeDoorCount(-1)">−</button>' +
+            '<div class="field" style="flex:1;"><input type="text" readonly value="' + obj.doorCount + ' من ' + item.doorsMax + '"></div>' +
+            '<button class="rotatePreset" onclick="changeDoorCount(1)">+</button>' +
         '</div></div>';
         if(obj.doorCount>0){
             let doorToggles = "";
@@ -2429,18 +1441,20 @@ function renderPropertiesDesktop(){
     }
     if(item.shelvesMax){
         configHtml +=
-        '<div class="propertySection"><div class="propertySectionTitle"><span>عدد الأرفف</span><small>SHELVES — اسحب للتعديل</small></div>' +
-        '<div class="countSlider">' +
-            '<input type="range" min="' + (item.shelvesMin||0) + '" max="' + item.shelvesMax + '" step="1" value="' + obj.shelfCount + '" oninput="setShelfCount(this.value)">' +
-            '<div class="countValue">' + obj.shelfCount + '</div>' +
+        '<div class="propertySection"><div class="propertySectionTitle"><span>عدد الأرفف</span><small>SHELVES</small></div>' +
+        '<div class="rotationBox">' +
+            '<button class="rotatePreset" onclick="changeShelfCount(-1)">−</button>' +
+            '<div class="field" style="flex:1;"><input type="text" readonly value="' + obj.shelfCount + ' من ' + item.shelvesMax + '"></div>' +
+            '<button class="rotatePreset" onclick="changeShelfCount(1)">+</button>' +
         '</div></div>';
     }
     if(item.hasDrawers && item.drawersMax){
         configHtml +=
-        '<div class="propertySection"><div class="propertySectionTitle"><span>عدد الأدراج</span><small>DRAWERS — اسحب للتعديل</small></div>' +
-        '<div class="countSlider">' +
-            '<input type="range" min="' + (item.drawersMin||0) + '" max="' + item.drawersMax + '" step="1" value="' + obj.drawerCount + '" oninput="setDrawerCount(this.value)">' +
-            '<div class="countValue">' + obj.drawerCount + '</div>' +
+        '<div class="propertySection"><div class="propertySectionTitle"><span>عدد الأدراج</span><small>DRAWERS</small></div>' +
+        '<div class="rotationBox">' +
+            '<button class="rotatePreset" onclick="changeDrawerCount(-1)">−</button>' +
+            '<div class="field" style="flex:1;"><input type="text" readonly value="' + obj.drawerCount + ' من ' + item.drawersMax + '"></div>' +
+            '<button class="rotatePreset" onclick="changeDrawerCount(1)">+</button>' +
         '</div></div>';
         if(obj.drawerCount>0){
             let drawerToggles = "";
@@ -2458,21 +1472,21 @@ function renderPropertiesDesktop(){
         '<div class="selectedInfo"><div class="selectedIcon">' + blueprintIcon(item) + '</div>' +
         '<div><strong>' + obj.name + '</strong><span>' + item.desc + '</span></div></div>' +
 
-        '<div class="propertySection"><div class="propertySectionTitle"><span>الموقع</span><small>POSITION (m) — استخدم + / − بدون لوحة مفاتيح</small></div>' +
+        '<div class="propertySection"><div class="propertySectionTitle"><span>الموقع</span><small>POSITION (m)</small></div>' +
         '<div class="fields">' +
-            '<div class="field"><label>X</label><div class="stepRow"><button class="stepBtn" onclick="stepInput(\'propX\',-0.1)">−</button><input id="propX" type="number" step="0.05" value="' + obj.x.toFixed(2) + '" oninput="propertyChanged()"><button class="stepBtn" onclick="stepInput(\'propX\',0.1)">+</button></div></div>' +
-            '<div class="field"><label>Z</label><div class="stepRow"><button class="stepBtn" onclick="stepInput(\'propZ\',-0.1)">−</button><input id="propZ" type="number" step="0.05" value="' + obj.z.toFixed(2) + '" oninput="propertyChanged()"><button class="stepBtn" onclick="stepInput(\'propZ\',0.1)">+</button></div></div>' +
+            '<div class="field"><label>X</label><input id="propX" type="number" step="0.05" value="' + obj.x.toFixed(2) + '" oninput="propertyChanged()"></div>' +
+            '<div class="field"><label>Z</label><input id="propZ" type="number" step="0.05" value="' + obj.z.toFixed(2) + '" oninput="propertyChanged()"></div>' +
         '</div></div>' +
 
         '<div class="propertySection"><div class="propertySectionTitle"><span>المقاسات</span><small>DIMENSIONS</small></div>' +
         '<div class="fields three">' +
-            '<div class="field"><div class="unit"><label>العرض</label><div class="stepRow"><button class="stepBtn" onclick="stepInput(\'propW\',-5,10)">−</button><input id="propW" type="number" min="10" value="' + Math.round(obj.width) + '" oninput="propertyChanged()"><button class="stepBtn" onclick="stepInput(\'propW\',5,10)">+</button></div></div></div>' +
-            '<div class="field"><div class="unit"><label>العمق</label><div class="stepRow"><button class="stepBtn" onclick="stepInput(\'propD\',-5,10)">−</button><input id="propD" type="number" min="10" value="' + Math.round(obj.depth) + '" oninput="propertyChanged()"><button class="stepBtn" onclick="stepInput(\'propD\',5,10)">+</button></div></div></div>' +
-            '<div class="field"><div class="unit"><label>الارتفاع</label><div class="stepRow"><button class="stepBtn" onclick="stepInput(\'propH\',-5,10)">−</button><input id="propH" type="number" min="10" value="' + Math.round(obj.height) + '" oninput="propertyChanged()"><button class="stepBtn" onclick="stepInput(\'propH\',5,10)">+</button></div></div></div>' +
+            '<div class="field"><div class="unit"><label>العرض</label><input id="propW" type="number" min="10" value="' + Math.round(obj.width) + '" oninput="propertyChanged()"></div></div>' +
+            '<div class="field"><div class="unit"><label>العمق</label><input id="propD" type="number" min="10" value="' + Math.round(obj.depth) + '" oninput="propertyChanged()"></div></div>' +
+            '<div class="field"><div class="unit"><label>الارتفاع</label><input id="propH" type="number" min="10" value="' + Math.round(obj.height) + '" oninput="propertyChanged()"></div></div>' +
         '</div></div>' +
 
         '<div class="propertySection"><div class="propertySectionTitle"><span>الدوران</span><small>ROTATION °</small></div>' +
-        '<div class="rotationBox"><button class="stepBtn" onclick="stepInput(\'propR\',-15)">−</button><input id="propR" type="number" value="' + Math.round(obj.rotY) + '" oninput="propertyChanged()"><button class="stepBtn" onclick="stepInput(\'propR\',15)">+</button>' +
+        '<div class="rotationBox"><input id="propR" type="number" value="' + Math.round(obj.rotY) + '" oninput="propertyChanged()">' +
         '<button class="rotatePreset" onclick="setRotation(0)">0°</button>' +
         '<button class="rotatePreset" onclick="setRotation(90)">90°</button>' +
         '<button class="rotatePreset" onclick="setRotation(180)">180°</button></div></div>' +
@@ -2494,34 +1508,20 @@ function renderPropertiesDesktop(){
         (finishHtml ? ('<div class="propertySection"><div class="propertySectionTitle"><span>نوع التشطيب</span><small>MATERIAL</small></div>' +
         '<div class="colorRow">' + finishHtml + '</div></div>') : '') +
 
-        '<div class="note">القطعة مجسّم ثلاثي الأبعاد حقيقي — اسحبها مباشرة داخل المشهد، أو استخدم الحقول لضبط الموقع والمقاس، واسحب أشرطة عدد الأبواب/الأدراج/الأرفف لتعديلها وافتحها مباشرة من هنا.</div>' +
+        '<div class="note">القطعة مجسّم ثلاثي الأبعاد حقيقي — اسحبها مباشرة داخل المشهد، أو استخدم الحقول لضبط الموقع والمقاس، وتحكم بعدد الأبواب/الأدراج/الأرفف وافتحها مباشرة من هنا.</div>' +
     '</div>';
-}
-
-/* tap-friendly +/- stepping for number fields — no on-screen keyboard needed on Android */
-function stepInput(fieldId, delta, min){
-    const el = document.getElementById(fieldId);
-    if(!el) return;
-    let v = Number(el.value) || 0;
-    v = Math.round((v+delta)*100)/100;
-    if(min!=null) v = Math.max(min, v);
-    el.value = (fieldId==="propX"||fieldId==="propZ") ? v.toFixed(2) : v;
-    propertyChanged();
 }
 
 let propertyHistoryTimer = null;
 function propertyChanged(){
     const obj = objects.find(function(x){ return x.id===selectedId; });
     if(!obj) return;
-    const xEl=document.getElementById("propX"), zEl=document.getElementById("propZ");
-    const wEl=document.getElementById("propW"), dEl=document.getElementById("propD");
-    const hEl=document.getElementById("propH"), rEl=document.getElementById("propR");
-    const x = xEl ? Number(xEl.value) : obj.x;
-    const z = zEl ? Number(zEl.value) : obj.z;
-    const w = wEl ? Number(wEl.value) : obj.width;
-    const d = dEl ? Number(dEl.value) : obj.depth;
-    const h = hEl ? Number(hEl.value) : obj.height;
-    const r = rEl ? Number(rEl.value) : obj.rotY;
+    const x = Number(document.getElementById("propX").value);
+    const z = Number(document.getElementById("propZ").value);
+    const w = Number(document.getElementById("propW").value);
+    const d = Number(document.getElementById("propD").value);
+    const h = Number(document.getElementById("propH").value);
+    const r = Number(document.getElementById("propR").value);
     let needsRebuild = false;
     if(Number.isFinite(w) && w>=10 && w!==obj.width){ obj.width=w; needsRebuild=true; }
     if(Number.isFinite(d) && d>=10 && d!==obj.depth){ obj.depth=d; needsRebuild=true; }
@@ -2619,73 +1619,54 @@ function changeObjectColor(hex, type){
 function updateCounts(){ objectCountEl.textContent = objects.length; }
 
 /* =========================================================
-   CABINET / DRAWER CONTROLS (drag sliders)
+   CABINET / DRAWER CONTROLS
 ========================================================= */
 function getSelectedObject(){
     return objects.find(function(x){ return x.id===selectedId; });
 }
 
-function setHandleStyle(style){
-    const obj = getSelectedObject();
-    if(!obj) return;
-    if(obj.handleStyle === style) return;
-    obj.handleStyle = style;
-    rebuildObject(obj);
-    saveHistory();
-    renderProperties();
-    showToast("تم تغيير نوع المقبض");
-}
-
-function setDoorCount(value){
+function changeDoorCount(delta){
     const obj = getSelectedObject();
     if(!obj) return;
     const item = FURNITURE.find(function(x){ return x.id===obj.itemId; });
     if(!item || !item.cabinet || item.doorsMax==null) return;
-    const next = Math.max(item.doorsMin||0, Math.min(item.doorsMax, Math.round(Number(value))));
+    const next = Math.max(item.doorsMin||0, Math.min(item.doorsMax, (obj.doorCount||0)+delta));
     if(next===obj.doorCount) return;
     obj.doorCount = next;
     obj.doorsOpen = resizeBoolArray(obj.doorsOpen, next);
     rebuildObject(obj);
     saveHistory();
     renderProperties();
+    showToast("تم تعديل عدد الأبواب إلى " + next);
 }
 
-function setShelfCount(value){
+function changeShelfCount(delta){
     const obj = getSelectedObject();
     if(!obj) return;
     const item = FURNITURE.find(function(x){ return x.id===obj.itemId; });
     if(!item || item.shelvesMax==null) return;
-    const next = Math.max(item.shelvesMin||0, Math.min(item.shelvesMax, Math.round(Number(value))));
-
-    // عند تعديل الأرفف نفتح كل أبواب الدولاب تلقائياً،
-    // حتى يرى العميل الرفوف كاملة أمامه.
+    const next = Math.max(item.shelvesMin||0, Math.min(item.shelvesMax, (obj.shelfCount||0)+delta));
+    if(next===obj.shelfCount) return;
     obj.shelfCount = next;
-    if(item.cabinet && (obj.doorCount||0) > 0){
-        obj.doorsOpen = resizeBoolArray(obj.doorsOpen, obj.doorCount);
-        for(let i=0;i<obj.doorCount;i++) obj.doorsOpen[i] = true;
-    }
-
     rebuildObject(obj);
-    // إعادة تطبيق حالة الفتح على المفصلات بعد إعادة بناء المجسم.
-    (obj.three && obj.three.doorPivots || []).forEach(function(p,i){
-        p.rotation.y = obj.doorsOpen && obj.doorsOpen[i] ? p.userData.openRot : 0;
-    });
     saveHistory();
     renderProperties();
+    showToast("تم تعديل عدد الأرفف إلى " + next);
 }
 
-function setDrawerCount(value){
+function changeDrawerCount(delta){
     const obj = getSelectedObject();
     if(!obj) return;
     const item = FURNITURE.find(function(x){ return x.id===obj.itemId; });
     if(!item || item.drawersMax==null) return;
-    const next = Math.max(item.drawersMin||0, Math.min(item.drawersMax, Math.round(Number(value))));
+    const next = Math.max(item.drawersMin||0, Math.min(item.drawersMax, (obj.drawerCount||0)+delta));
     if(next===obj.drawerCount) return;
     obj.drawerCount = next;
     obj.drawersOpen = resizeBoolArray(obj.drawersOpen, next);
     rebuildObject(obj);
     saveHistory();
     renderProperties();
+    showToast("تم تعديل عدد الأدراج إلى " + next);
 }
 
 function toggleDoor(index){
@@ -2741,7 +1722,6 @@ function snapshot(){
             id:o.id,itemId:o.itemId,name:o.name,x:o.x,z:o.z,rotY:o.rotY,
             width:o.width,depth:o.depth,height:o.height,colorHex:o.colorHex,colorType:o.colorType,
             locked:o.locked,doorCount:o.doorCount||0,shelfCount:o.shelfCount||0,drawerCount:o.drawerCount||0,
-            handleStyle:o.handleStyle||null,
             doorsOpen:(o.doorsOpen||[]).slice(),drawersOpen:(o.drawersOpen||[]).slice()
         };
     }));
@@ -2796,7 +1776,6 @@ function loadProject(){
                 o.doorCount = o.doorCount||0;
                 o.shelfCount = o.shelfCount||0;
                 o.drawerCount = o.drawerCount||0;
-                if(!o.handleStyle && (o.doorCount>0 || o.drawerCount>0)) o.handleStyle = "bar";
                 o.doorsOpen = resizeBoolArray(o.doorsOpen, o.doorCount);
                 o.drawersOpen = resizeBoolArray(o.drawersOpen, o.drawerCount);
                 instantiateThree(o);
@@ -2835,307 +1814,6 @@ function showToast(message){
 if(localStorage.getItem("ATELIER_3D_PROJECT")){
     document.getElementById("resumeWrap").classList.remove("hidden");
 }
-
-/* =========================================================
-   ANDROID GAME WIZARD — progressive dimensions/configuration
-   Only one decision is shown at a time so the 3D object remains visible.
-========================================================= */
-let mobileWizardStage=0;
-let mobileWizardObjectId=null;
-function mobileWizardStages(obj,item){
-  /* Practical Android flow: only settings that change the actual furniture build. */
-  const stages=[
-    {key:'height',title:'الطول',sub:'اضبط طول / ارتفاع العنصر',kind:'number',field:'propH',value:obj.height,min:10,step:5,unit:'سم'},
-    {key:'width',title:'العرض',sub:'اضبط عرض العنصر',kind:'number',field:'propW',value:obj.width,min:10,step:5,unit:'سم'},
-    {key:'depth',title:'العمق',sub:'اضبط عمق العنصر',kind:'number',field:'propD',value:obj.depth,min:10,step:5,unit:'سم'}
-  ];
-  if(item && item.cabinet && item.doorsMax){
-    stages.splice(2,0,{key:'doors',title:'عدد الأبواب',sub:'حدد عدد أبواب الدولاب',kind:'count',value:obj.doorCount,min:item.doorsMin||0,max:Math.min(item.doorsMax,6)});
-  }
-  if(item && item.shelvesMax) stages.push({key:'shelves',title:'عدد الأرفف',sub:'حدد عدد الأرفف',kind:'countShelf',value:obj.shelfCount,min:item.shelvesMin||0,max:item.shelvesMax});
-  if(item && item.hasDrawers && item.drawersMax) stages.push({key:'drawers',title:'عدد الأدراج',sub:'حدد عدد الأدراج',kind:'countDrawer',value:obj.drawerCount,min:item.drawersMin||0,max:item.drawersMax});
-  return stages;
-}
-function renderMobileWizard(){
-  const obj=objects.find(x=>x.id===selectedId);
-  const root=document.getElementById('propertyContent');
-  if(!root) return;
-  if(!obj){ root.innerHTML=''; return; }
-  const item=FURNITURE.find(x=>x.id===obj.itemId)||{};
-  if(mobileWizardObjectId!==obj.id){ mobileWizardObjectId=obj.id; mobileWizardStage=0; }
-  const stages=mobileWizardStages(obj,item);
-  mobileWizardStage=Math.max(0,Math.min(mobileWizardStage,stages.length-1));
-  const st=stages[mobileWizardStage];
-  updateMobileGameStep(4,'المرحلة '+(mobileWizardStage+1)+' من '+stages.length+' • '+st.title);
-  let body='';
-  if(st.kind==='number'){
-    body='<div class="wizardValue"><button class="stepBtn" onclick="stepInput(\''+st.field+'\',-'+st.step+','+st.min+')">−</button><input class="bigInput" id="'+st.field+'" type="number" min="'+st.min+'" value="'+Math.round(st.value)+'" oninput="propertyChanged()"><button class="stepBtn" onclick="stepInput(\''+st.field+'\','+st.step+','+st.min+')">+</button><span class="unit">'+st.unit+'</span></div>';
-  } else if(st.kind==='count'||st.kind==='countShelf'||st.kind==='countDrawer'){
-    let setter=st.key==='doors'?'setDoorCount':st.key==='shelves'?'setShelfCount':'setDrawerCount';
-    body='<div class="wizardCount"><button class="stepBtn" onclick="'+setter+'(Math.max('+st.min+',Number(document.getElementById(\'wizardCountInput\').value)-1))">−</button><div class="countBox" id="wizardCountValue">'+st.value+'</div><button class="stepBtn" onclick="'+setter+'(Math.min('+st.max+',Number(document.getElementById(\'wizardCountInput\').value)+1))">+</button></div><input type="hidden" id="wizardCountInput" value="'+st.value+'"><input class="wizardRange" type="range" min="'+st.min+'" max="'+st.max+'" step="1" value="'+st.value+'" oninput="'+setter+'(this.value);document.getElementById(\'wizardCountInput\').value=this.value;document.getElementById(\'wizardCountValue\').textContent=this.value">';
-  } else if(st.kind==='handle'){
-    let html='';
-    (typeof HANDLE_STYLES!=='undefined'?HANDLE_STYLES:[]).forEach(h=>{html+='<button class="wizardChoice '+((obj.handleStyle||'bar')===h.id?'active':'')+'" onclick="setHandleStyle(\''+h.id+'\');renderMobileWizard()">'+h.label+'</button>';});
-    body='<div class="wizardChoices">'+html+'</div>';
-  } else if(st.kind==='finish'){
-    let html='';
-    if(item.finishGroup&&FINISHES[item.finishGroup]) FINISHES[item.finishGroup].forEach(s=>{html+='<button class="wizardChoice '+(obj.colorHex===s.hex?'active':'')+'" style="background:#'+s.hex.toString(16).padStart(6,'0')+';color:#fff" onclick="changeObjectColor('+s.hex+',\''+s.type+'\');renderMobileWizard()">'+s.label+'</button>';});
-    body='<div class="wizardChoices">'+html+'</div>';
-  } else if(st.kind==='position'){
-    body='<div class="wizardMiniRow"><button class="wizardMiniBtn" onclick="centerSelected();renderMobileWizard()">⊙ توسيط</button><button class="wizardMiniBtn" onclick="setInteractionMode(\'select\');closeMobilePanels()">↖ تحريك داخل المشهد</button></div>';
-  } else if(st.kind==='rotation'){
-    body='<div class="wizardChoices"><button class="wizardChoice" onclick="setRotation(0);renderMobileWizard()">0°</button><button class="wizardChoice" onclick="setRotation(90);renderMobileWizard()">90°</button><button class="wizardChoice" onclick="setRotation(180);renderMobileWizard()">180°</button><button class="wizardChoice" onclick="rotateSelected(-15);renderMobileWizard()">−15°</button><button class="wizardChoice" onclick="rotateSelected(15);renderMobileWizard()">+15°</button></div>';
-  } else {
-    body='<div class="wizardMiniRow"><button class="wizardMiniBtn" onclick="duplicateSelected()">⧉ نسخ</button><button class="wizardMiniBtn" onclick="closeMobilePanels()">✓ عرض المشهد</button></div>';
-  }
-  let dots=''; stages.forEach((x,i)=>{dots+='<i class="wizardDot '+(i<=mobileWizardStage?'active':'')+'"></i>';});
-  const prev=mobileWizardStage>0?'<button onclick="mobileWizardBack()">رجوع</button>':'';
-  const next=mobileWizardStage<stages.length-1?'<button class="next" onclick="mobileWizardNext()">التالي</button>':'<button class="next finish" onclick="closeMobilePanels()">✓ إنهاء التعديل</button>';
-  root.innerHTML='<div class="mobileWizard"><button class="wizardClose" onclick="closeMobilePanels()">×</button><div class="mobileWizardCard"><div class="wizardTop"><div class="wizardStepNo">'+String(mobileWizardStage+1).padStart(2,'0')+'</div><div class="wizardTopText"><strong>'+st.title+'</strong><span>'+st.sub+' • '+obj.name+'</span></div></div><div class="wizardProgress">'+dots+'</div>'+body+'<div class="wizardHint">المجسم يتحدث مباشرة أمام العميل مع كل تعديل</div><div class="wizardActions">'+prev+next+'</div></div></div>';
-}
-function mobileWizardNext(){
-  const obj=objects.find(x=>x.id===selectedId); if(!obj)return;
-  const item=FURNITURE.find(x=>x.id===obj.itemId)||{}; const stages=mobileWizardStages(obj,item);
-  if(mobileWizardStage<stages.length-1) mobileWizardStage++; renderMobileWizard();
-}
-function mobileWizardBack(){if(mobileWizardStage>0)mobileWizardStage--;renderMobileWizard();}
-function renderProperties(){
-  if(isAndroidLike()) renderMobileWizard(); else renderPropertiesDesktop();
-}
 </script>
-<script>
-
-/* =========================================================
-   MOBILE GAME FLOW — room → model → 2D/3D → settings
-========================================================= */
-let mobilePreviewObjectId=null;
-let mobilePreviewMode='2d';
-function isAndroidLike(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||window.innerWidth<=850;}
-function updateMobileGameStep(step,label){
-  const a=document.getElementById('gameStepText'), b=document.getElementById('gameStepLabel');
-  if(a)a.textContent=step;if(b)b.textContent=label;
-}
-function showMobileModelFlow(){
-  if(isAndroidLike()){updateMobileGameStep(2,'اختر المجسم');}
-}
-function openMobilePreview(obj){
-  if(!isAndroidLike()||!obj)return;
-  mobilePreviewObjectId=obj.id; mobilePreviewMode='2d';
-  const item=FURNITURE.find(x=>x.id===obj.itemId);
-  document.getElementById('previewName').textContent=obj.name;
-  document.getElementById('previewSub').textContent=item?item.desc:'معاينة التصميم';
-  document.getElementById('previewW').textContent=Math.round(obj.width)+' cm';
-  document.getElementById('previewD').textContent=Math.round(obj.depth)+' cm';
-  document.getElementById('previewH').textContent=Math.round(obj.height)+' cm';
-  renderMobilePreview();
-  document.getElementById('mobileObjectPreview').classList.add('open');
-  updateMobileGameStep(3,'اختر طريقة العرض');
-}
-function closeMobilePreview(){document.getElementById('mobileObjectPreview').classList.remove('open');}
-function renderMobilePreview(){
-  const obj=objects.find(x=>x.id===mobilePreviewObjectId); if(!obj)return;
-  const item=FURNITURE.find(x=>x.id===obj.itemId); const box=document.getElementById('previewCanvas');
-  const b=document.getElementById('preview2dBtn'), d=document.getElementById('preview3dBtn');
-  b.classList.toggle('active',mobilePreviewMode==='2d'); d.classList.toggle('active',mobilePreviewMode==='3d');
-  if(mobilePreviewMode==='2d'){
-    box.innerHTML=blueprintIcon(item).replace('<svg ','<svg viewBox="0 0 56 56" style="width:72%;height:72%;" ');
-  }else{
-    box.innerHTML='<div style="text-align:center;color:var(--muted);font-size:10px;padding:20px"><div style="font-size:38px;color:var(--brass-light);margin-bottom:8px">◇</div>وضع 3D جاهز<br><span style="font-size:8px;color:var(--muted-dim)">أغلق المعاينة لمشاهدة المجسم في المشهد بزاوية حرة</span></div>';
-    selectedId=obj.id; updateSelectionVisuals(); renderProperties();
-  }
-}
-function setPreviewMode(mode){mobilePreviewMode=mode;renderMobilePreview();if(mode==='3d'){closeMobilePreview();focusSelectedObject();}}
-function focusSelectedObject(){
-  const obj=objects.find(x=>x.id===selectedId);if(!obj||!obj.three)return;
-  if(cameraMode==='persp'){
-    orbit.target.set(obj.x,Math.max(.5,obj.height/200),obj.z);
-    orbit.radius=Math.max(obj.width/100,obj.depth/100)*2.7;
-    orbit.theta=.7;orbit.phi=1.05;updateCameraFromOrbit();
-  }else{updateOrthoFrustum();}
-  updateSelectionVisuals();
-}
-const _originalAddFurniture=addFurniture;
-addFurniture=function(item){
-  const before=objects.length;
-  _originalAddFurniture(item);
-  if(isAndroidLike()&&objects.length>before){
-    const obj=objects.find(x=>x.id===selectedId); if(obj)openMobilePreview(obj);
-  }
-};
-const _originalOpenRoom=openRoom;
-openRoom=function(id){
-  _originalOpenRoom(id);
-  if(isAndroidLike()){
-    setTimeout(function(){updateMobileGameStep(2,'اختر المجسم');},80);
-  }
-};
-function toggleAccordionSection(titleEl){
-  const sec=titleEl.parentElement; const body=[...sec.children].filter(x=>x!==titleEl);
-  const hidden=sec.dataset.collapsed==='1'; sec.dataset.collapsed=hidden?'0':'1';
-  body.forEach(x=>x.style.display=hidden?'':'none');
-}
-/* Make the property sections feel like mobile accordion cards without changing desktop behavior. */
-if(window.innerWidth<=850){
-  setTimeout(function(){
-    const root=document.getElementById('propertyContent');
-    if(root && !root.dataset.accReady){
-      root.dataset.accReady='1';
-      const observer=new MutationObserver(function(){
-        root.querySelectorAll('.propertySection').forEach(function(sec,i){
-          if(sec.dataset.acc==='1')return;sec.dataset.acc='1';
-          const title=sec.querySelector('.propertySectionTitle');
-          if(title){title.onclick=function(){toggleAccordionSection(title)}; if(i>1){sec.dataset.collapsed='1';[...sec.children].filter(x=>x!==title).forEach(x=>x.style.display='none');}}
-        });
-      });
-      observer.observe(root,{childList:true,subtree:true});
-    }
-  },100);
-}
-
-</script>
-
-<!-- MOBILE GAME FLOW -->
-<div class="mobileGameHUD" id="mobileGameHUD"><div class="gameStep"><b id="gameStepText">1</b><span id="gameStepLabel">اختر الغرفة</span><i></i><span>المجسم</span><i></i><span>2D / 3D</span></div></div>
-<div class="mobileObjectPreview" id="mobileObjectPreview" onclick="if(event.target===this) closeMobilePreview()">
-  <div class="previewSheet">
-    <div class="previewHandle"></div>
-    <div class="previewHead"><div><strong id="previewName">المجسم</strong><span id="previewSub">معاينة التصميم</span></div><button onclick="closeMobilePreview()" style="font-size:24px;color:var(--muted)">×</button></div>
-    <div class="previewTabs"><button id="preview2dBtn" class="active" onclick="setPreviewMode('2d')">▧ المعاينة 2D</button><button id="preview3dBtn" onclick="setPreviewMode('3d')">◇ المعاينة 3D</button></div>
-    <div class="previewCanvas" id="previewCanvas"></div>
-    <div class="previewInfo"><div class="previewChip"><b id="previewW">—</b><span>العرض</span></div><div class="previewChip"><b id="previewD">—</b><span>العمق</span></div><div class="previewChip"><b id="previewH">—</b><span>الارتفاع</span></div></div>
-    <div class="previewActions"><button onclick="closeMobilePreview();showMobileProperties()">⚙ إعدادات المجسم</button><button class="go3d" onclick="setPreviewMode('3d')">مشاهدة بزاوية 3D ↗</button></div>
-  </div>
-</div>
 </body>
-</html><style>
-/* =========================================================
-   FINAL ANDROID UX — PROPERTIES AS A BOTTOM ACTION STRIP
-   The 3D scene remains completely free and dominant.
-========================================================= */
-@media (max-width:850px){
-  .properties.mobileOpen{
-    position:fixed!important;
-    inset:54px 0 64px 0!important;
-    width:100vw!important;
-    max-width:none!important;
-    height:auto!important;
-    transform:none!important;
-    background:transparent!important;
-    border:0!important;
-    box-shadow:none!important;
-    pointer-events:none!important;
-    overflow:visible!important;
-    display:block!important;
-    visibility:visible!important;
-    z-index:700!important;
-  }
-  .properties.mobileOpen .propertiesHeader{display:none!important}
-  .properties.mobileOpen #propertyContent{
-    position:static!important;
-    width:100%!important;
-    height:100%!important;
-    padding:0!important;
-    overflow:visible!important;
-    pointer-events:none!important;
-  }
-
-  /* One compact strip, directly above the Android bottom navigation. */
-  .properties.mobileOpen .mobileWizard{
-    position:fixed!important;
-    left:8px!important;
-    right:8px!important;
-    bottom:calc(64px + env(safe-area-inset-bottom) + 8px)!important;
-    top:auto!important;
-    width:auto!important;
-    max-width:none!important;
-    max-height:none!important;
-    transform:none!important;
-    pointer-events:auto!important;
-    z-index:950!important;
-    direction:rtl!important;
-  }
-  .properties.mobileOpen .mobileWizardCard{
-    width:100%!important;
-    max-height:31dvh!important;
-    overflow-y:auto!important;
-    -webkit-overflow-scrolling:touch!important;
-    padding:9px 10px!important;
-    border-radius:18px!important;
-    background:rgba(10,15,18,.96)!important;
-    border:1px solid rgba(0,164,142,.30)!important;
-    box-shadow:0 10px 35px rgba(0,0,0,.58),0 0 0 1px rgba(255,255,255,.015) inset!important;
-    backdrop-filter:blur(18px)!important;
-  }
-  .properties.mobileOpen .wizardClose{
-    position:absolute!important;
-    top:-34px!important;
-    left:0!important;
-    right:auto!important;
-    width:28px!important;
-    height:28px!important;
-    border-radius:9px!important;
-    font-size:15px!important;
-  }
-  .properties.mobileOpen .wizardTop{
-    margin-bottom:5px!important;
-  }
-  .properties.mobileOpen .wizardTopText strong{font-size:11px!important}
-  .properties.mobileOpen .wizardTopText span{font-size:7px!important}
-  .properties.mobileOpen .wizardProgress{margin:4px 0 7px!important}
-  .properties.mobileOpen .wizardValue{margin-bottom:6px!important}
-  .properties.mobileOpen .wizardValue .bigInput{
-    height:42px!important;
-    font-size:15px!important;
-  }
-  .properties.mobileOpen .wizardValue .stepBtn{
-    width:42px!important;
-    height:42px!important;
-  }
-  .properties.mobileOpen .wizardChoices{
-    grid-template-columns:repeat(6,1fr)!important;
-    gap:5px!important;
-  }
-  .properties.mobileOpen .wizardChoice{
-    height:38px!important;
-    font-size:9px!important;
-  }
-  .properties.mobileOpen .wizardRange{height:28px!important}
-  .properties.mobileOpen .wizardHint{
-    margin:5px 0!important;
-    font-size:7px!important;
-  }
-  .properties.mobileOpen .wizardActions{
-    margin-top:6px!important;
-  }
-  .properties.mobileOpen .wizardActions button{
-    height:37px!important;
-    font-size:9px!important;
-  }
-
-  /* Keep the 3D scene controls away from the bottom strip. */
-  .viewToggle{bottom:calc(64px + env(safe-area-inset-bottom) + 62px)!important}
-  .zoomControl{bottom:calc(64px + env(safe-area-inset-bottom) + 62px)!important}
-  .statusBar{bottom:calc(64px + env(safe-area-inset-bottom) + 62px)!important}
-  .cameraModeDock{bottom:calc(64px + env(safe-area-inset-bottom) + 8px)!important}
-}
-
-@media (max-width:480px){
-  .properties.mobileOpen .mobileWizard{
-    left:6px!important;
-    right:6px!important;
-  }
-  .properties.mobileOpen .mobileWizardCard{
-    max-height:34dvh!important;
-    padding:8px!important;
-    border-radius:16px!important;
-  }
-  .properties.mobileOpen .wizardChoices{grid-template-columns:repeat(5,1fr)!important}
-  .properties.mobileOpen .wizardChoice{height:36px!important;font-size:8px!important}
-}
-
-@media (orientation:landscape) and (max-width:850px){
-  .properties.mobileOpen .mobileWizardCard{max-height:42dvh!important}
-  .properties.mobileOpen .wizardValue .bigInput{height:38px!important}
-  .properties.mobileOpen .wizardValue .stepBtn{height:38px!important}
-}
-</style>
+</html>
