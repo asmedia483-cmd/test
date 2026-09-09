@@ -6,7 +6,94 @@
 <title>أتيليه — استوديو التصميم الداخلي ثلاثي الأبعاد</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
+/* =========================================================
+   MOBILE GAME FLOW — room → model → 2D/3D → settings
+========================================================= */
+let mobilePreviewObjectId=null;
+let mobilePreviewMode='2d';
+function isAndroidLike(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||window.innerWidth<=850;}
+function updateMobileGameStep(step,label){
+  const a=document.getElementById('gameStepText'), b=document.getElementById('gameStepLabel');
+  if(a)a.textContent=step;if(b)b.textContent=label;
+}
+function showMobileModelFlow(){
+  if(isAndroidLike()){updateMobileGameStep(2,'اختر المجسم');}
+}
+function openMobilePreview(obj){
+  if(!isAndroidLike()||!obj)return;
+  mobilePreviewObjectId=obj.id; mobilePreviewMode='2d';
+  const item=FURNITURE.find(x=>x.id===obj.itemId);
+  document.getElementById('previewName').textContent=obj.name;
+  document.getElementById('previewSub').textContent=item?item.desc:'معاينة التصميم';
+  document.getElementById('previewW').textContent=Math.round(obj.width)+' cm';
+  document.getElementById('previewD').textContent=Math.round(obj.depth)+' cm';
+  document.getElementById('previewH').textContent=Math.round(obj.height)+' cm';
+  renderMobilePreview();
+  document.getElementById('mobileObjectPreview').classList.add('open');
+  updateMobileGameStep(3,'اختر طريقة العرض');
+}
+function closeMobilePreview(){document.getElementById('mobileObjectPreview').classList.remove('open');}
+function renderMobilePreview(){
+  const obj=objects.find(x=>x.id===mobilePreviewObjectId); if(!obj)return;
+  const item=FURNITURE.find(x=>x.id===obj.itemId); const box=document.getElementById('previewCanvas');
+  const b=document.getElementById('preview2dBtn'), d=document.getElementById('preview3dBtn');
+  b.classList.toggle('active',mobilePreviewMode==='2d'); d.classList.toggle('active',mobilePreviewMode==='3d');
+  if(mobilePreviewMode==='2d'){
+    box.innerHTML=blueprintIcon(item).replace('<svg ','<svg viewBox="0 0 56 56" style="width:72%;height:72%;" ');
+  }else{
+    box.innerHTML='<div style="text-align:center;color:var(--muted);font-size:10px;padding:20px"><div style="font-size:38px;color:var(--brass-light);margin-bottom:8px">◇</div>وضع 3D جاهز<br><span style="font-size:8px;color:var(--muted-dim)">أغلق المعاينة لمشاهدة المجسم في المشهد بزاوية حرة</span></div>';
+    selectedId=obj.id; updateSelectionVisuals(); renderProperties();
+  }
+}
+function setPreviewMode(mode){mobilePreviewMode=mode;renderMobilePreview();if(mode==='3d'){closeMobilePreview();focusSelectedObject();}}
+function focusSelectedObject(){
+  const obj=objects.find(x=>x.id===selectedId);if(!obj||!obj.three)return;
+  if(cameraMode==='persp'){
+    orbit.target.set(obj.x,Math.max(.5,obj.height/200),obj.z);
+    orbit.radius=Math.max(obj.width/100,obj.depth/100)*2.7;
+    orbit.theta=.7;orbit.phi=1.05;updateCameraFromOrbit();
+  }else{updateOrthoFrustum();}
+  updateSelectionVisuals();
+}
+const _originalAddFurniture=addFurniture;
+addFurniture=function(item){
+  const before=objects.length;
+  _originalAddFurniture(item);
+  if(isAndroidLike()&&objects.length>before){
+    const obj=objects.find(x=>x.id===selectedId); if(obj)openMobilePreview(obj);
+  }
+};
+const _originalOpenRoom=openRoom;
+openRoom=function(id){
+  _originalOpenRoom(id);
+  if(isAndroidLike()){
+    setTimeout(function(){updateMobileGameStep(2,'اختر المجسم');},80);
+  }
+};
+function toggleAccordionSection(titleEl){
+  const sec=titleEl.parentElement; const body=[...sec.children].filter(x=>x!==titleEl);
+  const hidden=sec.dataset.collapsed==='1'; sec.dataset.collapsed=hidden?'0':'1';
+  body.forEach(x=>x.style.display=hidden?'':'none');
+}
+/* Make the property sections feel like mobile accordion cards without changing desktop behavior. */
+if(window.innerWidth<=850){
+  setTimeout(function(){
+    const root=document.getElementById('propertyContent');
+    if(root && !root.dataset.accReady){
+      root.dataset.accReady='1';
+      const observer=new MutationObserver(function(){
+        root.querySelectorAll('.propertySection').forEach(function(sec,i){
+          if(sec.dataset.acc==='1')return;sec.dataset.acc='1';
+          const title=sec.querySelector('.propertySectionTitle');
+          if(title){title.onclick=function(){toggleAccordionSection(title)}; if(i>1){sec.dataset.collapsed='1';[...sec.children].filter(x=>x!==title).forEach(x=>x.style.display='none');}}
+        });
+      });
+      observer.observe(root,{childList:true,subtree:true});
+    }
+  },100);
+}
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -506,6 +593,51 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
     .roomMenuBox{max-height:94dvh;}
 }
 
+
+/* =========================================================
+   ANDROID / MOBILE GAME UX LAYER
+========================================================= */
+.mobileGameHUD{display:none}
+@media(max-width:850px){
+  body{background:#0b0e10;overscroll-behavior:none}
+  #startScreen{overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .startShell{padding:24px 16px 92px;min-height:100dvh}
+  .startTop{margin-bottom:28px}.brandBig strong{font-size:18px}.buildTag{display:none}
+  .heroTitle{margin-bottom:24px}.heroTitle h1{font-size:28px}.heroTitle p{font-size:12px;line-height:1.8}
+  .roomCards{display:grid;grid-template-columns:1fr;gap:10px;background:none;border:0}
+  .roomCard{height:150px;border:1px solid var(--line2);border-radius:18px;background:linear-gradient(145deg,#201a14,#15120f);box-shadow:0 10px 30px rgba(0,0,0,.22)}
+  .roomStage{justify-content:flex-start;opacity:.55;padding-right:25%;}.roomStage svg{width:55%;max-height:110px}
+  .roomCardFooter{right:16px;bottom:14px;left:16px}.roomCardFooter h2{font-size:19px}.roomCardFooter p{font-size:9px;max-width:75%}.roomGo{opacity:1;transform:none;margin-top:5px;font-size:10px}
+  .startFooter{display:none}
+
+  #app{grid-template-columns:1fr;grid-template-rows:54px 1fr;}
+  .topbar{grid-column:1;min-height:54px;padding:0 10px;backdrop-filter:blur(14px)}
+  .topBrand{min-width:0}.topBrand strong{font-size:11px}.topBrand small{font-size:7px}.topLogo{width:30px;height:30px}
+  .roomPill{min-width:0;padding:6px 10px;font-size:10px;border-radius:20px}
+  .toolGroup{gap:4px}.toolGroup .toolBtn{height:38px;min-width:38px;padding:0;border-radius:10px;font-size:0}.toolGroup .toolBtn:first-child{font-size:15px}.toolGroup .toolBtn.primary{font-size:0}
+  .toolGroup .toolBtn.primary:after{content:'✓';font-size:15px}
+  .workspace{grid-column:1;grid-row:2;height:calc(100dvh - 54px);min-height:0}
+  .canvasTools{top:12px;left:10px;gap:7px}.canvasTool{width:42px;height:42px;border-radius:13px;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+  .viewToggle{top:auto;right:50%;transform:translateX(50%);bottom:72px;border-radius:25px;overflow:hidden;background:rgba(18,15,12,.94);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+  .viewToggle button{height:42px;padding:0 18px;font-size:10px}
+  .zoomControl{left:10px;bottom:72px;border-radius:24px;overflow:hidden}.zoomControl button{width:42px;height:42px}.zoomValue{min-width:48px}
+  .statusBar{right:10px;bottom:72px}.statusChip{padding:7px 9px;border-radius:18px}.statusChip:not(:last-child){display:none}
+  .hint{top:65px;max-width:92%;text-align:center;border-radius:12px;font-size:9px;padding:7px 12px}
+
+  /* Bottom-sheet behavior */
+  .library,.properties{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:100%!important;height:min(82dvh,680px)!important;z-index:850!important;border:1px solid var(--line2)!important;border-radius:24px 24px 0 0!important;background:rgba(27,23,18,.98)!important;box-shadow:0 -18px 50px rgba(0,0,0,.55)!important;overflow:hidden!important;transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1)!important;display:flex!important;visibility:hidden}
+  .library.mobileOpen,.properties.mobileOpen{transform:translateY(0);visibility:visible}
+  .library:before,.properties:before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:42px;height:4px;border-radius:10px;background:#5b4a35;z-index:3}
+  .libraryHeader,.propertiesHeader{padding:22px 16px 10px}.searchBox input{height:43px;border-radius:12px}.categoryBar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:8px 12px}.category{white-space:nowrap;padding:9px 13px;border-radius:20px;font-size:10px}
+  .furnitureList{padding:8px 12px}.furnitureItem{grid-template-columns:72px 1fr 30px;align-items:center;min-height:82px;padding:8px;border-radius:14px;border:1px solid var(--line);background:rgba(34,28,21,.6);margin-bottom:7px}.blueIcon{height:66px;border-radius:10px}.itemName{font-size:12px}.itemDesc{font-size:8px}.itemPlus{position:static;opacity:1;width:32px;height:32px;border-radius:10px;font-size:19px}
+  .properties{overflow-y:auto!important;-webkit-overflow-scrolling:touch}.propertiesHeader{border-bottom:1px solid var(--line)}
+  .propertyBody{padding:12px 14px 92px}.selectedInfo{border-radius:14px;padding:10px}.selectedIcon{width:50px;height:50px;border-radius:10px}.propertySection{background:var(--panel2);border:1px solid var(--line);border-radius:14px;margin-bottom:9px;overflow:hidden;padding:0}.propertySectionTitle{margin:0;padding:13px 12px;cursor:pointer}.propertySectionTitle span{font-size:11px}.propertySectionTitle small{font-size:7px}.propertySection > :not(.propertySectionTitle){padding-left:12px;padding-right:12px}.fields,.fields.three{padding-bottom:12px}.field input,.rotationBox input{height:42px;border-radius:10px}.stepBtn{width:40px;height:40px;border-radius:10px}.action,.rotatePreset{height:42px;border-radius:10px}.swatch{width:38px;height:38px;border-radius:10px}.toggleRow{padding:9px 0}.switch{width:44px;height:26px}
+
+  .mobileGameHUD{display:flex;position:fixed;left:10px;right:10px;top:64px;z-index:310;justify-content:center;pointer-events:none}.gameStep{background:rgba(20,17,13,.88);border:1px solid var(--line2);backdrop-filter:blur(12px);border-radius:22px;padding:7px 11px;display:flex;gap:8px;align-items:center;font-size:8px;color:var(--muted);box-shadow:0 8px 24px rgba(0,0,0,.25)}.gameStep b{color:var(--brass-light);font-size:9px}.gameStep i{width:4px;height:4px;background:var(--line2);border-radius:50%}
+  .mobileObjectPreview{position:fixed;inset:0;z-index:1200;display:none;align-items:flex-end;background:rgba(0,0,0,.55);backdrop-filter:blur(5px)}.mobileObjectPreview.open{display:flex}.previewSheet{width:100%;background:var(--panel);border:1px solid var(--line2);border-bottom:0;border-radius:26px 26px 0 0;padding:14px 14px 28px;box-shadow:0 -20px 60px rgba(0,0,0,.55)}.previewHandle{width:42px;height:4px;border-radius:10px;background:#5b4a35;margin:0 auto 12px}.previewHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.previewHead strong{font-size:15px}.previewHead span{font-size:8px;color:var(--muted-dim)}.previewTabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}.previewTabs button{height:42px;border:1px solid var(--line);background:var(--panel2);border-radius:12px;color:var(--muted);font-size:10px}.previewTabs button.active{border-color:var(--brass);background:rgba(193,121,60,.12);color:var(--brass-light)}.previewCanvas{height:180px;border:1px solid var(--line);border-radius:16px;background:#0b0e10;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px}.previewCanvas svg{width:75%;height:75%;stroke:var(--brass-light);fill:none}.previewInfo{display:flex;gap:7px;margin-bottom:10px}.previewChip{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}.previewChip b{display:block;font-family:var(--mono);font-size:10px}.previewChip span{font-size:7px;color:var(--muted-dim)}.previewActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.previewActions button{height:46px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);font-size:10px}.previewActions .go3d{background:var(--brass);color:#1b140b;border-color:var(--brass);font-weight:800}
+  .mobileNav{height:64px!important;background:rgba(27,23,18,.97)!important;backdrop-filter:blur(14px);padding-bottom:env(safe-area-inset-bottom);}.mobileNav button{height:64px!important;border-left:0!important}.mobileNav button.active{background:rgba(193,121,60,.08)}
+}
+@media(max-width:380px){.roomCard{height:138px}.roomStage{padding-right:30%}.previewCanvas{height:150px}.previewInfo{display:none}}
 </style>
 </head>
 <body>
@@ -2368,5 +2500,18 @@ if(localStorage.getItem("ATELIER_3D_PROJECT")){
     document.getElementById("resumeWrap").classList.remove("hidden");
 }
 </script>
+
+<!-- MOBILE GAME FLOW -->
+<div class="mobileGameHUD" id="mobileGameHUD"><div class="gameStep"><b id="gameStepText">1</b><span id="gameStepLabel">اختر الغرفة</span><i></i><span>المجسم</span><i></i><span>2D / 3D</span></div></div>
+<div class="mobileObjectPreview" id="mobileObjectPreview" onclick="if(event.target===this) closeMobilePreview()">
+  <div class="previewSheet">
+    <div class="previewHandle"></div>
+    <div class="previewHead"><div><strong id="previewName">المجسم</strong><span id="previewSub">معاينة التصميم</span></div><button onclick="closeMobilePreview()" style="font-size:24px;color:var(--muted)">×</button></div>
+    <div class="previewTabs"><button id="preview2dBtn" class="active" onclick="setPreviewMode('2d')">▧ المعاينة 2D</button><button id="preview3dBtn" onclick="setPreviewMode('3d')">◇ المعاينة 3D</button></div>
+    <div class="previewCanvas" id="previewCanvas"></div>
+    <div class="previewInfo"><div class="previewChip"><b id="previewW">—</b><span>العرض</span></div><div class="previewChip"><b id="previewD">—</b><span>العمق</span></div><div class="previewChip"><b id="previewH">—</b><span>الارتفاع</span></div></div>
+    <div class="previewActions"><button onclick="closeMobilePreview();showMobileProperties()">⚙ إعدادات المجسم</button><button class="go3d" onclick="setPreviewMode('3d')">مشاهدة بزاوية 3D ↗</button></div>
+  </div>
+</div>
 </body>
 </html>
