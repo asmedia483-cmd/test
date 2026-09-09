@@ -656,6 +656,32 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
 }
 
 /* =========================================================
+   FREE 3D CAMERA CONTROL — center of the phone remains the scene
+========================================================= */
+.cameraModeDock{
+  position:absolute;left:14px;bottom:74px;z-index:360;display:flex;gap:6px;
+  padding:5px;border:1px solid var(--line2);border-radius:14px;
+  background:rgba(8,12,16,.86);backdrop-filter:blur(12px);box-shadow:0 10px 28px rgba(0,0,0,.28)
+}
+.cameraModeBtn{height:38px;min-width:62px;padding:0 10px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--muted);font-size:10px;display:flex;align-items:center;justify-content:center;gap:5px}
+.cameraModeBtn.active{color:var(--teal-light);border-color:rgba(0,164,142,.45);background:rgba(0,164,142,.10)}
+@media(max-width:850px){
+  .cameraModeDock{left:8px;bottom:78px;flex-direction:column;gap:4px;padding:4px;border-radius:13px}
+  .cameraModeBtn{width:48px;min-width:48px;height:42px;padding:0;flex-direction:column;gap:1px;font-size:9px}
+  .cameraModeBtn span{font-size:7px}
+  /* Properties are a compact edge dock; the middle of the phone belongs to the 3D scene. */
+  .mobileWizard{position:fixed!important;right:8px!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;width:min(42vw,285px)!important;max-height:72dvh;overflow:visible}
+  .mobileWizardCard{max-height:72dvh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .wizardClose{top:0;left:auto;right:calc(100% + 6px);width:32px;height:32px}
+}
+@media(max-width:480px){
+  .mobileWizard{width:min(58vw,255px)!important}
+  .wizardTopText strong{font-size:10px}
+  .wizardValue .bigInput{height:42px;font-size:15px}
+  .wizardChoice{height:36px}
+}
+
+/* =========================================================
    ANDROID EDGE DOCK — properties stay on the edge, scene stays visible
 ========================================================= */
 @media(max-width:850px){
@@ -973,6 +999,11 @@ input[type=range]{accent-color:var(--teal)!important}
             <button class="canvasTool active" id="modeSelect" onclick="setInteractionMode('select')" title="تحديد وتحريك">↖</button>
             <button class="canvasTool" onclick="toggleGrid()" title="الشبكة الإرشادية">#</button>
             <button class="canvasTool" onclick="resetView()" title="إعادة ضبط الكاميرا">⌂</button>
+        </div>
+
+        <div class="cameraModeDock" id="cameraModeDock" aria-label="تحكم المشهد">
+            <button class="cameraModeBtn active" id="cameraFreeBtn" onclick="setInteractionMode('orbit')">◉ <span>حر</span></button>
+            <button class="cameraModeBtn" id="cameraMoveBtn" onclick="setInteractionMode('select')">↖ <span>تحريك</span></button>
         </div>
 
         <div class="viewToggle">
@@ -1751,6 +1782,7 @@ function initThree(){
     window.addEventListener("pointercancel", onPointerUp);
     canvasEl.addEventListener("wheel", onWheel, {passive:false});
 
+    if(isMobileLayout()) setInteractionMode('orbit');
     animate();
 }
 
@@ -1894,7 +1926,7 @@ function updateHintForDevice(){
     const touch = window.matchMedia("(pointer:coarse)").matches;
     if(hintEl){
         hintEl.textContent = touch
-            ? "اسحب القطعة بإصبع واحد للتحريك · اسحب الفراغ للدوران · إصبعان للتكبير والتصغير"
+            ? "وضع 3D حر: اسحب وسط الشاشة للدوران · إصبعان للتكبير · استخدم تحريك لنقل القطعة"
             : "اسحب القطعة بالماوس لتحريكها · اسحب الفراغ لتدوير الكاميرا · عجلة الماوس للتكبير";
         hintEl.classList.remove("hide");
     }
@@ -2190,18 +2222,28 @@ function onPointerDown(e){
         updateSelectionVisuals();
         renderProperties();
         if(isMobileLayout()) showMobileProperties();
-        if(!hitObj.locked){
+
+        // FREE mode: selecting an object never steals the drag from the camera.
+        // SELECT mode: dragging the object moves it as before.
+        if(interactionMode==='select' && !hitObj.locked){
             const gp = groundPointAt(e.clientX, e.clientY);
             dragState = { id:hitObj.id, offX: gp.x-hitObj.x, offZ: gp.z-hitObj.z };
             canvasEl.classList.add("dragging-obj");
+        } else if(cameraMode==='persp'){
+            orbitDrag = { x:e.clientX, y:e.clientY, theta:orbit.theta, phi:orbit.phi };
+            canvasEl.classList.add("orbiting");
+            hintEl.classList.add("hide");
         }
     } else {
+        // Empty scene is always an orbit surface in perspective mode.
         selectedId = null;
         updateSelectionVisuals();
         renderProperties();
-        orbitDrag = { x:e.clientX, y:e.clientY, theta:orbit.theta, phi:orbit.phi };
-        canvasEl.classList.add("orbiting");
-        hintEl.classList.add("hide");
+        if(cameraMode==='persp'){
+            orbitDrag = { x:e.clientX, y:e.clientY, theta:orbit.theta, phi:orbit.phi };
+            canvasEl.classList.add("orbiting");
+            hintEl.classList.add("hide");
+        }
     }
 }
 
@@ -2295,7 +2337,22 @@ function toggleGrid(){
     const g = roomGroup.getObjectByName("grid");
     if(g) g.visible = gridVisible;
 }
-function setInteractionMode(m){ interactionMode = m; }
+function setInteractionMode(m){
+    interactionMode = m;
+    const free = document.getElementById('cameraFreeBtn');
+    const move = document.getElementById('cameraMoveBtn');
+    if(free) free.classList.toggle('active', m==='orbit');
+    if(move) move.classList.toggle('active', m==='select');
+    if(canvasEl){
+        canvasEl.classList.toggle('cameraFree', m==='orbit');
+        canvasEl.classList.toggle('moveObjects', m==='select');
+    }
+    if(hintEl && isMobileLayout()){
+        hintEl.textContent = m==='orbit'
+          ? 'وضع 3D حر: اسحب في وسط الشاشة لتدوير المشهد · إصبعان للتكبير'
+          : 'وضع التحريك: اسحب المجسم لتحريكه · اسحب الفراغ لتدوير المشهد';
+    }
+}
 
 /* =========================================================
    PROPERTIES PANEL
