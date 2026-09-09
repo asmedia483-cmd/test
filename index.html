@@ -638,6 +638,14 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
   .propertyBody{padding:12px 14px 92px}.selectedInfo{border-radius:14px;padding:10px}.selectedIcon{width:50px;height:50px;border-radius:10px}.propertySection{background:var(--panel2);border:1px solid var(--line);border-radius:14px;margin-bottom:9px;overflow:hidden;padding:0}.propertySectionTitle{margin:0;padding:13px 12px;cursor:pointer}.propertySectionTitle span{font-size:11px}.propertySectionTitle small{font-size:7px}.propertySection > :not(.propertySectionTitle){padding-left:12px;padding-right:12px}.fields,.fields.three{padding-bottom:12px}.field input,.rotationBox input{height:42px;border-radius:10px}.stepBtn{width:40px;height:40px;border-radius:10px}.action,.rotatePreset{height:42px;border-radius:10px}.swatch{width:38px;height:38px;border-radius:10px}.toggleRow{padding:9px 0}.switch{width:44px;height:26px}
 
   .mobileGameHUD{display:flex;position:fixed;left:10px;right:10px;top:64px;z-index:310;justify-content:center;pointer-events:none}.gameStep{background:rgba(20,17,13,.88);border:1px solid var(--line2);backdrop-filter:blur(12px);border-radius:22px;padding:7px 11px;display:flex;gap:8px;align-items:center;font-size:8px;color:var(--muted);box-shadow:0 8px 24px rgba(0,0,0,.25)}.gameStep b{color:var(--brass-light);font-size:9px}.gameStep i{width:4px;height:4px;background:var(--line2);border-radius:50%}
+  /* ANDROID STEP-BY-STEP DESIGNER: one decision at a time, scene stays dominant */
+  .properties.mobileOpen{background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important;pointer-events:none!important;width:100vw!important;right:0!important;left:0!important;top:54px!important;bottom:64px!important;transform:none!important;visibility:visible!important;display:block!important}
+  .properties.mobileOpen .propertiesHeader{display:none!important}
+  .properties.mobileOpen #propertyContent{height:100%!important;overflow:visible!important;padding:0!important;pointer-events:none!important}
+  .mobileWizard{position:absolute;right:10px;bottom:10px;width:min(86vw,340px);pointer-events:auto;direction:rtl}
+  .mobileWizardCard{background:rgba(22,19,15,.96);border:1px solid rgba(193,121,60,.30);border-radius:20px;padding:10px;box-shadow:0 16px 45px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.025);backdrop-filter:blur(16px)}
+  .wizardTop{display:flex;align-items:center;gap:9px;margin-bottom:8px}.wizardStepNo{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:rgba(193,121,60,.13);border:1px solid rgba(193,121,60,.35);color:var(--brass-light);font:700 10px var(--mono);flex:none}.wizardTopText{min-width:0;flex:1}.wizardTopText strong{display:block;font-size:11px;color:#f1e7d9}.wizardTopText span{display:block;font-size:7px;color:var(--muted-dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wizardProgress{display:flex;gap:4px;margin:0 2px 8px}.wizardDot{height:3px;flex:1;border-radius:4px;background:#3a3027}.wizardDot.active{background:var(--brass)}.wizardValue{display:flex;align-items:center;gap:7px}.wizardValue .bigInput{flex:1;min-width:0;height:45px;background:#0e0c0a;border:1px solid var(--line2);border-radius:12px;color:#fff;text-align:center;font:700 16px var(--mono);outline:none}.wizardValue .bigInput:focus{border-color:var(--brass);box-shadow:0 0 0 2px rgba(193,121,60,.08)}.wizardValue .unit{font-size:8px;color:var(--muted-dim);width:28px;text-align:center}.wizardValue .stepBtn{width:44px;height:45px;border-radius:12px;background:#17130f;border:1px solid var(--line2);color:#fff;font-size:20px}.wizardHint{font-size:7px;color:var(--muted-dim);text-align:center;margin:6px 0 7px}.wizardChoices{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.wizardChoice{height:38px;border:1px solid var(--line);border-radius:10px;background:#17130f;color:#d8cbb9;font-size:9px}.wizardChoice.active{border-color:var(--brass);background:rgba(193,121,60,.12);color:var(--brass-light)}.wizardActions{display:grid;grid-template-columns:1fr 1.35fr;gap:6px;margin-top:8px}.wizardActions button{height:39px;border-radius:11px;border:1px solid var(--line2);background:#17130f;color:#ddd;font-size:9px;font-weight:700}.wizardActions .next{background:var(--brass);border-color:var(--brass);color:#1b140b}.wizardActions .finish{grid-column:1/3}.wizardCount{display:flex;align-items:center;gap:8px}.wizardCount .countBox{flex:1;text-align:center;font:800 20px var(--mono);color:#fff}.wizardRange{width:100%;accent-color:var(--brass);height:32px}.wizardMiniRow{display:grid;grid-template-columns:1fr 1fr;gap:6px}.wizardMiniBtn{height:40px;border-radius:11px;border:1px solid var(--line2);background:#17130f;color:#ddd;font-size:9px}.wizardClose{position:absolute;left:0;top:-42px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);background:rgba(22,19,15,.94);color:#ddd;font-size:18px;box-shadow:0 8px 22px rgba(0,0,0,.3)}
+  @media(max-width:380px){.mobileWizard{right:7px;bottom:7px;width:calc(100vw - 14px)}.mobileWizardCard{padding:8px;border-radius:17px}.wizardTop{margin-bottom:6px}.wizardValue .bigInput{height:40px;font-size:14px}.wizardValue .stepBtn{height:40px;width:40px}.wizardActions button{height:36px}.wizardChoice{height:34px;font-size:8px}}
   .mobileObjectPreview{position:fixed;inset:0;z-index:1200;display:none;align-items:flex-end;background:rgba(0,0,0,.55);backdrop-filter:blur(5px)}.mobileObjectPreview.open{display:flex}.previewSheet{width:100%;background:var(--panel);border:1px solid var(--line2);border-bottom:0;border-radius:26px 26px 0 0;padding:14px 14px 28px;box-shadow:0 -20px 60px rgba(0,0,0,.55)}.previewHandle{width:42px;height:4px;border-radius:10px;background:#5b4a35;margin:0 auto 12px}.previewHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.previewHead strong{font-size:15px}.previewHead span{font-size:8px;color:var(--muted-dim)}.previewTabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}.previewTabs button{height:42px;border:1px solid var(--line);background:var(--panel2);border-radius:12px;color:var(--muted);font-size:10px}.previewTabs button.active{border-color:var(--brass);background:rgba(193,121,60,.12);color:var(--brass-light)}.previewCanvas{height:180px;border:1px solid var(--line);border-radius:16px;background:#0b0e10;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px}.previewCanvas svg{width:75%;height:75%;stroke:var(--brass-light);fill:none}.previewInfo{display:flex;gap:7px;margin-bottom:10px}.previewChip{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}.previewChip b{display:block;font-family:var(--mono);font-size:10px}.previewChip span{font-size:7px;color:var(--muted-dim)}.previewActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.previewActions button{height:46px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);font-size:10px}.previewActions .go3d{background:var(--brass);color:#1b140b;border-color:var(--brass);font-weight:800}
   .mobileNav{height:64px!important;background:rgba(27,23,18,.97)!important;backdrop-filter:blur(14px);padding-bottom:env(safe-area-inset-bottom);}.mobileNav button{height:64px!important;border-left:0!important}.mobileNav button.active{background:rgba(193,121,60,.08)}
 }
@@ -2162,7 +2170,7 @@ function setInteractionMode(m){ interactionMode = m; }
 /* =========================================================
    PROPERTIES PANEL
 ========================================================= */
-function renderProperties(){
+function renderPropertiesDesktop(){
     const obj = objects.find(function(x){ return x.id===selectedId; });
     if(!obj){
         propertyContent.innerHTML =
@@ -2295,12 +2303,15 @@ let propertyHistoryTimer = null;
 function propertyChanged(){
     const obj = objects.find(function(x){ return x.id===selectedId; });
     if(!obj) return;
-    const x = Number(document.getElementById("propX").value);
-    const z = Number(document.getElementById("propZ").value);
-    const w = Number(document.getElementById("propW").value);
-    const d = Number(document.getElementById("propD").value);
-    const h = Number(document.getElementById("propH").value);
-    const r = Number(document.getElementById("propR").value);
+    const xEl=document.getElementById("propX"), zEl=document.getElementById("propZ");
+    const wEl=document.getElementById("propW"), dEl=document.getElementById("propD");
+    const hEl=document.getElementById("propH"), rEl=document.getElementById("propR");
+    const x = xEl ? Number(xEl.value) : obj.x;
+    const z = zEl ? Number(zEl.value) : obj.z;
+    const w = wEl ? Number(wEl.value) : obj.width;
+    const d = dEl ? Number(dEl.value) : obj.depth;
+    const h = hEl ? Number(hEl.value) : obj.height;
+    const r = rEl ? Number(rEl.value) : obj.rotY;
     let needsRebuild = false;
     if(Number.isFinite(w) && w>=10 && w!==obj.width){ obj.width=w; needsRebuild=true; }
     if(Number.isFinite(d) && d>=10 && d!==obj.depth){ obj.depth=d; needsRebuild=true; }
@@ -2602,6 +2613,77 @@ function showToast(message){
 ========================================================= */
 if(localStorage.getItem("ATELIER_3D_PROJECT")){
     document.getElementById("resumeWrap").classList.remove("hidden");
+}
+
+/* =========================================================
+   ANDROID GAME WIZARD — progressive dimensions/configuration
+   Only one decision is shown at a time so the 3D object remains visible.
+========================================================= */
+let mobileWizardStage=0;
+let mobileWizardObjectId=null;
+function mobileWizardStages(obj,item){
+  const stages=[
+    {key:'height',title:'الطول',sub:'حدد طول / ارتفاع العنصر',kind:'number',field:'propH',value:obj.height,min:10,step:5,unit:'سم'},
+    {key:'width',title:'العرض',sub:'بعد الطول، حدد عرض العنصر',kind:'number',field:'propW',value:obj.width,min:10,step:5,unit:'سم'}
+  ];
+  if(item && item.cabinet && item.doorsMax){
+    stages.push({key:'doors',title:'عدد الأبواب',sub:'حدد عدد أبواب الدولاب',kind:'count',value:obj.doorCount,min:item.doorsMin||0,max:item.doorsMax});
+  }
+  stages.push({key:'depth',title:'العمق',sub:'حدد عمق العنصر',kind:'number',field:'propD',value:obj.depth,min:10,step:5,unit:'سم'});
+  if(item && item.shelvesMax) stages.push({key:'shelves',title:'عدد الأرفف',sub:'حدد عدد الأرفف داخل الدولاب',kind:'countShelf',value:obj.shelfCount,min:item.shelvesMin||0,max:item.shelvesMax});
+  if(item && item.hasDrawers && item.drawersMax) stages.push({key:'drawers',title:'عدد الأدراج',sub:'حدد عدد الأدراج',kind:'countDrawer',value:obj.drawerCount,min:item.drawersMin||0,max:item.drawersMax});
+  if(item && (item.cabinet||item.hasDrawers)) stages.push({key:'handle',title:'نوع المقبض',sub:'اختر شكل المقابض',kind:'handle'});
+  stages.push({key:'finish',title:'الخامة واللون',sub:'اختر التشطيب المناسب',kind:'finish'});
+  stages.push({key:'position',title:'مكان العنصر',sub:'حرّك القطعة داخل الغرفة',kind:'position'});
+  stages.push({key:'rotation',title:'زاوية العنصر',sub:'حدد زاوية الدوران',kind:'rotation'});
+  stages.push({key:'done',title:'جاهز',sub:'راجع التصميم ثم ابدأ بالعنصر التالي',kind:'done'});
+  return stages;
+}
+function renderMobileWizard(){
+  const obj=objects.find(x=>x.id===selectedId);
+  const root=document.getElementById('propertyContent');
+  if(!root) return;
+  if(!obj){ root.innerHTML=''; return; }
+  const item=FURNITURE.find(x=>x.id===obj.itemId)||{};
+  if(mobileWizardObjectId!==obj.id){ mobileWizardObjectId=obj.id; mobileWizardStage=0; }
+  const stages=mobileWizardStages(obj,item);
+  mobileWizardStage=Math.max(0,Math.min(mobileWizardStage,stages.length-1));
+  const st=stages[mobileWizardStage];
+  updateMobileGameStep(4,'المرحلة '+(mobileWizardStage+1)+' من '+stages.length+' • '+st.title);
+  let body='';
+  if(st.kind==='number'){
+    body='<div class="wizardValue"><button class="stepBtn" onclick="stepInput(\''+st.field+'\',-'+st.step+','+st.min+')">−</button><input class="bigInput" id="'+st.field+'" type="number" min="'+st.min+'" value="'+Math.round(st.value)+'" oninput="propertyChanged()"><button class="stepBtn" onclick="stepInput(\''+st.field+'\','+st.step+','+st.min+')">+</button><span class="unit">'+st.unit+'</span></div>';
+  } else if(st.kind==='count'||st.kind==='countShelf'||st.kind==='countDrawer'){
+    let setter=st.key==='doors'?'setDoorCount':st.key==='shelves'?'setShelfCount':'setDrawerCount';
+    body='<div class="wizardCount"><button class="stepBtn" onclick="'+setter+'(Math.max('+st.min+',Number(document.getElementById(\'wizardCountInput\').value)-1))">−</button><div class="countBox" id="wizardCountValue">'+st.value+'</div><button class="stepBtn" onclick="'+setter+'(Math.min('+st.max+',Number(document.getElementById(\'wizardCountInput\').value)+1))">+</button></div><input type="hidden" id="wizardCountInput" value="'+st.value+'"><input class="wizardRange" type="range" min="'+st.min+'" max="'+st.max+'" step="1" value="'+st.value+'" oninput="'+setter+'(this.value);document.getElementById(\'wizardCountInput\').value=this.value;document.getElementById(\'wizardCountValue\').textContent=this.value">';
+  } else if(st.kind==='handle'){
+    let html='';
+    (typeof HANDLE_STYLES!=='undefined'?HANDLE_STYLES:[]).forEach(h=>{html+='<button class="wizardChoice '+((obj.handleStyle||'bar')===h.id?'active':'')+'" onclick="setHandleStyle(\''+h.id+'\');renderMobileWizard()">'+h.label+'</button>';});
+    body='<div class="wizardChoices">'+html+'</div>';
+  } else if(st.kind==='finish'){
+    let html='';
+    if(item.finishGroup&&FINISHES[item.finishGroup]) FINISHES[item.finishGroup].forEach(s=>{html+='<button class="wizardChoice '+(obj.colorHex===s.hex?'active':'')+'" style="background:#'+s.hex.toString(16).padStart(6,'0')+';color:#fff" onclick="changeObjectColor('+s.hex+',\''+s.type+'\');renderMobileWizard()">'+s.label+'</button>';});
+    body='<div class="wizardChoices">'+html+'</div>';
+  } else if(st.kind==='position'){
+    body='<div class="wizardMiniRow"><button class="wizardMiniBtn" onclick="centerSelected();renderMobileWizard()">⊙ توسيط</button><button class="wizardMiniBtn" onclick="setInteractionMode(\'select\');closeMobilePanels()">↖ تحريك داخل المشهد</button></div>';
+  } else if(st.kind==='rotation'){
+    body='<div class="wizardChoices"><button class="wizardChoice" onclick="setRotation(0);renderMobileWizard()">0°</button><button class="wizardChoice" onclick="setRotation(90);renderMobileWizard()">90°</button><button class="wizardChoice" onclick="setRotation(180);renderMobileWizard()">180°</button><button class="wizardChoice" onclick="rotateSelected(-15);renderMobileWizard()">−15°</button><button class="wizardChoice" onclick="rotateSelected(15);renderMobileWizard()">+15°</button></div>';
+  } else {
+    body='<div class="wizardMiniRow"><button class="wizardMiniBtn" onclick="duplicateSelected()">⧉ نسخ</button><button class="wizardMiniBtn" onclick="closeMobilePanels()">✓ عرض المشهد</button></div>';
+  }
+  let dots=''; stages.forEach((x,i)=>{dots+='<i class="wizardDot '+(i<=mobileWizardStage?'active':'')+'"></i>';});
+  const prev=mobileWizardStage>0?'<button onclick="mobileWizardBack()">رجوع</button>':'';
+  const next=mobileWizardStage<stages.length-1?'<button class="next" onclick="mobileWizardNext()">التالي</button>':'<button class="next finish" onclick="closeMobilePanels()">✓ إنهاء التعديل</button>';
+  root.innerHTML='<div class="mobileWizard"><button class="wizardClose" onclick="closeMobilePanels()">×</button><div class="mobileWizardCard"><div class="wizardTop"><div class="wizardStepNo">'+String(mobileWizardStage+1).padStart(2,'0')+'</div><div class="wizardTopText"><strong>'+st.title+'</strong><span>'+st.sub+' • '+obj.name+'</span></div></div><div class="wizardProgress">'+dots+'</div>'+body+'<div class="wizardHint">المجسم يتحدث مباشرة أمام العميل مع كل تعديل</div><div class="wizardActions">'+prev+next+'</div></div></div>';
+}
+function mobileWizardNext(){
+  const obj=objects.find(x=>x.id===selectedId); if(!obj)return;
+  const item=FURNITURE.find(x=>x.id===obj.itemId)||{}; const stages=mobileWizardStages(obj,item);
+  if(mobileWizardStage<stages.length-1) mobileWizardStage++; renderMobileWizard();
+}
+function mobileWizardBack(){if(mobileWizardStage>0)mobileWizardStage--;renderMobileWizard();}
+function renderProperties(){
+  if(isAndroidLike()) renderMobileWizard(); else renderPropertiesDesktop();
 }
 </script>
 
