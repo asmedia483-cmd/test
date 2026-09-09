@@ -6,94 +6,7 @@
 <title>أتيليه — استوديو التصميم الداخلي ثلاثي الأبعاد</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
-/* =========================================================
-   MOBILE GAME FLOW — room → model → 2D/3D → settings
-========================================================= */
-let mobilePreviewObjectId=null;
-let mobilePreviewMode='2d';
-function isAndroidLike(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||window.innerWidth<=850;}
-function updateMobileGameStep(step,label){
-  const a=document.getElementById('gameStepText'), b=document.getElementById('gameStepLabel');
-  if(a)a.textContent=step;if(b)b.textContent=label;
-}
-function showMobileModelFlow(){
-  if(isAndroidLike()){updateMobileGameStep(2,'اختر المجسم');}
-}
-function openMobilePreview(obj){
-  if(!isAndroidLike()||!obj)return;
-  mobilePreviewObjectId=obj.id; mobilePreviewMode='2d';
-  const item=FURNITURE.find(x=>x.id===obj.itemId);
-  document.getElementById('previewName').textContent=obj.name;
-  document.getElementById('previewSub').textContent=item?item.desc:'معاينة التصميم';
-  document.getElementById('previewW').textContent=Math.round(obj.width)+' cm';
-  document.getElementById('previewD').textContent=Math.round(obj.depth)+' cm';
-  document.getElementById('previewH').textContent=Math.round(obj.height)+' cm';
-  renderMobilePreview();
-  document.getElementById('mobileObjectPreview').classList.add('open');
-  updateMobileGameStep(3,'اختر طريقة العرض');
-}
-function closeMobilePreview(){document.getElementById('mobileObjectPreview').classList.remove('open');}
-function renderMobilePreview(){
-  const obj=objects.find(x=>x.id===mobilePreviewObjectId); if(!obj)return;
-  const item=FURNITURE.find(x=>x.id===obj.itemId); const box=document.getElementById('previewCanvas');
-  const b=document.getElementById('preview2dBtn'), d=document.getElementById('preview3dBtn');
-  b.classList.toggle('active',mobilePreviewMode==='2d'); d.classList.toggle('active',mobilePreviewMode==='3d');
-  if(mobilePreviewMode==='2d'){
-    box.innerHTML=blueprintIcon(item).replace('<svg ','<svg viewBox="0 0 56 56" style="width:72%;height:72%;" ');
-  }else{
-    box.innerHTML='<div style="text-align:center;color:var(--muted);font-size:10px;padding:20px"><div style="font-size:38px;color:var(--brass-light);margin-bottom:8px">◇</div>وضع 3D جاهز<br><span style="font-size:8px;color:var(--muted-dim)">أغلق المعاينة لمشاهدة المجسم في المشهد بزاوية حرة</span></div>';
-    selectedId=obj.id; updateSelectionVisuals(); renderProperties();
-  }
-}
-function setPreviewMode(mode){mobilePreviewMode=mode;renderMobilePreview();if(mode==='3d'){closeMobilePreview();focusSelectedObject();}}
-function focusSelectedObject(){
-  const obj=objects.find(x=>x.id===selectedId);if(!obj||!obj.three)return;
-  if(cameraMode==='persp'){
-    orbit.target.set(obj.x,Math.max(.5,obj.height/200),obj.z);
-    orbit.radius=Math.max(obj.width/100,obj.depth/100)*2.7;
-    orbit.theta=.7;orbit.phi=1.05;updateCameraFromOrbit();
-  }else{updateOrthoFrustum();}
-  updateSelectionVisuals();
-}
-const _originalAddFurniture=addFurniture;
-addFurniture=function(item){
-  const before=objects.length;
-  _originalAddFurniture(item);
-  if(isAndroidLike()&&objects.length>before){
-    const obj=objects.find(x=>x.id===selectedId); if(obj)openMobilePreview(obj);
-  }
-};
-const _originalOpenRoom=openRoom;
-openRoom=function(id){
-  _originalOpenRoom(id);
-  if(isAndroidLike()){
-    setTimeout(function(){updateMobileGameStep(2,'اختر المجسم');},80);
-  }
-};
-function toggleAccordionSection(titleEl){
-  const sec=titleEl.parentElement; const body=[...sec.children].filter(x=>x!==titleEl);
-  const hidden=sec.dataset.collapsed==='1'; sec.dataset.collapsed=hidden?'0':'1';
-  body.forEach(x=>x.style.display=hidden?'':'none');
-}
-/* Make the property sections feel like mobile accordion cards without changing desktop behavior. */
-if(window.innerWidth<=850){
-  setTimeout(function(){
-    const root=document.getElementById('propertyContent');
-    if(root && !root.dataset.accReady){
-      root.dataset.accReady='1';
-      const observer=new MutationObserver(function(){
-        root.querySelectorAll('.propertySection').forEach(function(sec,i){
-          if(sec.dataset.acc==='1')return;sec.dataset.acc='1';
-          const title=sec.querySelector('.propertySectionTitle');
-          if(title){title.onclick=function(){toggleAccordionSection(title)}; if(i>1){sec.dataset.collapsed='1';[...sec.children].filter(x=>x!==title).forEach(x=>x.style.display='none');}}
-        });
-      });
-      observer.observe(root,{childList:true,subtree:true});
-    }
-  },100);
-}
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -2872,6 +2785,96 @@ function mobileWizardBack(){if(mobileWizardStage>0)mobileWizardStage--;renderMob
 function renderProperties(){
   if(isAndroidLike()) renderMobileWizard(); else renderPropertiesDesktop();
 }
+</script>
+<script>
+
+/* =========================================================
+   MOBILE GAME FLOW — room → model → 2D/3D → settings
+========================================================= */
+let mobilePreviewObjectId=null;
+let mobilePreviewMode='2d';
+function isAndroidLike(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||window.innerWidth<=850;}
+function updateMobileGameStep(step,label){
+  const a=document.getElementById('gameStepText'), b=document.getElementById('gameStepLabel');
+  if(a)a.textContent=step;if(b)b.textContent=label;
+}
+function showMobileModelFlow(){
+  if(isAndroidLike()){updateMobileGameStep(2,'اختر المجسم');}
+}
+function openMobilePreview(obj){
+  if(!isAndroidLike()||!obj)return;
+  mobilePreviewObjectId=obj.id; mobilePreviewMode='2d';
+  const item=FURNITURE.find(x=>x.id===obj.itemId);
+  document.getElementById('previewName').textContent=obj.name;
+  document.getElementById('previewSub').textContent=item?item.desc:'معاينة التصميم';
+  document.getElementById('previewW').textContent=Math.round(obj.width)+' cm';
+  document.getElementById('previewD').textContent=Math.round(obj.depth)+' cm';
+  document.getElementById('previewH').textContent=Math.round(obj.height)+' cm';
+  renderMobilePreview();
+  document.getElementById('mobileObjectPreview').classList.add('open');
+  updateMobileGameStep(3,'اختر طريقة العرض');
+}
+function closeMobilePreview(){document.getElementById('mobileObjectPreview').classList.remove('open');}
+function renderMobilePreview(){
+  const obj=objects.find(x=>x.id===mobilePreviewObjectId); if(!obj)return;
+  const item=FURNITURE.find(x=>x.id===obj.itemId); const box=document.getElementById('previewCanvas');
+  const b=document.getElementById('preview2dBtn'), d=document.getElementById('preview3dBtn');
+  b.classList.toggle('active',mobilePreviewMode==='2d'); d.classList.toggle('active',mobilePreviewMode==='3d');
+  if(mobilePreviewMode==='2d'){
+    box.innerHTML=blueprintIcon(item).replace('<svg ','<svg viewBox="0 0 56 56" style="width:72%;height:72%;" ');
+  }else{
+    box.innerHTML='<div style="text-align:center;color:var(--muted);font-size:10px;padding:20px"><div style="font-size:38px;color:var(--brass-light);margin-bottom:8px">◇</div>وضع 3D جاهز<br><span style="font-size:8px;color:var(--muted-dim)">أغلق المعاينة لمشاهدة المجسم في المشهد بزاوية حرة</span></div>';
+    selectedId=obj.id; updateSelectionVisuals(); renderProperties();
+  }
+}
+function setPreviewMode(mode){mobilePreviewMode=mode;renderMobilePreview();if(mode==='3d'){closeMobilePreview();focusSelectedObject();}}
+function focusSelectedObject(){
+  const obj=objects.find(x=>x.id===selectedId);if(!obj||!obj.three)return;
+  if(cameraMode==='persp'){
+    orbit.target.set(obj.x,Math.max(.5,obj.height/200),obj.z);
+    orbit.radius=Math.max(obj.width/100,obj.depth/100)*2.7;
+    orbit.theta=.7;orbit.phi=1.05;updateCameraFromOrbit();
+  }else{updateOrthoFrustum();}
+  updateSelectionVisuals();
+}
+const _originalAddFurniture=addFurniture;
+addFurniture=function(item){
+  const before=objects.length;
+  _originalAddFurniture(item);
+  if(isAndroidLike()&&objects.length>before){
+    const obj=objects.find(x=>x.id===selectedId); if(obj)openMobilePreview(obj);
+  }
+};
+const _originalOpenRoom=openRoom;
+openRoom=function(id){
+  _originalOpenRoom(id);
+  if(isAndroidLike()){
+    setTimeout(function(){updateMobileGameStep(2,'اختر المجسم');},80);
+  }
+};
+function toggleAccordionSection(titleEl){
+  const sec=titleEl.parentElement; const body=[...sec.children].filter(x=>x!==titleEl);
+  const hidden=sec.dataset.collapsed==='1'; sec.dataset.collapsed=hidden?'0':'1';
+  body.forEach(x=>x.style.display=hidden?'':'none');
+}
+/* Make the property sections feel like mobile accordion cards without changing desktop behavior. */
+if(window.innerWidth<=850){
+  setTimeout(function(){
+    const root=document.getElementById('propertyContent');
+    if(root && !root.dataset.accReady){
+      root.dataset.accReady='1';
+      const observer=new MutationObserver(function(){
+        root.querySelectorAll('.propertySection').forEach(function(sec,i){
+          if(sec.dataset.acc==='1')return;sec.dataset.acc='1';
+          const title=sec.querySelector('.propertySectionTitle');
+          if(title){title.onclick=function(){toggleAccordionSection(title)}; if(i>1){sec.dataset.collapsed='1';[...sec.children].filter(x=>x!==title).forEach(x=>x.style.display='none');}}
+        });
+      });
+      observer.observe(root,{childList:true,subtree:true});
+    }
+  },100);
+}
+
 </script>
 
 <!-- MOBILE GAME FLOW -->
