@@ -747,6 +747,136 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
   }
   .library.mobileOpen{transform:translateX(0)!important}
 }
+
+/* =========================================================
+   D-STYLE DARK / TEAL THEME
+   Inspired by the supplied black + deep teal reference mark.
+   Keeps the existing furniture/3D functionality intact.
+========================================================= */
+:root{
+  --bg:#07090d;
+  --panel:#0c1015;
+  --panel2:#11171c;
+  --panel3:#151d22;
+  --line:#1b252c;
+  --line2:#2a3740;
+  --text:#f4f8f8;
+  --muted:#8b999e;
+  --muted-dim:#5d6b70;
+  --brass:#00a48e;
+  --brass-light:#19c4aa;
+  --teal:#00a48e;
+  --danger:#d85e67;
+}
+html,body{background:radial-gradient(circle at 50% 0%,#111920 0%,#07090d 48%,#05070a 100%);color:var(--text)}
+button,input{font-family:'Cairo',sans-serif}
+
+/* brand / logo language */
+.brandLogo,.topLogo{
+  background:#000;
+  border:1px solid #172126!important;
+  border-radius:50%!important;
+  box-shadow:0 0 0 1px rgba(0,164,142,.04),0 10px 30px rgba(0,0,0,.35);
+}
+.brandLogo:before{inset:7px!important;border:0!important;border-left:3px solid var(--teal)!important;border-right:3px solid var(--teal)!important;border-radius:50%!important;opacity:.9}
+.brandLogo svg,.topLogo svg{stroke:var(--teal)!important;filter:drop-shadow(0 0 5px rgba(0,164,142,.2))}
+.brandBig strong,.topBrand strong{color:#fff}
+.brandBig span,.topBrand small{color:#64757b}
+
+/* start screen */
+#startScreen{background:
+  radial-gradient(circle at 50% 10%,rgba(0,164,142,.10),transparent 32%),
+  radial-gradient(circle at 15% 90%,rgba(0,164,142,.045),transparent 35%),
+  #07090d!important}
+.startTop{border-color:var(--line)}
+.roomCards{background:var(--line);border-color:var(--line)}
+.roomCard{background:linear-gradient(145deg,#0d1217,#090c10)}
+.roomCard:hover{background:#11181d;box-shadow:inset 0 0 0 1px rgba(0,164,142,.22)}
+.roomIndex,.roomGo,.resumeBtn{color:var(--brass-light)!important}
+.roomCardFooter h2{color:#f4f8f8}
+
+/* app shell */
+.topbar{background:rgba(9,12,16,.96);border-color:var(--line);box-shadow:0 6px 25px rgba(0,0,0,.2)}
+.roomPill{background:#0d1318;border-color:var(--line2);border-radius:999px}
+.toolBtn{background:#0e1419;border-color:var(--line);border-radius:9px}
+.toolBtn:hover{border-color:rgba(0,164,142,.45)}
+.toolBtn.primary{background:var(--teal);border-color:var(--teal);color:#00120f;box-shadow:0 5px 18px rgba(0,164,142,.14)}
+.toolBtn.active{color:var(--brass-light);border-color:var(--teal)}
+
+/* side libraries */
+.library,.properties{background:rgba(10,14,18,.97);border-color:var(--line)}
+.libraryHeader,.categoryBar,.propertiesHeader{border-color:var(--line)}
+.searchBox input,.field input{background:#080c10;border-color:var(--line2);border-radius:10px}
+.searchBox input:focus,.field input:focus{border-color:var(--teal);box-shadow:0 0 0 2px rgba(0,164,142,.08)}
+.category{background:#0e1419;border-color:var(--line);border-radius:999px}
+.category.active{color:var(--brass-light);border-color:var(--teal);background:rgba(0,164,142,.10)}
+.furnitureItem{border-radius:13px}
+.furnitureItem:hover{background:#10171c;border-color:#1d2a31}
+.blueIcon,.selectedIcon{background:#070b0f;border-color:var(--line2);border-radius:12px}
+.blueIcon svg,.selectedIcon svg{stroke:var(--teal)!important}
+.itemPlus{background:var(--teal);color:#00120f;border-radius:7px}
+
+/* viewport */
+.workspace{background:
+  radial-gradient(circle at 50% 42%,rgba(0,164,142,.035),transparent 34%),
+  #070a0e}
+.canvasTools{background:rgba(9,13,17,.88)!important;border-color:var(--line2)!important;border-radius:13px!important;backdrop-filter:blur(12px)}
+.canvasTool{border-color:var(--line)!important;border-radius:9px!important}
+.canvasTool:hover,.canvasTool.active{color:var(--brass-light)!important;border-color:var(--teal)!important;background:rgba(0,164,142,.07)!important}
+.viewToggle{background:rgba(9,13,17,.9)!important;border-color:var(--line2)!important;border-radius:999px!important;overflow:hidden}
+.viewToggle button.active{background:var(--teal)!important;color:#00120f!important}
+.zoomControl{background:rgba(9,13,17,.9)!important;border-color:var(--line2)!important;border-radius:12px!important}
+.statusChip{background:rgba(9,13,17,.85)!important;border-color:var(--line)!important;border-radius:999px!important}
+.statusChip b{color:var(--brass-light)!important}
+
+/* properties cards */
+.propertySection{background:linear-gradient(145deg,#10161b,#0b1014)!important;border-color:#1d2930!important;border-radius:16px!important;box-shadow:0 10px 25px rgba(0,0,0,.14)}
+.propertySectionTitle{color:#eaf1f1!important}
+.stepBtn,.rotatePreset,.action{background:#0b1115!important;border-color:var(--line2)!important;border-radius:10px!important}
+.stepBtn:hover,.rotatePreset:hover,.action:hover{border-color:var(--teal)!important;color:var(--brass-light)!important;background:rgba(0,164,142,.06)!important}
+.rotatePreset{color:var(--muted)!important}
+.switch.active{background:rgba(0,164,142,.18)!important;border-color:var(--teal)!important}
+.switch.active i{background:var(--brass-light)!important}
+.action.delete{border-color:rgba(216,94,103,.3)!important;color:#e77a82!important}
+
+/* mobile */
+.mobileNav{background:rgba(7,10,13,.97)!important;border-top:1px solid var(--line2)!important;backdrop-filter:blur(18px)}
+.mobileNav button{color:#718087!important}
+.mobileNav button.active{color:var(--brass-light)!important;background:rgba(0,164,142,.08)!important}
+.mobileNav button:active{background:rgba(0,164,142,.12)!important}
+.mobileGameHUD .gameStep{background:rgba(7,11,14,.90)!important;border-color:#25333a!important;box-shadow:0 10px 30px rgba(0,0,0,.45)!important}
+.mobileGameHUD .gameStep b{color:var(--brass-light)!important}
+.mobileWizard,.previewSheet{background:linear-gradient(160deg,#10171b,#090d11)!important;border-color:#27353d!important;box-shadow:0 -20px 60px rgba(0,0,0,.7)!important}
+.wizardStepNo{background:rgba(0,164,142,.10)!important;border-color:rgba(0,164,142,.38)!important;color:var(--brass-light)!important}
+.wizardDot.active{background:var(--teal)!important}
+.wizardValue .bigInput{background:#070b0e!important;border-color:#27353d!important}
+.wizardValue .bigInput:focus{border-color:var(--teal)!important;box-shadow:0 0 0 2px rgba(0,164,142,.10)!important}
+.wizardValue .stepBtn,.wizardActions button,.wizardChoice{background:#0b1115!important;border-color:#25323a!important}
+.wizardChoice.active{border-color:var(--teal)!important;background:rgba(0,164,142,.10)!important;color:var(--brass-light)!important}
+.wizardActions .next,.previewActions .go3d{background:var(--teal)!important;border-color:var(--teal)!important;color:#00120f!important}
+.previewTabs button.active{border-color:var(--teal)!important;background:rgba(0,164,142,.10)!important;color:var(--brass-light)!important}
+.previewCanvas{background:#05080b!important;border-color:#1e2a31!important}
+.previewCanvas svg{stroke:var(--teal)!important}
+.previewChip{background:#0b1115!important;border-color:#1f2c33!important}
+
+/* use teal instead of the old brass on common labels / sliders */
+input[type=range]{accent-color:var(--teal)!important}
+.roomMenu{background:rgba(0,0,0,.72)!important;backdrop-filter:blur(10px)}
+.roomMenuBox{background:#0c1115!important;border-color:#27343b!important;box-shadow:0 25px 80px rgba(0,0,0,.65)!important;border-radius:20px!important}
+.roomMenuChoice{background:#10171b!important;border-color:#223039!important;border-radius:14px!important}
+.roomMenuChoice:hover{border-color:var(--teal)!important;color:var(--brass-light)!important}
+.toast{background:#0b1115!important;border-color:#27343b!important;border-radius:12px!important}
+
+/* compact Android touch targets */
+@media(max-width:850px){
+  .topbar{background:rgba(7,10,13,.96)!important}
+  .topBrand small{letter-spacing:1px}
+  .library,.properties{background:rgba(9,13,17,.985)!important}
+  .libraryHeader{background:linear-gradient(#0c1217,#0b1014)!important}
+  .propertiesHeader{background:linear-gradient(#0c1217,#0b1014)!important}
+  .mobileSheetClose,.wizardClose{background:#0b1115!important;border-color:#2a3740!important;color:var(--brass-light)!important}
+}
+
 </style>
 </head>
 <body>
