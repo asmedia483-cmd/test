@@ -2656,9 +2656,20 @@ function setShelfCount(value){
     const item = FURNITURE.find(function(x){ return x.id===obj.itemId; });
     if(!item || item.shelvesMax==null) return;
     const next = Math.max(item.shelvesMin||0, Math.min(item.shelvesMax, Math.round(Number(value))));
-    if(next===obj.shelfCount) return;
+
+    // عند تعديل الأرفف نفتح كل أبواب الدولاب تلقائياً،
+    // حتى يرى العميل الرفوف كاملة أمامه.
     obj.shelfCount = next;
+    if(item.cabinet && (obj.doorCount||0) > 0){
+        obj.doorsOpen = resizeBoolArray(obj.doorsOpen, obj.doorCount);
+        for(let i=0;i<obj.doorCount;i++) obj.doorsOpen[i] = true;
+    }
+
     rebuildObject(obj);
+    // إعادة تطبيق حالة الفتح على المفصلات بعد إعادة بناء المجسم.
+    (obj.three && obj.three.doorPivots || []).forEach(function(p,i){
+        p.rotation.y = obj.doorsOpen && obj.doorsOpen[i] ? p.userData.openRot : 0;
+    });
     saveHistory();
     renderProperties();
 }
