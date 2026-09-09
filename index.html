@@ -589,7 +589,7 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
 }
 
 @media (max-height:620px) and (max-width:850px){
-    .library,.properties{height:82dvh!important;}
+    .library,.properties{height:54dvh!important;}
     .roomMenuBox{max-height:94dvh;}
 }
 
@@ -625,19 +625,27 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
   .hint{top:65px;max-width:92%;text-align:center;border-radius:12px;font-size:9px;padding:7px 12px}
 
   /* Bottom-sheet behavior */
-  .library,.properties{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:100%!important;height:min(82dvh,680px)!important;z-index:850!important;border:1px solid var(--line2)!important;border-radius:24px 24px 0 0!important;background:rgba(27,23,18,.98)!important;box-shadow:0 -18px 50px rgba(0,0,0,.55)!important;overflow:hidden!important;transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1)!important;display:flex!important;visibility:hidden}
+  .library,.properties{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:100%!important;height:min(48dvh,520px)!important;z-index:850!important;border:1px solid var(--line2)!important;border-radius:24px 24px 0 0!important;background:rgba(27,23,18,.98)!important;box-shadow:0 -18px 50px rgba(0,0,0,.55)!important;overflow:hidden!important;transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1)!important;display:flex!important;visibility:hidden}
   .library.mobileOpen,.properties.mobileOpen{transform:translateY(0);visibility:visible}
   .library:before,.properties:before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:42px;height:4px;border-radius:10px;background:#5b4a35;z-index:3}
   .libraryHeader,.propertiesHeader{padding:22px 16px 10px}.searchBox input{height:43px;border-radius:12px}.categoryBar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:8px 12px}.category{white-space:nowrap;padding:9px 13px;border-radius:20px;font-size:10px}
   .furnitureList{padding:8px 12px}.furnitureItem{grid-template-columns:72px 1fr 30px;align-items:center;min-height:82px;padding:8px;border-radius:14px;border:1px solid var(--line);background:rgba(34,28,21,.6);margin-bottom:7px}.blueIcon{height:66px;border-radius:10px}.itemName{font-size:12px}.itemDesc{font-size:8px}.itemPlus{position:static;opacity:1;width:32px;height:32px;border-radius:10px;font-size:19px}
-  .properties{overflow-y:auto!important;-webkit-overflow-scrolling:touch}.propertiesHeader{border-bottom:1px solid var(--line)}
+  .properties{overflow:hidden!important;-webkit-overflow-scrolling:touch}
+  .propertiesHeader{border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:5;background:rgba(27,23,18,.98)}
+  .propertiesHeaderText{min-width:0}
+  .mobileSheetClose{display:flex;width:38px;height:34px;flex:0 0 38px;align-items:center;justify-content:center;border:1px solid var(--line2);border-radius:10px;background:var(--panel2);color:var(--brass-light);font-size:18px}
+  #propertyContent{min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:86px}
   .propertyBody{padding:12px 14px 92px}.selectedInfo{border-radius:14px;padding:10px}.selectedIcon{width:50px;height:50px;border-radius:10px}.propertySection{background:var(--panel2);border:1px solid var(--line);border-radius:14px;margin-bottom:9px;overflow:hidden;padding:0}.propertySectionTitle{margin:0;padding:13px 12px;cursor:pointer}.propertySectionTitle span{font-size:11px}.propertySectionTitle small{font-size:7px}.propertySection > :not(.propertySectionTitle){padding-left:12px;padding-right:12px}.fields,.fields.three{padding-bottom:12px}.field input,.rotationBox input{height:42px;border-radius:10px}.stepBtn{width:40px;height:40px;border-radius:10px}.action,.rotatePreset{height:42px;border-radius:10px}.swatch{width:38px;height:38px;border-radius:10px}.toggleRow{padding:9px 0}.switch{width:44px;height:26px}
 
   .mobileGameHUD{display:flex;position:fixed;left:10px;right:10px;top:64px;z-index:310;justify-content:center;pointer-events:none}.gameStep{background:rgba(20,17,13,.88);border:1px solid var(--line2);backdrop-filter:blur(12px);border-radius:22px;padding:7px 11px;display:flex;gap:8px;align-items:center;font-size:8px;color:var(--muted);box-shadow:0 8px 24px rgba(0,0,0,.25)}.gameStep b{color:var(--brass-light);font-size:9px}.gameStep i{width:4px;height:4px;background:var(--line2);border-radius:50%}
   .mobileObjectPreview{position:fixed;inset:0;z-index:1200;display:none;align-items:flex-end;background:rgba(0,0,0,.55);backdrop-filter:blur(5px)}.mobileObjectPreview.open{display:flex}.previewSheet{width:100%;background:var(--panel);border:1px solid var(--line2);border-bottom:0;border-radius:26px 26px 0 0;padding:14px 14px 28px;box-shadow:0 -20px 60px rgba(0,0,0,.55)}.previewHandle{width:42px;height:4px;border-radius:10px;background:#5b4a35;margin:0 auto 12px}.previewHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.previewHead strong{font-size:15px}.previewHead span{font-size:8px;color:var(--muted-dim)}.previewTabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}.previewTabs button{height:42px;border:1px solid var(--line);background:var(--panel2);border-radius:12px;color:var(--muted);font-size:10px}.previewTabs button.active{border-color:var(--brass);background:rgba(193,121,60,.12);color:var(--brass-light)}.previewCanvas{height:180px;border:1px solid var(--line);border-radius:16px;background:#0b0e10;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px}.previewCanvas svg{width:75%;height:75%;stroke:var(--brass-light);fill:none}.previewInfo{display:flex;gap:7px;margin-bottom:10px}.previewChip{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}.previewChip b{display:block;font-family:var(--mono);font-size:10px}.previewChip span{font-size:7px;color:var(--muted-dim)}.previewActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.previewActions button{height:46px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);font-size:10px}.previewActions .go3d{background:var(--brass);color:#1b140b;border-color:var(--brass);font-weight:800}
   .mobileNav{height:64px!important;background:rgba(27,23,18,.97)!important;backdrop-filter:blur(14px);padding-bottom:env(safe-area-inset-bottom);}.mobileNav button{height:64px!important;border-left:0!important}.mobileNav button.active{background:rgba(193,121,60,.08)}
 }
-@media(max-width:380px){.roomCard{height:138px}.roomStage{padding-right:30%}.previewCanvas{height:150px}.previewInfo{display:none}}
+@media(max-width:380px){.roomCard{height:138px}.roomStage{padding-right:30%}.previewCanvas{height:150px}.previewInfo{display:none}.library,.properties{height:50dvh!important}}
+@media (orientation:landscape) and (max-width:850px){
+  .library,.properties{height:58dvh!important}
+  .workspace{height:calc(100dvh - 54px)}
+}
 </style>
 </head>
 <body>
@@ -754,7 +762,10 @@ button{border:0;cursor:pointer;background:none;color:inherit;}
     </section>
 
     <aside class="properties" id="propertiesPanel">
-        <div class="propertiesHeader"><h3>خصائص العنصر</h3><p>التحكم الدقيق في القطعة المحددة</p></div>
+        <div class="propertiesHeader">
+            <div class="propertiesHeaderText"><h3>خصائص العنصر</h3><p>التحكم الدقيق في القطعة المحددة</p></div>
+            <button class="mobileSheetClose" onclick="closeMobilePanels()" aria-label="تصغير الخصائص">⌄</button>
+        </div>
         <div id="propertyContent">
             <div class="emptyProperty">
                 <div class="emptyPropertyIcon">⊙</div>
