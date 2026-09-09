@@ -817,7 +817,66 @@ input[type=range]{accent-color:var(--teal)!important}
 }
 
 </style>
-</head>
+<style>
+/* =========================================================
+   FINAL ANDROID FIX — selected object properties + free 3D canvas
+   The scene stays interactive; only the right edge becomes the settings dock.
+========================================================= */
+@media (max-width:850px){
+  .properties.mobileOpen{
+    display:block!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    position:fixed!important;
+    z-index:1200!important;
+    top:58px!important;
+    right:0!important;
+    left:auto!important;
+    bottom:calc(64px + env(safe-area-inset-bottom))!important;
+    width:min(46vw,300px)!important;
+    max-width:46vw!important;
+    height:auto!important;
+    transform:translateX(0)!important;
+    overflow:hidden!important;
+    border-radius:20px 0 0 20px!important;
+    background:rgba(18,16,13,.97)!important;
+    border:1px solid var(--line2)!important;
+    border-right:0!important;
+    box-shadow:-16px 0 42px rgba(0,0,0,.42)!important;
+  }
+  .properties.mobileOpen .propertiesHeader{display:flex!important;pointer-events:auto!important;}
+  .properties.mobileOpen #propertyContent{
+    display:block!important;
+    height:calc(100% - 68px)!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    pointer-events:auto!important;
+    padding:0!important;
+  }
+  .properties.mobileOpen .mobileWizard{
+    position:relative!important;
+    right:auto!important;bottom:auto!important;
+    width:100%!important;
+    pointer-events:auto!important;
+    padding:8px!important;
+    transform:none!important;
+  }
+  .properties.mobileOpen .mobileWizardCard{
+    width:100%!important;
+    max-height:none!important;
+    overflow:visible!important;
+    border-radius:16px!important;
+  }
+  .properties.mobileOpen .wizardActions button,
+  .properties.mobileOpen .stepBtn,
+  .properties.mobileOpen .wizardChoice,
+  .properties.mobileOpen .wizardMiniBtn{touch-action:manipulation!important;}
+  #three-canvas{touch-action:none!important;user-select:none;-webkit-user-select:none;}
+}
+@media(max-width:480px){
+  .properties.mobileOpen{width:52vw!important;max-width:52vw!important;}
+}
+</style></head>
 <body>
 
 <!-- ================= START SCREEN ================= -->
@@ -1689,11 +1748,11 @@ function initThree(){
     scene.add(roomGroup);
 
     window.addEventListener("resize", onResize);
-    canvasEl.addEventListener("pointerdown", function(e){ rememberCanvasPointer(e); onPointerDown(e); });
+    canvasEl.addEventListener("pointerdown", function(e){ rememberCanvasPointer(e); androidTapDown(e); onPointerDown(e); });
     canvasEl.addEventListener("pointermove", onPointerMove);
     canvasEl.addEventListener("click", selectObjectFromCanvasTap);
-    window.addEventListener("pointerup", onPointerUp);
-    window.addEventListener("pointercancel", onPointerUp);
+    window.addEventListener("pointerup", function(e){ androidTapUp(e); onPointerUp(e); });
+    window.addEventListener("pointercancel", function(e){ androidTapStart=null; onPointerUp(e); });
     canvasEl.addEventListener("wheel", onWheel, {passive:false});
 
     if(isMobileLayout()) setInteractionMode('orbit');
@@ -1880,10 +1939,14 @@ function toggleMobilePanel(name){
 function showMobileProperties(){
     const libEl = document.querySelector(".library");
     const propEl = document.getElementById("propertiesPanel");
-    if(!propEl) return;
+    if(!propEl || !isMobileLayout()) return;
     if(libEl) libEl.classList.remove("mobileOpen");
     propEl.classList.add("mobileOpen");
     propEl.style.visibility = "visible";
+    propEl.style.display = "block";
+    propEl.style.pointerEvents = "auto";
+    const pc=document.getElementById("propertyContent");
+    if(pc){ pc.style.pointerEvents="auto"; pc.style.overflowY="auto"; }
     setMobileNavState("properties");
     if(selectedId){ renderMobileWizard(); }
 }
@@ -2215,6 +2278,26 @@ function onPointerUp(e){
     orbitDrag = null;
     canvasEl.classList.remove("dragging-obj");
     canvasEl.classList.remove("orbiting");
+}
+
+// Android-safe tap: pointerup selects the object only when the finger did not move.
+let androidTapStart=null;
+function androidTapDown(e){
+  if(!isMobileLayout() || activePointers.size>1) return;
+  androidTapStart={x:e.clientX,y:e.clientY,id:e.pointerId};
+}
+function androidTapUp(e){
+  if(!isMobileLayout() || !androidTapStart || androidTapStart.id!==e.pointerId) return;
+  const dx=e.clientX-androidTapStart.x, dy=e.clientY-androidTapStart.y;
+  const moved=Math.hypot(dx,dy)>12; androidTapStart=null;
+  if(moved) return;
+  const hit=pickObjectAt(e.clientX,e.clientY);
+  if(!hit) return;
+  selectedId=hit.id;
+  updateSelectionVisuals();
+  renderProperties();
+  showMobileProperties();
+  updateMobileGameStep(4,'إعدادات المجسم • '+hit.name);
 }
 
 // Robust Android tap selection: some mobile browsers deliver a click after
