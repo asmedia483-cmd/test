@@ -833,8 +833,8 @@ input[type=range]{accent-color:var(--teal)!important}
     right:0!important;
     left:auto!important;
     bottom:calc(64px + env(safe-area-inset-bottom))!important;
-    width:min(46vw,300px)!important;
-    max-width:46vw!important;
+    width:min(38vw,255px)!important;
+    max-width:38vw!important;
     height:auto!important;
     transform:translateX(0)!important;
     overflow:hidden!important;
@@ -874,7 +874,7 @@ input[type=range]{accent-color:var(--teal)!important}
   #three-canvas{touch-action:none!important;user-select:none;-webkit-user-select:none;}
 }
 @media(max-width:480px){
-  .properties.mobileOpen{width:52vw!important;max-width:52vw!important;}
+  .properties.mobileOpen{width:min(40vw,235px)!important;max-width:40vw!important;}
 }
 </style></head>
 <body>
@@ -1456,7 +1456,7 @@ const FURNITURE = [
     return buildCabinetBody(w,d,h,c.body,cfg);
  }},
 {id:"wardrobe", room:"bedroom", category:"التخزين", name:"دولاب ملابس", desc:"200×60×220 سم", width:200, depth:60, height:220, iconAspect:[200,60],
- cabinet:true, doorsMin:1, doorsMax:4, defaultDoors:3, shelvesMin:0, shelvesMax:6, defaultShelves:1,
+ cabinet:true, doorsMin:1, doorsMax:6, defaultDoors:3, shelvesMin:0, shelvesMax:6, defaultShelves:1,
  hasDrawers:true, drawersMin:0, drawersMax:4, defaultDrawers:2, finishGroup:"wood",
  build:function(w,d,h,c,obj){
     const cfg = {
@@ -2832,21 +2832,17 @@ if(localStorage.getItem("ATELIER_3D_PROJECT")){
 let mobileWizardStage=0;
 let mobileWizardObjectId=null;
 function mobileWizardStages(obj,item){
+  /* Practical Android flow: only settings that change the actual furniture build. */
   const stages=[
-    {key:'height',title:'الطول',sub:'حدد طول / ارتفاع العنصر',kind:'number',field:'propH',value:obj.height,min:10,step:5,unit:'سم'},
-    {key:'width',title:'العرض',sub:'بعد الطول، حدد عرض العنصر',kind:'number',field:'propW',value:obj.width,min:10,step:5,unit:'سم'}
+    {key:'height',title:'الطول',sub:'اضبط طول / ارتفاع العنصر',kind:'number',field:'propH',value:obj.height,min:10,step:5,unit:'سم'},
+    {key:'width',title:'العرض',sub:'اضبط عرض العنصر',kind:'number',field:'propW',value:obj.width,min:10,step:5,unit:'سم'},
+    {key:'depth',title:'العمق',sub:'اضبط عمق العنصر',kind:'number',field:'propD',value:obj.depth,min:10,step:5,unit:'سم'}
   ];
   if(item && item.cabinet && item.doorsMax){
-    stages.push({key:'doors',title:'عدد الأبواب',sub:'حدد عدد أبواب الدولاب',kind:'count',value:obj.doorCount,min:item.doorsMin||0,max:item.doorsMax});
+    stages.splice(2,0,{key:'doors',title:'عدد الأبواب',sub:'حدد عدد أبواب الدولاب',kind:'count',value:obj.doorCount,min:item.doorsMin||0,max:Math.min(item.doorsMax,6)});
   }
-  stages.push({key:'depth',title:'العمق',sub:'حدد عمق العنصر',kind:'number',field:'propD',value:obj.depth,min:10,step:5,unit:'سم'});
-  if(item && item.shelvesMax) stages.push({key:'shelves',title:'عدد الأرفف',sub:'حدد عدد الأرفف داخل الدولاب',kind:'countShelf',value:obj.shelfCount,min:item.shelvesMin||0,max:item.shelvesMax});
+  if(item && item.shelvesMax) stages.push({key:'shelves',title:'عدد الأرفف',sub:'حدد عدد الأرفف',kind:'countShelf',value:obj.shelfCount,min:item.shelvesMin||0,max:item.shelvesMax});
   if(item && item.hasDrawers && item.drawersMax) stages.push({key:'drawers',title:'عدد الأدراج',sub:'حدد عدد الأدراج',kind:'countDrawer',value:obj.drawerCount,min:item.drawersMin||0,max:item.drawersMax});
-  if(item && (item.cabinet||item.hasDrawers)) stages.push({key:'handle',title:'نوع المقبض',sub:'اختر شكل المقابض',kind:'handle'});
-  stages.push({key:'finish',title:'الخامة واللون',sub:'اختر التشطيب المناسب',kind:'finish'});
-  stages.push({key:'position',title:'مكان العنصر',sub:'حرّك القطعة داخل الغرفة',kind:'position'});
-  stages.push({key:'rotation',title:'زاوية العنصر',sub:'حدد زاوية الدوران',kind:'rotation'});
-  stages.push({key:'done',title:'جاهز',sub:'راجع التصميم ثم ابدأ بالعنصر التالي',kind:'done'});
   return stages;
 }
 function renderMobileWizard(){
